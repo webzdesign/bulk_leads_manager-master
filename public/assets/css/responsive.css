@@ -1,0 +1,28 @@
+@media (max-width:1440px) {
+    .loginBanner img,
+    .loginBanner{
+        height: 370px;
+    }
+}
+@media (max-width:992px) {
+    .loginBanner img,
+    .loginBanner{
+        height: 250px;
+    }
+}
+@media (max-width:576px) {
+    .w-100-500{
+        width: 100% !important;
+    }
+    .loginBanner img,
+    .loginBanner{
+        height: 250px;
+    }
+    .loginCard .loginCardHead{
+        min-height: 65px;
+        bottom:35px;
+    }
+    .loginCard .loginCardBody{
+        padding-bottom: 30px;
+    }
+}
