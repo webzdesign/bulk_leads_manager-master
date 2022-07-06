@@ -1,26 +1,6 @@
 @extends('layouts.master')
 
 @section('content')
-
-    <div class="breadcrumb">
-        <ul class="p-0 m-0 w-100">
-            <li>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5.99996 0L11.3333 4V12H7.99996V7.33333H3.99996V12H0.666626V4L5.99996 0Z" fill="#7B809A"/>
-                </svg>
-            </li>
-            <li>
-                <a href="javascript:;" class="f-14 f-400 c-7b">Home</a>
-            </li>
-            <li class="f-14 f-400 c-7b">
-                /
-            </li>
-            <li class="f-14 f-400 c-36">Settings</li>
-        </ul>
-        <h2 class="f-24 f-700 c-36 mt-3">Settings</h2>
-        <div class="devider"></div>
-    </div>
-
     <div class="middleContent settingWrpr">
         <div class="cards">
             <div class="cardsHeader">
