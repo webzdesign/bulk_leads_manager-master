@@ -81,7 +81,7 @@
                 <h3 class="text-white f-700 f-22 m-0">Welcome Back!</h3>
             </div>
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" id="form">
                 @csrf
                 <div class="form-group">
                     <label for="email" class="c-gr f-500 f-12 mb-2 d-flex align-items-center">
@@ -125,4 +125,37 @@
             </form>
         </div>
     </section>
+@endsection
+@section('script')
+<script>
+    $(document).ready(function () {
+        $("#form").validate({
+            rules:{
+                email: {
+                    email: true,
+                    required: true
+                },
+                password: {
+                    required: true
+                }
+            },
+            messages:{
+                email:{
+                    required: "Email Is Required."
+                },
+                password:{
+                    required: "Password Is Required."
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
+            },
+            submitHandler: function(form) {
+                $(':input[type="submit"]').prop('disabled', true);
+                form.submit();
+            }
+        });
+    });
+</script>
+
 @endsection
