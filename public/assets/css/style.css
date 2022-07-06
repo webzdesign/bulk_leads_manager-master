@@ -60,8 +60,21 @@ a{
     line-height:0;
     font-family: 'Roboto Bold';
     box-shadow: none !important;
+    font-size: 14px !important;
 }
-
+.btn-default{
+    background: #fff !important;
+    border-radius: 8px !important;
+    border:1px solid #4C26AA !important;
+    height: 40px;
+    color: #4C26AA;
+    padding: 0 15px;
+    font-size: 15px;
+    line-height:0;
+    font-family: 'Roboto Bold';
+    box-shadow: none !important;
+    font-size: 14px !important;
+}
 /* colors */
 .c-primary{
     color: #4C26AA !important;
@@ -133,6 +146,93 @@ a{
     border-color: #4C26AA !important;
 }
 
+.rightSection{
+    height: 100vh;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+/* custom select */
+
+.select-hidden {
+  display: none;
+  visibility: hidden;
+  padding-right: 10px;
+}
+.select {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+.select svg{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+.select-styled {
+    background: #FFFFFF !important;
+    border: 1px solid #C7CCD0;
+    border-radius: 8px;
+    height: 42px;
+    color: #4F4F52;
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    font-family: 'Roboto Medium' !important;
+    user-select: none;
+}
+.select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    margin: 0;
+    padding: 10px 0;
+    list-style: none;
+    background: #FFFFFF !important;
+    border: 1px solid #C7CCD0;
+    border-radius: 8px;
+    font-family: 'Roboto Medium' !important;
+    color: #4F4F52;
+    max-height: 255px;
+    overflow: auto;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important;
+}
+.select-options::-webkit-scrollbar-track
+{
+	background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+.select-options::-webkit-scrollbar
+{
+	width: 5px;
+    border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+.select-options::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+	background-color: #4C26AA ;
+}
+.select-options li {
+    padding: 5px 15px;
+}
+.select-options li:hover, .select-options li.is-selected {
+    background: #ededed;
+}
+.select-options li[rel="hide"] {
+    display: none;
+}
+
+
 /* login */
 
 .loginBanner{
@@ -173,6 +273,15 @@ footer{
 }
 
 /* sidebar */
+.sidebarOverlay{
+    background: #00000047;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 8;
+}
 aside{
     background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
     width: 260px;
@@ -187,23 +296,6 @@ aside .logoBx svg{
 }
 aside .whiteSpace{
     white-space: nowrap;
-}
-aside.sidebarClose{
-    width: 100px;
-    min-width: 100px;
-}
-aside.sidebarClose .menuList li a,
-aside.sidebarClose .jcc{
-    justify-content: center !important;
-}
-aside.sidebarClose .menuList li svg{
-    margin-right: 0;
-}
-aside.sidebarClose .userProfile{
-    padding: 20px 0;
-}
-aside.sidebarClose .displayNone{
-    display: none;
 }
 aside::-webkit-scrollbar-track
 {
@@ -293,21 +385,23 @@ header ul li .badges{
     bottom: 2px;
 }
 .breadcrumb{
-    padding: 24px;
+    padding: 24px 24px 0;
 }
 
 /* middle section */
 
 .middleContent{
     padding: 24px;
+    flex: auto;
 }
 .middleContent .cards{
     background: #FFFFFF;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
     border-radius: 12px;
+    margin-bottom: 30px;
 }
 .cardsHeader{
-    padding: 15px 24px;
+    padding: 20px 24px;
     border-bottom: 1px solid #ddd;
 }
 .cardsBody{
@@ -315,4 +409,29 @@ header ul li .badges{
 }
 .settingWrpr .cardsBody{
     padding: 30px 24px;
+}
+.settingWrpr .cardsBody .pr-40{
+    padding-right: 40px;
+}
+.settingWrpr .cardsBody .pl-40{
+    padding-left: 40px;
+}
+.settingWrpr .cardsFooter{
+    padding: 20px 24px;
+    border-top: 1px solid #ddd;
+}
+.settingWrpr .cardsFooter button{
+    margin-left: 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important;
+}
+.settingWrpr .cardsFooter .btn-primary{
+    min-width: 135px !important;
+}
+.settingWrpr .cardsFooter .btn-default{
+    min-width: 90px !important;
+}
+.settingWrpr .cardsBody textarea{
+    height: 221px;
+    padding-top: 12px;
+    resize: none;
 }

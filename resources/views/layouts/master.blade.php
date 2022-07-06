@@ -9,20 +9,28 @@
     <title>Bulk Leads Manager</title>
 
     @yield('style')
-    @include('layouts.partials.header')
+    @include('layouts.partials.headerscript')
 </head>
 <body>
 
     <div class="main">
 
         @if (Auth::check())
-        <div class="d-flex">
-            @include('layouts.partials.sidebar')
-            @include('layouts.partials.navbar')
-        </div>
+            <div class="d-flex">
+                @include('layouts.partials.sidebar')
+
+                <section class="w-100 rightSection">
+
+                    @include('layouts.partials.header')
+
+                    @yield('content')
+
+                    @include('layouts.partials.footer')
+                </section>
+            </div>
         @endif
 
-        @yield('content')
+        {{-- @yield('content') --}}
     </div>
 
     {{-- @if (Auth::check())

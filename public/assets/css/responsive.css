@@ -1,3 +1,23 @@
+@media (min-width:993px) {
+    aside.sidebarClose{
+        width: 108px;
+        min-width: 108px;
+    }
+    aside.sidebarClose .menuList li a,
+    aside.sidebarClose .jcc{
+        justify-content: center !important;
+    }
+    aside.sidebarClose .menuList li svg{
+        margin-right: 0;
+    }
+    aside.sidebarClose .userProfile{
+        padding: 20px 0;
+    }
+    aside.sidebarClose .displayNone{
+        display: none;
+    }
+}
+
 @media (max-width:1440px) {
     .loginBanner img,
     .loginBanner{
@@ -5,10 +25,29 @@
     }
 }
 @media (max-width:992px) {
+    .d-block-992{
+        display: block !important;
+    }
     .loginBanner img,
     .loginBanner{
         height: 250px;
     }
+    aside{
+        transform: translateX(-260px);
+        position: fixed;
+        z-index: 9;
+    }
+    aside.sidebarClose{
+        transform: translateX(0);
+        width: 260px;
+    }
+    header{
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #fff;
+    }
+
 }
 @media (max-width:576px) {
     .w-100-500{
