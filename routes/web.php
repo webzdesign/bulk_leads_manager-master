@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +24,7 @@ Auth::routes(['register' => false]);
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-});
 
+    /*Settings*/
+    Route::get('settings', [SettingController::class, 'index'])->name('settings');
+});
