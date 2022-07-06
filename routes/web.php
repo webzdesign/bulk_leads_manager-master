@@ -20,12 +20,14 @@ Route::get('/', function () {
     return redirect('login');
 });
 
-Auth::routes(['register' => false]);
+Route::group(['middleware' => 'prevent-back-history'],function(){
 
-Route::group(['middleware' => ['auth']], function() {
-    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Auth::routes(['register' => false]);
+    Route::group(['middleware' => ['auth']], function() {
+        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    /*Settings route*/
-    Route::get('settings', [SettingController::class, 'index'])->name('settings');
-    Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
+        /*Settings route*/
+        Route::get('settings', [SettingController::class, 'index'])->name('settings');
+        Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
+    });
 });

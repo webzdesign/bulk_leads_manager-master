@@ -48,6 +48,7 @@
             </div>
             @else
                 @yield('content')
+                @include('layouts.partials.footer')
         @endif
     </div>
 
