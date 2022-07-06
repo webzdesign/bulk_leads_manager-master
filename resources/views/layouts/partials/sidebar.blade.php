@@ -18,7 +18,10 @@
         <div id="demo" class="collapse">
             <ul class="p-0 mt-3 menuList">
                 <li>
-                    <a href="javascript:;" class="d-flex align-items-center text-white f-400 f-14" >
+                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                        @csrf
+                    </form>
+                    <a href="javascript:;" class="d-flex align-items-center text-white f-400 f-14" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M9 14H2L2 2H9" stroke="#fff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M7 8H15" stroke="#fff" stroke-width="1.75" stroke-miterlimit="10" stroke-linecap="round"/>
