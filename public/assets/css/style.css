@@ -61,6 +61,7 @@ a{
     font-family: 'Roboto Bold';
     box-shadow: none !important;
     font-size: 14px !important;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
 }
 .btn-default{
     background: #fff !important;
@@ -74,6 +75,7 @@ a{
     font-family: 'Roboto Bold';
     box-shadow: none !important;
     font-size: 14px !important;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
 }
 /* colors */
 .c-primary{
@@ -88,7 +90,12 @@ a{
 .c-36{
     color: #364868 !important;
 }
-
+.c-16{
+    color: #16C0E8 !important;
+}
+.c-e9{
+    color: #E91F63 !important;
+}
 /* fonts */
 .f-10{
     font-size: 10px !important;
@@ -126,7 +133,7 @@ a{
     font-family: 'Roboto Bold' !important;
 }
 .devider{
-    background: #ddd;
+    background: #F0F2F5;
     width: 100%;
     height: 1px;
     margin-top: 20px;
@@ -141,6 +148,7 @@ a{
     border-radius: 8px;
     height: 42px;
     padding: 5px 18px;
+    font-family: 'Roboto Regular' !important;
 }
 .form-control:focus{
     border-color: #4C26AA !important;
@@ -202,7 +210,6 @@ a{
     color: #4F4F52;
     max-height: 255px;
     overflow: auto;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important;
 }
 .select-options::-webkit-scrollbar-track
 {
@@ -268,7 +275,7 @@ a{
 /* footer */
 
 footer{
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #F0F2F5;
     padding: 20px 30px;
 }
 
@@ -358,7 +365,7 @@ aside .menuList li a:hover{
 
 /* header */
 header{
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #F0F2F5;
     padding: 18px 50px 18px 20px;
 }
 header ul li{
@@ -402,7 +409,7 @@ header ul li .badges{
 }
 .cardsHeader{
     padding: 20px 24px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #F0F2F5;
 }
 .cardsBody{
     padding: 15px 24px;
@@ -418,9 +425,9 @@ header ul li .badges{
 }
 .settingWrpr .cardsFooter{
     padding: 20px 24px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #F0F2F5;
 }
-.settingWrpr .cardsFooter button{
+.settingWrpr .cardsFooter button, .tableCards .cardsHeader button{
     margin-left: 10px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important;
 }
@@ -434,4 +441,127 @@ header ul li .badges{
     height: 221px;
     padding-top: 12px;
     resize: none;
+}
+
+.tableCards{
+    padding-bottom: 15px;
+}
+.tableCards .cardsHeader button{
+    line-height: 2.9;
+}
+.tableCards .cardsHeader button svg{
+    margin-right: 5px;
+    position: relative;
+    bottom: 1px;
+}
+.tableCards th{
+    background: #E9EAED !important;
+    text-transform: uppercase;
+    color: #4F4F52 !important;
+    font-size: 14px !important;
+    padding: 12px 15px;
+    border: none !important;
+}
+.tableCards .cardsBody{
+    padding: 0 0 20px;
+    font-family: 'Roboto Bold' !important;
+}
+.tableCards .table>:not(:first-child){
+    border: none !important;
+}
+.tableCards td{
+    border-color: #F0F2F5;
+    color: #4F4F52 !important;
+    font-size: 14px !important;
+    padding: 17px 15px;
+    font-family: 'Roboto Bold' !important;
+}
+.tableCards .editRemove label{
+    text-decoration: underline;
+    margin-right: 10px;
+}
+.tableCards tr td .mb-2:last-child{
+    margin-bottom: 0 !important;
+}
+.tableCards .dayBx{
+    min-width: 180px;
+}
+.tableCards .editBtn, .tableCards .deleteBtn{
+    background: #1A73E7;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: none;
+    width: 40px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.tableCards .deleteBtn{
+    background: #E91F63;
+}
+.tableCards .editDlbtn button{
+    margin-left: 10px;
+}
+.tableCards .editDlbtn button:first-child{
+    margin-left: 0;
+}
+.tableCards .cardsBody{
+    overflow: auto;
+}
+.tableCards .cardsBody::-webkit-scrollbar-track
+{
+    width: 5px;
+    background-color: #F5F5F5;
+    height: 9px;
+}
+
+.tableCards .cardsBody::-webkit-scrollbar
+{
+    border-radius: 10px;
+    height: 9px;
+    background-color: #D9D9D9;
+}
+
+.tableCards .cardsBody::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+    background-color: #D9D9D9;
+}
+.tableCards .cardsHeader {
+    flex-wrap: wrap;
+}
+
+.fieldsModal .modal-body .fieldList li{
+    margin-top: 15px;
+    list-style: auto;
+}
+
+.modal-content{
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    border: 0;
+}
+.modal-title{
+    color: #344767;
+    font-size: 18px;
+    font-family: "Roboto Bold" !important;
+}
+.modal-header{
+    padding: 24px 20px;
+}
+.modal-header .btn-close{
+    font-size: 12px;
+    box-shadow: none;
+}
+.fieldsModal .modal-dialog{
+    max-width: 614px;
+}
+.modal-footer{
+    padding: 17px 20px;
+}
+
+.groupModal .select-styled, .groupModal .form-control{
+    color: #7B809A;
+    font-family: "Roboto Regular" !important;
 }
