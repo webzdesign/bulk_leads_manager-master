@@ -5,14 +5,19 @@
         </svg>
         <span class="d-none-add whiteSpace">Bulk Leads Manager</span>
     </h2>
-    <div class="userProfile d-flex align-items-center justify-content-between jcc">
-        <div class="d-flex align-items-center">
-            <img src="{{ asset('public/assets/images/userprofile.jpg') }}" alt="profile">
-            <h4 class="f-300 f-14 text-white m-0 px-2 text-ellips d-none-add">{{ auth()->user()->name }}</h4>
+    <div class="userProfile jcc" id="accordion" role="tablist">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img src="{{ asset('public/assets/images/userprofile.jpg') }}" alt="profile">
+                <h4 class="f-300 f-14 text-white m-0 px-2 text-ellips d-none-add">{{ auth()->user()->name }}</h4>
+            </div>    
+            <svg class="arrowDown d-none-add" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.612793 1.58594L4.85543 5.82858L9.09807 1.58594" stroke="white"/>
+            </svg>
+        </a>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. </div>
         </div>
-        <svg class="arrowDown d-none-add" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0.612793 1.58594L4.85543 5.82858L9.09807 1.58594" stroke="white"/>
-        </svg>
     </div>
     <h3 class="f-12 f-700 text-white">MAIN MENU</h3>
     <ul class="p-0 mt-3 menuList">
@@ -111,3 +116,6 @@
         </li>
     </ul>
 </aside>
+<div class="d-none d-block-992">
+    <div class="sidebarOverlay d-none"></div>
+</div>
