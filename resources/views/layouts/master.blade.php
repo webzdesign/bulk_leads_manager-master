@@ -30,7 +30,7 @@
                                 </svg>
                             </li>
                             <li>
-                                <a href="javascript:;" class="f-14 f-400 c-7b">Home</a>
+                                <a href="{{ route('home') }}" class="f-14 f-400 c-7b">Home</a>
                             </li>
                             <li class="f-14 f-400 c-7b">
                                 /
