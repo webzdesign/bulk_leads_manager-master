@@ -86,7 +86,7 @@ class SettingController extends Controller
         ]);
 
         SiteSetting::create([
-            'auto_delete_rec_after' => $data['name'],
+            'auto_delete_rec_after' => $request['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
