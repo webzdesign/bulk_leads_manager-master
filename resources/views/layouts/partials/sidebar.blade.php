@@ -6,7 +6,7 @@
         <span class="d-none-add whiteSpace">Bulk Leads Manager</span>
     </h2>
     <div class="userProfile jcc" id="accordion" role="tablist">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="d-flex align-items-center justify-content-between">
+        <div data-bs-toggle="collapse" data-bs-target="#demo" class="cursor-pointer d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <img src="{{ asset('public/assets/images/userprofile.jpg') }}" alt="profile">
                 <h4 class="f-300 f-14 text-white m-0 px-2 text-ellips d-none-add">{{ auth()->user()->name }}</h4>
@@ -14,9 +14,20 @@
             <svg class="arrowDown d-none-add" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0.612793 1.58594L4.85543 5.82858L9.09807 1.58594" stroke="white"/>
             </svg>
-        </a>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-            <div class="panel-body"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. </div>
+        </div>
+        <div id="demo" class="collapse">
+            <ul class="p-0 mt-3 menuList">
+                <li>
+                    <a href="javascript:;" class="d-flex align-items-center text-white f-400 f-14" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M9 14H2L2 2H9" stroke="#fff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7 8H15" stroke="#fff" stroke-width="1.75" stroke-miterlimit="10" stroke-linecap="round"/>
+                        <path d="M12 11L15 8L12 5" stroke="#fff" stroke-width="1.75" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="d-none-add">Logout</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
     <h3 class="f-12 f-700 text-white">MAIN MENU</h3>
