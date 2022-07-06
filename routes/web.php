@@ -27,4 +27,5 @@ Route::group(['middleware' => ['auth']], function() {
 
     /*Settings route*/
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
+    Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
 });

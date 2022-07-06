@@ -49,9 +49,6 @@
             @else
                 @yield('content')
         @endif
-
-
-        {{-- @yield('content') --}}
     </div>
 
     {{-- @if (Auth::check())

@@ -11,68 +11,90 @@
                     <span class="f-18 f-600 c-gr f-700">Site Settinngs</span>
                 </div>
             </div>
-            <div class="cardsBody">
-                <div class="row">
-                    <div class="col-lg-6 pr-40">
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Auto delete records after:</label>
-                            <select id="mounth">
-                                <option>12 months</option>
-                                <option>11 months</option>
-                                <option>10 months</option>
-                                <option>9 months</option>
-                                <option>8 months</option>
-                                <option>7 months</option>
-                            </select>
-                            <p class="c-7b f-14 f-400 mt-2 mb-4">Once a lead reaches this age it will be deleted from the database.</p>
+            <form method="POST" action="{{ url('site_setting_create') }}" id="form1">
+                @csrf
+                <input type="hidden" name="id">
+
+                <div class="cardsBody">
+                    <div class="row">
+                        <div class="col-lg-6 pr-40">
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Auto delete records after:</label>
+                                <select name="auto_delete_rec_after">
+                                    @for ($i=1; $i<=12; $i++)
+                                        <option value="{{ $i }}">{{ $i }} Months</option>
+                                    @endfor
+                                </select>
+                                @error('auto_delete_rec_after')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+
+                                <p class="c-7b f-14 f-400 mt-2 mb-4">Once a lead reaches this age it will be deleted from the database.</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Disallow import of leads older than:</label>
+                                <select name="disallow_import_lead_older">
+                                    @for ($i=1; $i<=12; $i++)
+                                        <option value="{{ $i }}">{{ $i }} Months</option>
+                                    @endfor
+                                </select>
+                                @error('disallow_import_lead_older')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+
+                                <p class="c-7b f-14 f-400 mt-2">
+                                    When importing new CSV files, any leads that are older than this will be ignored.
+                                </p>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Disallow import of leads older than:</label>
-                            <select id="mounth">
-                                <option>12 months</option>
-                                <option>11 months</option>
-                                <option>10 months</option>
-                                <option>9 months</option>
-                                <option>8 months</option>
-                                <option>7 months</option>
-                            </select>
-                            <p class="c-7b f-14 f-400 mt-2">
-                                When importing new CSV files, any leads that are older than this will be ignored.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 pl-40">
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Frequency of deleted archives:</label>
-                            <select id="mounth">
-                                <option>12 months</option>
-                                <option>11 months</option>
-                                <option>10 months</option>
-                                <option>9 months</option>
-                                <option>8 months</option>
-                                <option>7 months</option>
-                            </select>
-                            <p class="c-7b f-14 f-400 mt-2">When leads expire (configure with Auto delete record setting) they are zipped and emailed to the admin, to prevent spamming emails to you every hour/day you can decrease the frequency so more records are grouped together in the zip file, otherwise you may receive frequent emails with only a handful of records. Manually deleted records ignore this and trigger a new .zip to be sent. </p>
-                        </div>
-                        <div class="form-group mt-4">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Number of times each lead can be downloaded:</label>
-                            <select id="mounth">
-                                <option>10</option>
-                                <option>10</option>
-                                <option>10</option>
-                            </select>
-                            <p class="c-7b f-14 f-400 mt-2">
-                                Each lead can only be downloaed this many times.
-                            </p>
+                        <div class="col-lg-6 pl-40">
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Frequency of deleted archives:</label>
+                                <select name="frequency_of_deleted_archives">
+                                    @for ($i=1; $i<=30; $i++)
+                                        <option value="{{ $i }}">{{ $i }} Days</option>
+                                    @endfor
+                                </select>
+
+                                @error('frequency_of_deleted_archives')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+
+                                <p class="c-7b f-14 f-400 mt-2">When leads expire (configure with Auto delete record setting) they are zipped and emailed to the admin, to prevent spamming emails to you every hour/day you can decrease the frequency so more records are grouped together in the zip file, otherwise you may receive frequent emails with only a handful of records. Manually deleted records ignore this and trigger a new .zip to be sent. </p>
+                            </div>
+                            <div class="form-group mt-4">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Number of times each lead can be downloaded:</label>
+                                <select name="no_of_time_lead_download">
+                                    @for ($i=1; $i<=30; $i++)
+                                        <option value="{{ $i }}">{{ $i }} </option>
+                                    @endfor
+                                </select>
+                                @error('no_of_time_lead_download')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+
+                                <p class="c-7b f-14 f-400 mt-2">
+                                    Each lead can only be downloaed this many times.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="cardsFooter d-flex justify-content-end">
-                <button class="btn-default f-500 f-14">cancel</button>
-                <button class="btn-primary f-500 f-14">Save changes</button>
-            </div>
+                <div class="cardsFooter d-flex justify-content-end">
+                    <button class="btn-default f-500 f-14" type="button">cancel</button>
+                    <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
+                </div>
+            </form>
         </div>
+
         <div class="cards">
             <div class="cardsHeader">
                 <div class="d-flex align-items-center">
@@ -82,42 +104,69 @@
                     <span class="f-18 f-600 c-gr f-700">Email Setup</span>
                 </div>
             </div>
-            <div class="cardsBody">
-                <div class="row">
-                    <div class="col-lg-6 pr-40">
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Email Address to send FROM:</label>
-                            <input type="text" value="admin@bulkleadsmanager.com" class="form-control c-gr f-14 f-500">
+
+            <form method="POST" action="{{ route('login') }}" id="form2">
+                <div class="cardsBody">
+                    <div class="row">
+                        <div class="col-lg-6 pr-40">
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Email Address to send FROM:</label>
+                                <input type="text" value="admin@bulkleadsmanager.com" class="form-control c-gr f-14 f-500" name="email_from_address">
+
+                                @error('email_from_address')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Email from  Name:</label>
+                                <input type="text" value="Apache Leads" class="form-control c-gr f-14 f-500" name="email_from_name">
+
+                                @error('email_from_name')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Send deleted leads .zip file to email address (#1)</label>
+                                <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="deleted_lead_email_one">
+
+                                @error('deleted_lead_email_one')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Email from  Name:</label>
-                            <input type="text" value="Apache Leads" class="form-control c-gr f-14 f-500">
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Send deleted leads .zip file to email address (#1)</label>
-                            <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 pl-40">
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Send deleted leads .zip file to email address (#2)</label>
-                            <input type="text" value="steve@xsited.com" class="form-control c-gr f-14 f-500">
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">BCC all outgoing emails to Email Address (leave blank to disable)</label>
-                            <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500">
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Email Reply-To (optional)</label>
-                            <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500">
+                        <div class="col-lg-6 pl-40">
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Send deleted leads .zip file to email address (#2)</label>
+                                <input type="text" value="steve@xsited.com" class="form-control c-gr f-14 f-500" name="deleted_lead_email_two">
+
+                                @error('deleted_lead_email_two')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">BCC all outgoing emails to Email Address (leave blank to disable)</label>
+                                <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="bcc_email_address">
+                            </div>
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Email Reply-To (optional)</label>
+                                <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="reply_to_email">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="cardsFooter d-flex justify-content-end">
-                <button class="btn-default f-500 f-14">cancel</button>
-                <button class="btn-primary f-500 f-14">Save changes</button>
-            </div>
+                <div class="cardsFooter d-flex justify-content-end">
+                    <button class="btn-default f-500 f-14" type="button">cancel</button>
+                    <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
+                </div>
+            </form>
         </div>
         <div class="cards">
             <div class="cardsHeader">
@@ -128,28 +177,95 @@
                     <span class="f-18 f-600 c-gr f-700">Email Template</span>
                 </div>
             </div>
-            <div class="cardsBody">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
-                            <select id="mounth">
-                                <option>Leads Delivery</option>
-                                <option>Leads Delivery</option>
-                            </select>
-                            <p class="c-7b f-14 f-400 mt-2 mb-4">[username] [email] [userid] are placed with the correct values.</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
-                            <textarea class="form-control c-gr f-14 f-500">Apache Leads</textarea>
+
+            <form method="POST" action="{{ route('login') }}" id="form3">
+                <div class="cardsBody">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
+                                <select name="email_subject">
+                                    <option value="1">Leads Send</option>
+                                    <option value="2">Leads Delete</option>
+                                </select>
+                                @error('email_subject ')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+
+                                <p class="c-7b f-14 f-400 mt-2 mb-4">[username] [email] [userid] are placed with the correct values.</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
+                                <textarea class="form-control c-gr f-14 f-500" name="content">Apache Leads</textarea>
+                                @error('content ')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="cardsFooter d-flex justify-content-end">
-                <button class="btn-default f-500 f-14">cancel</button>
-                <button class="btn-primary f-500 f-14">Save changes</button>
-            </div>
+                <div class="cardsFooter d-flex justify-content-end">
+                    <button class="btn-default f-500 f-14" type="button">cancel</button>
+                    <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function () {
+        $("#form1").validate({
+            rules:{
+                auto_delete_rec_after: {required: true},
+                // disallow_import_lead_older: {required: true},
+                // frequency_of_deleted_archives: {required: true},
+                // no_of_time_lead_download: {required: true}
+            },
+            messages:{
+                auto_delete_rec_after:{required: "This Fields Is Required."},
+                // disallow_import_lead_older:{required: "This Fields Is Required."},
+                // frequency_of_deleted_archives:{required: "This Fields Is Required."},
+                // no_of_time_lead_download:{required: "This Fields Is Required."}
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
+            },
+            submitHandler: function(form) {
+                $(':input[type="submit"]').prop('disabled', true);
+                form.submit();
+            }
+        });
+
+        $("#form2").validate({
+            rules:{
+                email_from_address: {required: true,email:true},
+                deleted_lead_email_one: {required: true},
+                deleted_lead_email_two: {required: true},
+                bcc_email_address: {email: true},
+                reply_to_email: {email: true}
+            },
+            messages:{
+                email_from_address:{required: "This Fields Is Required.",email: "Please Enter Valid Email Address."},
+                deleted_lead_email_one:{required: "This Fields Is Required."},
+                deleted_lead_email_two:{required: "This Fields Is Required."},
+                bcc_email_address:{required: "Please Enter Valid Email Address."},
+                reply_to_email:{required: "Please Enter Valid Email Address."}
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
+            },
+            submitHandler: function(form) {
+                $(':input[type="submit"]').prop('disabled', true);
+                form.submit();
+            }
+        });
+    });
+</script>
+
 @endsection
