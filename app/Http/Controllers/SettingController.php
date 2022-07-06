@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    public $moduleName = 'Settings';
+
     /**
      * Create a new controller instance.
      *
@@ -23,6 +25,8 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return view('settings');
+        $moduleName = $this->moduleName;
+
+        return view('settings',compact('moduleName'));
     }
 }

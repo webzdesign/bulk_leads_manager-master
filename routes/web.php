@@ -25,6 +25,6 @@ Auth::routes(['register' => false]);
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    /*Settings*/
+    /*Settings route*/
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
 });
