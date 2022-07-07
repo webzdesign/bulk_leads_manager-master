@@ -31,6 +31,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::group(['prefix' => 'lead_type'], function(){
             Route::get('/', [LeadTypes::class, 'index'])->name('admin.lead_type.index');
             Route::post('/store_lead_type', [LeadTypes::class,'store_lead_type'])->name('admin.lead_type.store_lead_type');
+            Route::post('/edit',[LeadTypes::class,'edit'])->name('admin.lead_type.edit');
+            Route::post('/delete',[LeadTypes::class, 'delete'])->name('admin.lead_type.delete');
         });
 
         /*Settings route*/

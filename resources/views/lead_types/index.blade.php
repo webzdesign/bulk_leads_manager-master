@@ -34,7 +34,7 @@
                     </svg>
                     Add Age Group
                 </button>
-                <button class="btn-primary f-500 f-14" data-bs-toggle="modal" data-bs-target="#LeadType">
+                <button class="btn-primary f-500 f-14" data-bs-toggle="modal" data-bs-target="#LeadType" id="add_lead_type">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="#ffffff"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -96,7 +96,7 @@
                                 <td class="align-middle">
                                     <div class="editDlbtn d-flex">
                                         <a href="javascript:;">
-                                            <button class="editBtn">
+                                            <button class="editBtn" data-id="{{ $LeadType->id }}">
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
@@ -105,7 +105,7 @@
                                                 </svg>
                                             </button>
                                         </a>
-                                        <button class="deleteBtn">
+                                        <button class="deleteBtn" data-id="{{ $LeadType->id }}">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -196,12 +196,9 @@
                         <div class="col-md-8">
                             <select>
                                 <option value="hide">Select lead type</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
-                                <option>10 months</option>
-                                <option>9 months</option>
-                                <option>8 months</option>
-                                <option>7 months</option>
+                                @foreach ($LeadTypes as $LeadType)
+                                    <option value="{{ $LeadType->id }}">{{ $LeadType->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -225,7 +222,7 @@
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Lead Type</h4>
+                    <h4 class="modal-title" id="lead_type_title">Add Lead Type</h4>
                 </div>
 
                 <!-- Modal body -->
@@ -237,6 +234,7 @@
                         <div class="col-md-8">
                             <input type="text" id="lead_type" name="lead_type" class="form-control"
                                 placeholder="Enter lead type">
+                            <input type="text" id="lead_id" hidden>
                             <label class="text-danger f-400 f-14" id="lead_err"></label>
                         </div>
                     </div>
@@ -244,8 +242,8 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" id="lead_type_submit" class="btn-primary"
-                        style="min-width: 74px;">Add</button>
+                    <button type="button" id="lead_type_submit" class="btn-primary" style="min-width: 74px;"
+                        data-update="false">Add</button>
                 </div>
 
             </div>
@@ -254,8 +252,17 @@
     <!-- LeadType Modal End-->
 @endsection
 @section('script')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
+
+            $('#add_lead_type').on('click', function(e) {
+                $('#lead_type_title').text('Add Lead Type');
+                $('#lead_type').val('');
+                $('#lead_type_submit').text('Add');
+                $('#lead_type_submit').attr('data-update', 'false');
+                $('#lead_id').val('');
+            });
 
             $('#lead_type_submit').on('click', function(e) {
                 var value = $('#lead_type').val();
@@ -264,22 +271,93 @@
                     $('#lead_err').text('Lead Type Is Required.');
                 } else {
                     $('#lead_err').text('');
+                    id = $("#lead_id").val();
+                    if (id != '') {
+                        var type = "UPDATE";
+                    }
 
                     $.ajax({
                         type: "POST",
                         url: "{{ route('admin.lead_type.store_lead_type') }}",
                         data: {
-                            lead_type: value
+                            lead_type: value,
+                            id: id,
+                            type: type
                         },
                         success: function(res) {
-                            if (res == true) {
+                            if (res[0] == true) {
                                 $('#LeadType').modal('hide');
                                 $('#lead_type').val('');
-                                window.location.reload();
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: res[1],
+                                    text: res[2],
+                                }).then(function() {
+                                    window.location.reload();
+                                });
                             }
                         }
                     });
                 }
+            });
+
+            $(".deleteBtn").on('click', function(e) {
+
+                var id = $(this).attr('data-id')
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('admin.lead_type.delete') }}",
+                            data: {
+                                id: id
+                            },
+                            success: function(res) {
+                                if (res[0] == true) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        res[1],
+                                        'success'
+                                    ).then(function() {
+                                        window.location.reload();
+                                    });
+                                }
+                            }
+                        });
+
+                    }
+                })
+            });
+
+            $(".editBtn").on('click', function(e) {
+                $('#LeadType').modal('show');
+                $('#lead_type_title').text('Edit Lead Type');
+                $('#lead_type_submit').text('Update');
+                $('#lead_type_submit').attr('data-update', 'true');
+
+                var id = $(this).attr('data-id')
+                $('#lead_id').val(id);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.lead_type.edit') }}",
+                    data: {
+                        id: id
+                    },
+                    success: function(res) {
+                        $('#lead_type').val(res[1]);
+                    }
+                });
+
             });
 
         });
