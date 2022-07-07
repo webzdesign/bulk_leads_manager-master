@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadTypes;
 use Illuminate\Support\Facades\Auth;
@@ -36,5 +37,14 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         /*Settings route*/
         Route::get('settings', [SettingController::class, 'index'])->name('settings');
         Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
+
+        Route::group(['prefix' => 'admins'], function(){
+            Route::get('/', [AdminsController::class, 'index'])->name('admins.index');
+            Route::get('/get-data',[AdminsController::class,'getData'])->name('admins.getData');
+            Route::post('/store',[AdminsController::class,'store'])->name('admins.store');
+            Route::post('/edit',[AdminsController::class,'edit'])->name('admin.edit');
+            Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
+        });
+
     });
 });
