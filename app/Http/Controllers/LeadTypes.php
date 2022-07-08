@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AgeGroup;
 use App\Models\LeadType;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class LeadTypes extends Controller
     {
         $moduleName = $this->moduleName;
         $LeadTypes = LeadType::get();
-        return view("$this->view/index", compact('moduleName','LeadTypes'));
+        $ageGroups = AgeGroup::get();
+        return view("$this->view/index", compact('moduleName','LeadTypes','ageGroups'));
     }
 
     public function store_lead_type(Request $request)
