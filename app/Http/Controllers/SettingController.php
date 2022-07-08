@@ -4,21 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SiteSetting;
+use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Validator;
+use Auth;
 
 class SettingController extends Controller
 {
     public $moduleName = 'Settings';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
@@ -28,8 +20,10 @@ class SettingController extends Controller
     public function index()
     {
         $moduleName = $this->moduleName;
+        $site_settings = SiteSetting::get()->first();
+        $email_template = EmailTemplate::get()->first();
 
-        return view('settings',compact('moduleName'));
+        return view('settings/index',compact('moduleName','site_settings','email_template'));
     }
 
     /**
@@ -53,14 +47,16 @@ class SettingController extends Controller
         ]);
 
         $records = array(
-            'auto_delete_rec_after' => $request['name'],
-            'disallow_import_lead_older' => $request['name'],
-            'frequency_of_deleted_archives' => $request['name'],
-            'no_of_time_lead_download' => $request['name'],
+            'auto_delete_rec_after' => $request['auto_delete_rec_after'],
+            'disallow_import_lead_older' => $request['disallow_import_lead_older'],
+            'frequency_of_deleted_archives' => $request['frequency_of_deleted_archives'],
+            'no_of_time_lead_download' => $request['no_of_time_lead_download'],
+            'added_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id,
         );
-        SiteSetting::updateOrCreate($request['id'],$records);
+        SiteSetting::updateOrCreate(['id' => $request['id']],$records);
 
-        return back();
+        return back()->with('success', 'Setting updated successfuly!');
     }
 
     /**
@@ -72,23 +68,69 @@ class SettingController extends Controller
     protected function email_setup_create(Request $request)
     {
         $validation = $request->validate([
-            'email_from_address' => ['required'],
-            'deleted_lead_email_one' => ['required'],
-            'deleted_lead_email_two' => ['required'],
-            'bcc_email_address' => ['email'],
-            'reply_to_email' => ['email'],
+            'email_from_address' => ['required','email'],
+            'email_from_name' => ['required'],
+            'deleted_lead_email_one' => ['required','email'],
+            'deleted_lead_email_two' => ['required','email'],
+            'bcc_email_address' => ['nullable','sometimes','email'],
+            'reply_to_email' => ['nullable','sometimes','email'],
         ], [
             'email_from_address.required' => "This Fields Is Required.",
+            'email_from_address.email' => "Please Enter Valid Email Address.",
+
+            'email_from_name.required' => "This Fields Is Required.",
+
             'deleted_lead_email_one.required' => "This Fields Is Required.",
+            'deleted_lead_email_one.email' => "Please Enter Valid Email Address.",
+
             'deleted_lead_email_two.required' => "This Fields Is Required.",
+            'deleted_lead_email_two.email' => "Please Enter Valid Email Address.",
+
             'bcc_email_address.email' => "Please Enter Valid Email Address.",
             'reply_to_email.email' => "Please Enter Valid Email Address.",
         ]);
 
-        SiteSetting::create([
-            'auto_delete_rec_after' => $request['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $records = array(
+            'email_from_address' => $request['email_from_address'],
+            'email_from_name' => $request['email_from_name'],
+            'deleted_lead_email_one' => $request['deleted_lead_email_one'],
+            'deleted_lead_email_two' => $request['deleted_lead_email_two'],
+            'bcc_email_address' => $request['bcc_email_address'],
+            'reply_to_email' => $request['reply_to_email'],
+            'added_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id,
+        );
+
+        SiteSetting::updateOrCreate(['id' => $request['id']],$records);
+
+        return back()->with('success', 'Setting updated successfuly!');
+    }
+
+    /**
+     * Create a email template.
+     *
+     * @param  array  $data
+     * @return \App\Models\SiteSetting
+     */
+    protected function email_template_create(Request $request)
+    {
+        $validation = $request->validate([
+            'email_subject' => ['required'],
+            'content' => ['required'],
+        ], [
+            'email_subject.required' => "This Fields Is Required.",
+            'content.required' => "This Fields Is Required.",
         ]);
+
+        $records = array(
+            'email_subject' => $request['email_subject'],
+            'content' => $request['content'],
+            'added_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id,
+        );
+
+        EmailTemplate::updateOrCreate(['id' => $request['id']],$records);
+
+        return back()->with('success', 'Setting updated successfuly!');
     }
 }

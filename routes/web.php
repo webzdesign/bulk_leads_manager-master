@@ -7,6 +7,7 @@ use App\Http\Controllers\LeadTypes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\NewOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         /*Settings route*/
         Route::get('settings', [SettingController::class, 'index'])->name('settings');
         Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
+        Route::post('email_setup_create', [SettingController::class, 'email_setup_create'])->name('email_setup_create');
+        Route::post('email_template_create', [SettingController::class, 'email_template_create'])->name('email_template_create');
 
         Route::group(['prefix' => 'admins'], function(){
             Route::get('/', [AdminsController::class, 'index'])->name('admins.index');
@@ -54,5 +57,10 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
         });
 
+        /*New order route*/
+        Route::group(['prefix' => 'new-order'], function(){
+            Route::get('/', [NewOrderController::class, 'index'])->name('admin.new-order');
+            Route::post('/add-client', [NewOrderController::class, 'add_client'])->name('admin.add-client');
+        });
     });
 });
