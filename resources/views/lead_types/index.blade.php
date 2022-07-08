@@ -18,7 +18,7 @@
                     </svg>
                     View Fields
                 </button>
-                <button class="btn-default f-500 f-14" data-bs-toggle="modal" data-bs-target="#Group">
+                <button class="btn-default f-500 f-14" data-bs-toggle="modal" data-bs-target="#Group" id="age_add_button">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -65,33 +65,19 @@
                             <tr>
                                 <td class="align-middle">{{ $LeadType->name }}</td>
                                 <td>
-                                    <div class="mb-2 d-flex align-items-center">
-                                        <div class="dayBx">15 - 19 days <span class="c-7b">(0 records)</span>
-                                        </div>
-                                        <div class="editRemove">
-                                            <a href="javascript:;"><label
-                                                    class="cursor-pointer c-16 f-14 f-500">Edit</label></a>
-                                            <label class="cursor-pointer c-e9 f-14 f-500">Remove</label>
-                                        </div>
-                                    </div>
-                                    {{-- <div class="mb-2 d-flex align-items-center">
-                                        <div class="dayBx">60 - 179 days <span class="c-7b">(0 records)</span>
-                                        </div>
-                                        <div class="editRemove">
-                                            <a href="javascript:;"><label
-                                                    class="cursor-pointer c-16 f-14 f-500">Edit</label></a>
-                                            <label class="cursor-pointer c-e9 f-14 f-500">Remove</label>
-                                        </div>
-                                    </div>
-                                    <div class="mb-2 d-flex align-items-center">
-                                        <div class="dayBx">180 - 360 days <span class="c-7b">(0 records)</span>
-                                        </div>
-                                        <div class="editRemove">
-                                            <a href="javascript:;"><label
-                                                    class="cursor-pointer c-16 f-14 f-500">Edit</label></a>
-                                            <label class="cursor-pointer c-e9 f-14 f-500">Remove</label>
-                                        </div>
-                                    </div> --}}
+                                    @foreach ($ageGroups as $ageGroup)
+                                        @if ($LeadType->id == $ageGroup->lead_type_id)
+                                            <div class="mb-2 d-flex align-items-center">
+                                                <div class="dayBx">{{ $ageGroup->age_from }} - {{ $ageGroup->age_to }}
+                                                    days <span class="c-7b">(0 records)</span></div>
+                                                <div class="editRemove">
+                                                    <label class="cursor-pointer c-16 f-14 f-500 age_edit" data-ageId="{{ $ageGroup->id }}">Edit</label>
+                                                    <label class="cursor-pointer c-e9 f-14 f-500 age_remove"
+                                                        data-ageId="{{ $ageGroup->id }}">Remove</label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </td>
                                 <td class="align-middle">
                                     <div class="editDlbtn d-flex">
@@ -137,15 +123,9 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <ul class="fieldList">
-                        <li class="f-16 f-500 c-gr">First Name</li>
-                        <li class="f-16 f-500 c-gr">Last Name</li>
-                        <li class="f-16 f-500 c-gr">Email Address</li>
-                        <li class="f-16 f-500 c-gr">Address</li>
-                        <li class="f-16 f-500 c-gr">City</li>
-                        <li class="f-16 f-500 c-gr">State</li>
-                        <li class="f-16 f-500 c-gr">Country</li>
-                        <li class="f-16 f-500 c-gr">Phone Number</li>
-                        <li class="f-16 f-500 c-gr">Date Generated </li>
+                        @foreach ($leadFields as $leadField)
+                            <li class="f-16 f-500 c-gr">{{ $leadField->name }}</li>
+                        @endforeach
                     </ul>
                 </div>
 
@@ -167,7 +147,7 @@
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Age Group</h4>
+                    <h4 class="modal-title" id="age_title">Add Age Group</h4>
                 </div>
 
                 <!-- Modal body -->
@@ -177,7 +157,9 @@
                             <label class="c-gr f-16 f-500">Record Age FROM:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control">
+                            <input type="text" name="age_from" id="age_from" class="form-control">
+                            <input type="text" id="age_group_id" hidden>
+                            <label class="text-danger f-400 f-14 d-none" id="age_from_err">Age FROM Is Required.</label>
                         </div>
                     </div>
                     <div class="row align-items-center">
@@ -185,7 +167,8 @@
                             <label class="c-gr f-16 f-500">Record Age TO:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control">
+                            <input type="text" name="age_to" id="age_to" class="form-control">
+                            <label class="text-danger f-400 f-14 d-none" id="age_to_err">Age TO Is Required.</label>
                         </div>
                     </div>
                     <div class="devider"></div>
@@ -194,20 +177,20 @@
                             <label class="c-gr f-16 f-500">Lead Type Assigned to:</label>
                         </div>
                         <div class="col-md-8">
-                            <select>
+                            <select name="lead_type_assign" id="lead_type_assign">
                                 <option value="hide">Select lead type</option>
                                 @foreach ($LeadTypes as $LeadType)
                                     <option value="{{ $LeadType->id }}">{{ $LeadType->name }}</option>
                                 @endforeach
                             </select>
+                            <label class="text-danger f-400 f-14 d-none" id="lead_type_assign_err">Lead Type Is Required.</label>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn-primary" style="min-width: 74px;"
-                        data-bs-dismiss="modal">Add</button>
+                    <button type="button" id="age_submit" class="btn-primary" style="min-width: 74px;">Add</button>
                 </div>
 
             </div>
@@ -235,7 +218,7 @@
                             <input type="text" id="lead_type" name="lead_type" class="form-control"
                                 placeholder="Enter lead type">
                             <input type="text" id="lead_id" hidden>
-                            <label class="text-danger f-400 f-14" id="lead_err"></label>
+                            <label class="text-danger f-400 f-14 d-none" id="lead_err">Lead Type Is Required.</label>
                         </div>
                     </div>
                 </div>
@@ -264,13 +247,23 @@
                 $('#lead_id').val('');
             });
 
+            $('#age_add_button').on('click', function(e) {
+                $('#age_title').text('Add Age Group');
+                $('#age_submit').text('Add');
+                $('#age_from').val('');
+                $('#age_to').val('');
+                $('#age_group_id').val('');
+                var selected = $('#lead_type_assign option[value="hide"]').attr('selected','selected').text();
+                $('.select-styled').text(selected);
+            });
+
             $('#lead_type_submit').on('click', function(e) {
                 var value = $('#lead_type').val();
 
                 if (value == null || value == '') {
-                    $('#lead_err').text('Lead Type Is Required.');
+                    $('#lead_err').removeClass('d-none');
                 } else {
-                    $('#lead_err').text('');
+                    $('#lead_err').addClass('d-none');
                     id = $("#lead_id").val();
                     if (id != '') {
                         var type = "UPDATE";
@@ -344,6 +337,7 @@
                 $('#lead_type_title').text('Edit Lead Type');
                 $('#lead_type_submit').text('Update');
                 $('#lead_type_submit').attr('data-update', 'true');
+                $('#lead_err').addClass('d-none');
 
                 var id = $(this).attr('data-id')
                 $('#lead_id').val(id);
@@ -358,6 +352,123 @@
                     }
                 });
 
+            });
+
+            $('#age_submit').on('click', function(e) {
+                var ageFrom = $('#age_from').val();
+                var ageTo = $('#age_to').val();
+                var leadType = $('#lead_type_assign').val();
+
+                if (ageFrom == '') {
+                    $('#age_from_err').removeClass('d-none');
+                } else {
+                    $('#age_from_err').addClass('d-none');
+                }
+                if (ageTo == '') {
+                    $('#age_to_err').removeClass('d-none');
+                } else {
+                    $('#age_to_err').addClass('d-none');
+                }
+                if (leadType == 'hide') {
+                    $('#lead_type_assign_err').removeClass('d-none');
+                } else {
+                    $('#lead_type_assign_err').addClass('d-none');
+                }
+
+                if (ageFrom != '' && ageTo != '' && leadType != 'hide') {
+                    var age_group_id = $('#age_group_id').val();
+                    if(age_group_id != ''){
+                        var type = "UPDATE";
+                        var id = age_group_id;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('admin.lead_type.store_age_group') }}",
+                        data: {
+                            age_from: ageFrom,
+                            age_to: ageTo,
+                            lead_type: leadType,
+                            id: id,
+                            type: type
+                        },
+                        success: function(res) {
+                            if (res[0] == true) {
+                                $('#Group').modal('hide');
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: res[1],
+                                    text: res[2],
+                                }).then(function() {
+                                    window.location.reload();
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('.age_remove').on('click', function(e) {
+
+                var id = $(this).attr('data-ageID')
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('admin.lead_type.age_delete') }}",
+                            data: {
+                                id: id
+                            },
+                            success: function(res) {
+                                if (res[0] == true) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        res[1],
+                                        'success'
+                                    ).then(function() {
+                                        window.location.reload();
+                                    });
+                                }
+                            }
+                        })
+                    }
+                })
+            });
+
+            $('.age_edit').on('click', function(e){
+                $('#age_from_err').addClass('d-none');
+                $('#age_to_err').addClass('d-none');
+                $('#lead_type_assign_err').addClass('d-none');
+                var id = $(this).attr('data-ageId')
+
+                $('#Group').modal('show');
+                $('#age_title').text('Edit Age Group');
+                $('#age_submit').text('Update');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.lead_type.age_edit') }}",
+                    data: {id : id},
+                    success: function(res) {
+                        if(res[0] == true) {
+                            $('#age_group_id').val(res[1].id);
+                            var selected = $('#lead_type_assign option[value='+res[1].lead_type_id+']').attr("selected", "selected").text();
+                            $('.select-styled').text(selected);
+                            $('#age_from').val(res[1].age_from);
+                            $('#age_to').val(res[1].age_to);
+                        }
+                    }
+                });
             });
 
         });

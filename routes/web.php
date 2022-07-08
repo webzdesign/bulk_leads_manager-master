@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\AgeGroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadTypes;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/store_lead_type', [LeadTypes::class,'store_lead_type'])->name('admin.lead_type.store_lead_type');
             Route::post('/edit',[LeadTypes::class,'edit'])->name('admin.lead_type.edit');
             Route::post('/delete',[LeadTypes::class, 'delete'])->name('admin.lead_type.delete');
+
+            /*Age Group Route */
+            Route::post('/store_age_group',[AgeGroupController::class,'store_age_group'])->name('admin.lead_type.store_age_group');
+            Route::post('/age_delete',[AgeGroupController::class,'age_delete'])->name('admin.lead_type.age_delete');
+            Route::post('/age_edit',[AgeGroupController::class,'age_edit'])->name('admin.lead_type.age_edit');
         });
 
         /*Settings route*/
