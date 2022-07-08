@@ -16,13 +16,13 @@ class AdminsController extends Controller
     public function index()
     {
         $moduleName = $this->moduleName;
-        $users = User::all();
+        $users = User::where('id','!=',1)->get();
         return view($this->view.'/index',compact('moduleName','users'));
     }
 
      public function getData()
     {
-        $user = User::select('*');
+        $user = User::where('id','!=',1)->select('*');
         $data =$user;
         return DataTables::eloquent($data)
                 ->addIndexColumn()
