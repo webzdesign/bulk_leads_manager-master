@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         User::updateOrCreate(['email' => 'admin@gmail.com'],
         [
-            'name' => 'Admin',
+            'firstName' => 'Admin',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(LeadTypeSeeder::class);
+        $this->call(LeadFieldSeeder::class);
     }
 }
