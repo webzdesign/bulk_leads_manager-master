@@ -289,14 +289,8 @@
                         }
                     });
                     $('.jserror').html('');
-                    console.log();
-                    ('yes');
-                } else {
-                    console.log();
-                    ('no');
+
                 }
-
-
 
             });
 
@@ -377,12 +371,24 @@
 
             });
 
-            function checkValidation() {
+            $("#email").on('keyup',function(){
+           var check = isEmail($(this).val())
+           if(check == false && $(this).val() != '')
+           {
+            $(this).siblings('.jserror').css('color','red').html('Invalid Email.');
+           }
+           else
+           {
+            $(this).siblings('.jserror').html('');
+           }
+        });
 
-                var firstName = $('#firstName').val();
-                var lastName = $('#lastName').val();
-                var email = $('#email').val();
-                var password = $('#password').val();
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+             return regex.test(email);
+        }
+
+            function checkValidation() {
                 var fnFlag, lnFlag, emailFlag = false;
 
                 if ($('#firstName').val() == '' || $('#firstName').val() == null) {
@@ -457,7 +463,6 @@
                 return flag;
 
             }
-
         });
     </script>
 @endsection
