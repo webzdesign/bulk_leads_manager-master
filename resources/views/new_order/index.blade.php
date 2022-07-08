@@ -361,7 +361,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "{{ url('new-order/add-client') }}",
+                        url: "{{ url('new-order/create-client') }}",
                         dataType: "json",
                         data: datastring,
                         success: function(response) {
