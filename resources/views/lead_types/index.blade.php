@@ -123,15 +123,9 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <ul class="fieldList">
-                        <li class="f-16 f-500 c-gr">First Name</li>
-                        <li class="f-16 f-500 c-gr">Last Name</li>
-                        <li class="f-16 f-500 c-gr">Email Address</li>
-                        <li class="f-16 f-500 c-gr">Address</li>
-                        <li class="f-16 f-500 c-gr">City</li>
-                        <li class="f-16 f-500 c-gr">State</li>
-                        <li class="f-16 f-500 c-gr">Country</li>
-                        <li class="f-16 f-500 c-gr">Phone Number</li>
-                        <li class="f-16 f-500 c-gr">Date Generated </li>
+                        @foreach ($leadFields as $leadField)
+                            <li class="f-16 f-500 c-gr">{{ $leadField->name }}</li>
+                        @endforeach
                     </ul>
                 </div>
 
