@@ -1,4 +1,4 @@
-@media (min-width:993px) {
+@media (min-width:1025px) {
     aside.sidebarClose{
         width: 108px;
         min-width: 108px;
@@ -17,21 +17,7 @@
         display: none;
     }
 }
-
-@media (max-width:1440px) {
-    .loginBanner img,
-    .loginBanner{
-        height: 370px;
-    }
-}
-@media (max-width:992px) {
-    .d-block-992{
-        display: block !important;
-    }
-    .loginBanner img,
-    .loginBanner{
-        height: 250px;
-    }
+@media (max-width:1024px) {
     aside{
         transform: translateX(-260px);
         position: fixed;
@@ -47,14 +33,95 @@
         z-index: 1;
         background: #fff;
     }
+    .d-block-992{
+        display: block !important;
+    }
+}
 
+@media (max-width:1440px) {
+    .loginBanner img,
+    .loginBanner{
+        height: 370px;
+    }
+}
+@media (max-width:1200px) {
+    .importWrpr .uploadStatus .colOne {
+        min-width: 160px;
+    }
+}
+@media (max-width:992px) {
+    .loginBanner img,
+    .loginBanner{
+        height: 250px;
+    }
+    .newOrderWrpr .col-order-1 {
+        min-width: 150px;
+    }
+}
+@media (max-width:768px) {
+    .d-block-768{
+        display: block !important;
+    }
+    .mt-20-768{
+        margin-top: 20px;
+    }
+    .importStep .countStep{
+        padding-left: 0;
+    }
+    div.dataTables_wrapper div.dataTables_info{
+        margin-bottom: 10px;
+    }
+    .importWrpr .pr-80{
+        padding-right: 15px;
+    }
+    .importWrpr .cardsBody {
+        padding: 20px 15px;
+    }
+    .importWrpr .importStep li p{
+        font-size: 12px !important;
+    }
+    .importWrpr .importStep li{
+        padding: 0 5px;
+    }
+    .importWrpr .importStep span, .stepProgress.done .countStep svg{
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+        font-size: 12px !important;
+    }
+    .newOrderWrpr .col-order-1, .newOrderWrpr .col-order-2 {
+        min-width: 100%;
+        margin-bottom: 5px;
+    }
+    
 }
 @media (max-width:576px) {
+    .importWrpr .file-upload-wrapper:after, .f-14-500{
+        font-size: 14px !important;
+    }
+    .importWrpr .uploadStatus .colOne, .importWrpr .uploadStatus .colTwo{
+        font-size: 13px !important;
+    }
+    .f-16-500{
+        font-size: 16px !important;
+    }
     .w-100-500{
         width: 100% !important;
     }
     .breadcrumb h2{
         font-size: 18px !important;
+    }
+    .d-block-500{
+        display: block !important; 
+    }
+    .filterDropdownBx{
+        left: 0;
+        right: auto;
+        width: calc(100% - 0px);
+        min-width: auto;
+    }
+    .settingWrpr .cardsFooter, .importWrpr .fileProgress, .importWrpr .uploadStatus, .middleContent, .tableCards .cardsHeader, .cardsHeader, .importWrpr .fileUploadBx {
+        padding: 15px !important;
     }
     .loginBanner img,
     .loginBanner{
@@ -67,17 +134,48 @@
     .loginCard .loginCardBody{
         padding-bottom: 30px;
     }
-    .tableCards .cardsHeader{
-        padding: 15px;
-    }
     .tableCards .cardsHeader button{
         margin-bottom: 10px;
         font-size: 12px !important;
     }
-    .middleContent{
-        padding: 15px;
-    }
     .breadcrumb {
         padding: 15px 15px 0;
+    }
+    .importWrpr .importStep li {
+        max-width: 50%;
+        flex: 0 0 50%;
+        justify-content: flex-start !important;
+        margin-bottom: 15px;
+    }
+    .importWrpr .importStep li:nth-child(3), .importWrpr .importStep li:nth-child(4){
+        margin-bottom: 0 !important;
+    }
+    .importWrpr .fileUploadBx svg{
+        width: 50px;
+        height: 50px;
+    }
+    .stepConfirmation svg{
+        width: 70px;
+        height: 70px;
+    }
+    .importWrpr .progress{
+        height: 10px;
+    }
+    .importWrpr .uploadStatus .colOne {
+        min-width: 130px;
+    }
+    #filterBtn{
+        margin-top: 10px;
+    }
+    
+}
+
+@media (max-width:450px) {
+    .stepLeadDetail .cardsFooter{
+        display: block !important;
+    }
+    .stepLeadDetail .cardsFooter button.f-500{
+        min-width: 100% !important;
+        margin:0 0 10px;
     }
 }

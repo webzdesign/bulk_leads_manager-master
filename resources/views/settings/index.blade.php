@@ -13,7 +13,7 @@
             </div>
             <form method="POST" action="{{ url('site_setting_create') }}" id="form1">
                 @csrf
-                <input type="hidden" name="id">
+                <input type="hidden" name="id" value="{{ isset($site_settings) && $site_settings !=null ? $site_settings['id'] : ''; }}">
 
                 <div class="cardsBody">
                     <div class="row">
@@ -22,7 +22,7 @@
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Auto delete records after:</label>
                                 <select name="auto_delete_rec_after">
                                     @for ($i=1; $i<=12; $i++)
-                                        <option value="{{ $i }}">{{ $i }} Months</option>
+                                        <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['auto_delete_rec_after'] == $i ? 'selected' : '';?>>{{ $i }} Months</option>
                                     @endfor
                                 </select>
                                 @error('auto_delete_rec_after')
@@ -37,7 +37,7 @@
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Disallow import of leads older than:</label>
                                 <select name="disallow_import_lead_older">
                                     @for ($i=1; $i<=12; $i++)
-                                        <option value="{{ $i }}">{{ $i }} Months</option>
+                                        <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['disallow_import_lead_older'] == $i ? 'selected' : '';?>>{{ $i }} Months</option>
                                     @endfor
                                 </select>
                                 @error('disallow_import_lead_older')
@@ -56,7 +56,7 @@
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Frequency of deleted archives:</label>
                                 <select name="frequency_of_deleted_archives">
                                     @for ($i=1; $i<=30; $i++)
-                                        <option value="{{ $i }}">{{ $i }} Days</option>
+                                        <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['frequency_of_deleted_archives'] == $i ? 'selected' : '';?>>{{ $i }} Days</option>
                                     @endfor
                                 </select>
 
@@ -72,7 +72,7 @@
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Number of times each lead can be downloaded:</label>
                                 <select name="no_of_time_lead_download">
                                     @for ($i=1; $i<=30; $i++)
-                                        <option value="{{ $i }}">{{ $i }} </option>
+                                        <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['no_of_time_lead_download'] == $i ? 'selected' : '';?>>{{ $i }} </option>
                                     @endfor
                                 </select>
                                 @error('no_of_time_lead_download')
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="cardsFooter d-flex justify-content-end">
-                    <button class="btn-default f-500 f-14" type="button">cancel</button>
+                    <button class="btn-default f-500 f-14" type="reset">Cancel</button>
                     <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
                 </div>
             </form>
@@ -105,13 +105,15 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('login') }}" id="form2">
+            <form method="POST" action="{{ url('email_setup_create') }}" id="form2">
+                @csrf
+                <input type="hidden" name="id" value="{{ isset($site_settings) && $site_settings !=null ? $site_settings['id'] : ''; }}">
                 <div class="cardsBody">
                     <div class="row">
                         <div class="col-lg-6 pr-40">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Address to send FROM:</label>
-                                <input type="text" value="admin@bulkleadsmanager.com" class="form-control c-gr f-14 f-500" name="email_from_address">
+                                <input type="text" placeholder="admin@bulkleadsmanager.com" class="form-control c-gr f-14 f-500" name="email_from_address" value="<?= isset($site_settings) && $site_settings !=null ? $site_settings['email_from_address'] : '';?>">
 
                                 @error('email_from_address')
                                     <span class="text-danger f-400 f-14">
@@ -121,7 +123,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email from  Name:</label>
-                                <input type="text" value="Apache Leads" class="form-control c-gr f-14 f-500" name="email_from_name">
+                                <input type="text" placeholder="Apache Leads" class="form-control c-gr f-14 f-500" name="email_from_name" value="<?= isset($site_settings) && $site_settings !=null ? $site_settings['email_from_name'] : '';?>">
 
                                 @error('email_from_name')
                                     <span class="text-danger f-400 f-14">
@@ -131,7 +133,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Send deleted leads .zip file to email address (#1)</label>
-                                <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="deleted_lead_email_one">
+                                <input type="text" placeholder="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="deleted_lead_email_one" value="<?= isset($site_settings) && $site_settings !=null ? $site_settings['deleted_lead_email_one'] : '';?>">
 
                                 @error('deleted_lead_email_one')
                                     <span class="text-danger f-400 f-14">
@@ -143,7 +145,7 @@
                         <div class="col-lg-6 pl-40">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Send deleted leads .zip file to email address (#2)</label>
-                                <input type="text" value="steve@xsited.com" class="form-control c-gr f-14 f-500" name="deleted_lead_email_two">
+                                <input type="text" placeholder="steve@xsited.com" class="form-control c-gr f-14 f-500" name="deleted_lead_email_two" value="<?= isset($site_settings) && $site_settings !=null ? $site_settings['deleted_lead_email_two'] : '';?>">
 
                                 @error('deleted_lead_email_two')
                                     <span class="text-danger f-400 f-14">
@@ -153,17 +155,29 @@
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">BCC all outgoing emails to Email Address (leave blank to disable)</label>
-                                <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="bcc_email_address">
+                                <input type="text" placeholder="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="bcc_email_address" value="<?= isset($site_settings) && $site_settings !=null ? $site_settings['bcc_email_address'] : '';?>">
+
+                                @error('bcc_email_address')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Reply-To (optional)</label>
-                                <input type="text" value="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="reply_to_email">
+                                <input type="text" placeholder="admin@apacheleads.com" class="form-control c-gr f-14 f-500" name="reply_to_email" value="<?= isset($site_settings) && $site_settings !=null ? $site_settings['reply_to_email'] : '';?>">
+
+                                @error('reply_to_email')
+                                    <span class="text-danger f-400 f-14">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="cardsFooter d-flex justify-content-end">
-                    <button class="btn-default f-500 f-14" type="button">cancel</button>
+                    <button class="btn-default f-500 f-14" type="reset">Cancel</button>
                     <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
                 </div>
             </form>
@@ -178,15 +192,17 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('login') }}" id="form3">
+            <form method="POST" action="{{ url('email_template_create') }}" id="form3">
+                @csrf
+                <input type="hidden" name="id" value="{{ isset($email_template) && $email_template !=null ? $email_template['id'] : ''; }}">
                 <div class="cardsBody">
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
                                 <select name="email_subject">
-                                    <option value="1">Leads Send</option>
-                                    <option value="2">Leads Delete</option>
+                                    <option value="lead-send" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-send' ? 'selected' : '';?>>Leads Send</option>
+                                    <option value="lead-delete" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-delete' ? 'selected' : '';?>>Leads Delete</option>
                                 </select>
                                 @error('email_subject ')
                                     <span class="text-danger f-400 f-14">
@@ -198,7 +214,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
-                                <textarea class="form-control c-gr f-14 f-500" name="content">Apache Leads</textarea>
+                                <textarea class="form-control c-gr f-14 f-500" name="content">{{ isset($email_template) && $email_template !=null ? $email_template['content'] : '' }}</textarea>
                                 @error('content ')
                                     <span class="text-danger f-400 f-14">
                                         {{ $message }}
@@ -209,7 +225,7 @@
                     </div>
                 </div>
                 <div class="cardsFooter d-flex justify-content-end">
-                    <button class="btn-default f-500 f-14" type="button">cancel</button>
+                    <button class="btn-default f-500 f-14" type="reset">Cancel</button>
                     <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
                 </div>
             </form>
@@ -218,20 +234,46 @@
 @endsection
 
 @section('script')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function () {
+        @if(session()->has('success'))
+            Swal.fire(
+                'Success',
+                'Settings updated successfuly!',
+                'success'
+            );
+        @endif
+
+        //Dropdown selected text logic
+        var auto_delete_rec_after = $('[name="auto_delete_rec_after"] option:selected').val();
+        $('[name="auto_delete_rec_after"]').next('.select-styled').text(auto_delete_rec_after + ' Months');
+
+        var disallow_import_lead_older = $('[name="disallow_import_lead_older"] option:selected').val();
+        $('[name="disallow_import_lead_older"]').next('.select-styled').text(disallow_import_lead_older + ' Months');
+
+        var frequency_of_deleted_archives = $('[name="frequency_of_deleted_archives"] option:selected').val();
+        $('[name="frequency_of_deleted_archives"]').next('.select-styled').text(frequency_of_deleted_archives + ' Days');
+
+        var no_of_time_lead_download = $('[name="no_of_time_lead_download"] option:selected').val();
+        $('[name="no_of_time_lead_download"]').next('.select-styled').text(no_of_time_lead_download);
+
+        var email_subject = $('[name="email_subject"] option:selected').text();
+        $('[name="email_subject"]').next('.select-styled').text(email_subject);
+
         $("#form1").validate({
             rules:{
                 auto_delete_rec_after: {required: true},
-                // disallow_import_lead_older: {required: true},
-                // frequency_of_deleted_archives: {required: true},
-                // no_of_time_lead_download: {required: true}
+                disallow_import_lead_older: {required: true},
+                frequency_of_deleted_archives: {required: true},
+                no_of_time_lead_download: {required: true}
             },
             messages:{
                 auto_delete_rec_after:{required: "This Fields Is Required."},
-                // disallow_import_lead_older:{required: "This Fields Is Required."},
-                // frequency_of_deleted_archives:{required: "This Fields Is Required."},
-                // no_of_time_lead_download:{required: "This Fields Is Required."}
+                disallow_import_lead_older:{required: "This Fields Is Required."},
+                frequency_of_deleted_archives:{required: "This Fields Is Required."},
+                no_of_time_lead_download:{required: "This Fields Is Required."}
             },
             errorPlacement: function(error, element) {
                 error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
@@ -245,17 +287,37 @@
         $("#form2").validate({
             rules:{
                 email_from_address: {required: true,email:true},
-                deleted_lead_email_one: {required: true},
-                deleted_lead_email_two: {required: true},
+                email_from_name: {required: true},
+                deleted_lead_email_one: {required: true,email:true},
+                deleted_lead_email_two: {required: true,email:true},
                 bcc_email_address: {email: true},
                 reply_to_email: {email: true}
             },
             messages:{
                 email_from_address:{required: "This Fields Is Required.",email: "Please Enter Valid Email Address."},
-                deleted_lead_email_one:{required: "This Fields Is Required."},
-                deleted_lead_email_two:{required: "This Fields Is Required."},
-                bcc_email_address:{required: "Please Enter Valid Email Address."},
-                reply_to_email:{required: "Please Enter Valid Email Address."}
+                email_from_name:{required: "This Fields Is Required."},
+                deleted_lead_email_one:{required: "This Fields Is Required.",email: "Please Enter Valid Email Address."},
+                deleted_lead_email_two:{required: "This Fields Is Required.",email: "Please Enter Valid Email Address."},
+                bcc_email_address:{email: "Please Enter Valid Email Address."},
+                reply_to_email:{email: "Please Enter Valid Email Address."}
+            },
+            errorPlacement: function(error, element) {
+                error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
+            },
+            submitHandler: function(form) {
+                $(':input[type="submit"]').prop('disabled', true);
+                form.submit();
+            }
+        });
+
+        $("#form3").validate({
+            rules:{
+                email_subject: {required: true},
+                content: {required: true},
+            },
+            messages:{
+                email_subject:{required: "This Fields Is Required."},
+                content:{required: "This Fields Is Required."},
             },
             errorPlacement: function(error, element) {
                 error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
