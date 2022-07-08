@@ -77,11 +77,11 @@ a{
 input::-webkit-input-placeholder { /* Edge */
     color: #7B809A !important;
 }
-  
+
 input:-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #7B809A !important;
 }
-  
+
 input::placeholder {
     color: #7B809A !important;
 }
@@ -750,7 +750,7 @@ header ul li .badges{
 .importWrpr .stepThree table th{
     background: transparent !important;
     border-bottom: 1px solid #F0F2F5 !important;
-}   
+}
 .importWrpr .stepThree table td{
     color: #7B809A !important;
     font-family: "Roboto Regular" !important;
@@ -793,7 +793,7 @@ div.dataTables_wrapper div.dataTables_filter label{
         width: 328px;
     }
 }
-    
+
 .filterHeader{
     display: flex;
     justify-content: space-between;
