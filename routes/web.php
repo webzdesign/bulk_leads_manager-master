@@ -54,6 +54,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::get('/get-data',[AdminsController::class,'getData'])->name('admins.getData');
             Route::post('/store',[AdminsController::class,'store'])->name('admins.store');
             Route::post('/edit',[AdminsController::class,'edit'])->name('admin.edit');
+            Route::post('/delete',[AdminsController::class,'delete'])->name('admin.delete');
             Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
         });
 
