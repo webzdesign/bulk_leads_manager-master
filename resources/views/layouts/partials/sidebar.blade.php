@@ -5,8 +5,8 @@
         </svg>
         <span class="d-none-add whiteSpace">Bulk Leads Manager</span>
     </h2>
-    <div class="userProfile jcc" id="accordion" role="tablist">
-        <div data-bs-toggle="collapse" data-bs-target="#demo" class="cursor-pointer d-flex align-items-center justify-content-between">
+    <div class="userProfile" id="accordion" role="tablist">
+        <div data-bs-toggle="collapse" data-bs-target="#demo" class="jcc cursor-pointer d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <img src="{{ asset('public/assets/images/userprofile.jpg') }}" alt="profile">
                 <h4 class="f-300 f-14 text-white m-0 px-2 text-ellips d-none-add">{{ auth()->user()->name }}</h4>
