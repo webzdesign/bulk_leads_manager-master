@@ -191,6 +191,7 @@
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6932 14.2957L10.7036 9.31023C11.386 8.35146 11.791 7.1584 11.791 5.90142C11.791 2.64178 9.14704 0 5.8847 0C2.62254 0.00017572 0 2.64196 0 5.90142C0 9.16105 2.64397 11.8028 5.90631 11.8028C7.18564 11.8028 8.35839 11.3981 9.31795 10.7163L14.3076 15.7018C14.4994 15.8935 14.7553 16 15.0113 16C15.2672 16 15.523 15.8935 15.7149 15.7018C16.0985 15.2971 16.0985 14.6792 15.6935 14.2956L15.6932 14.2957ZM1.96118 5.90155C1.96118 3.72845 3.73104 1.98133 5.88465 1.98133C8.03826 1.9815 9.82938 3.72845 9.82938 5.90155C9.82938 8.07466 8.05952 9.82178 5.90591 9.82178C3.7523 9.82178 1.96118 8.05338 1.96118 5.90155Z" fill="#7B809A"/></svg>
 </script>
     <script>
+        var emailFlag ;
         $(document).ready(function () {
            var tbl = $('#example').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
@@ -229,17 +230,17 @@
 
             $('#addClient_submit').on('click', function(e) {
                 e.preventDefault();
+                var email = $('#email').val();
                 var mainFlag = checkValidation();
+                var type = '';
                 id = $("#client_id").val();
                 if (id != '') {
-                    var type = "UPDATE";
+                    type = "UPDATE";
                 }
-
                 if(mainFlag == true)
                 {
                     var firstName = $('#firstName').val();
                     var lastName = $('#lastName').val();
-                    var email = $('#email').val();
                     var city = $('#city').val();
                     var state = $('#state').val();
                     var country = $('#country').val();
@@ -379,10 +380,23 @@
                 }
                 else
                 {
-                    $(this).siblings('.jserror').html('');
+                    var type = '';
+                    id = $("#client_id").val();
+                    if (id != '') {
+                        type = "UPDATE";
+                    }
+                     var isValid = checkUniqueMail($(this).val(),type,id);
+                     if(isValid == false && $(this).val() != '')
+                    {
+                        $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
+                    }
+                    else
+                    {
+                         $(this).siblings('.jserror').html('');
+                    }
                 }
-            });
 
+            });
         });
 
         function isEmail(email)
@@ -427,6 +441,33 @@
                 $('#state').val('');
                 $('#country').val('');
                 $('#ipAdrs').val('');
+        }
+
+        function checkUniqueMail(email,type)
+        {
+            $.ajax({
+                type: "post",
+                url: "{{route('admin.client.checkEmailId')}}",
+                data:{
+                    email:email,
+                    type:type,
+                    id:id
+                },
+                success: function (response) {
+                    console.log(response);
+                    if(response == false)
+                    {
+                        $('#email').siblings('.jserror').css('color', 'red').html('Email Already Exist');
+                       emailFlag = false;
+                    }
+                    else
+                    {
+                        emailFlag = true;
+                    }
+                }
+            });
+
+            return emailFlag;
         }
 
     </script>

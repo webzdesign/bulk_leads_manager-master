@@ -76,6 +76,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/edit',[ClientsController::class,'edit'])->name('admin.client.edit');
             Route::post('/delete',[ClientsController::class,'delete'])->name('admin.client.delete');
             Route::post('/filter',[ClientsController::class,'filter'])->name('admin.client.filter');
+            Route::post('/checkEmailId',[ClientsController::class,'checkEmailId'])->name('admin.client.checkEmailId');
         });
 
         Route::group(['prefix' => 'import-history'], function(){
