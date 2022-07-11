@@ -69,13 +69,18 @@
                                 <div class="d-flex align-items-center d-block-768">
                                     <label class="f-16 f-500 c-gr col-order-1">Email:</label>
                                     <div class="col-order-2 position-relative">
-                                        <input type="text" placeholder="Enter email address" class="form-control">
+                                        <input type="text" placeholder="Enter email address" class="form-control" name="filter_client_email">
                                         <div class="emailErrorDiv text-center position-absolute bg-white">
                                             <div class="loadingClient c-7b f-14 f-400">
                                                 Searching client with same email address
-                                                <img src="{{ asset('public/assets/images/Spinner.svg') }}" alt="loader" width="30" height="30">
+                                                <img src="{{ asset('public/assets/images/Spinner.svg') }}" alt="loader" width="30" height="30" class="loader_image">
                                             </div>
-                                            <span class="c-e9 f-14 f-400 d-block mb-2">No client matched the email address you entered.</span>
+
+                                            <div class="email_list">
+                                                <!-- Loading -->
+                                            </div>
+
+                                            <span class="c-e9 f-14 f-400 d-block mb-2 email_not_match"></span>
                                             <button class="btn-add" data-bs-toggle="modal" data-bs-target="#Client">Add client</button>
                                         </div>
                                     </div>
@@ -313,7 +318,7 @@
                                 <label class="c-gr f-16 f-500">IP Address</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control f-14 c-19" name="ip_address" placeholder="Enter IP address">
+                                <input type="text" class="form-control f-14 c-19" name="ip_address" placeholder="Enter IP address" value="{{ Request::ip();                                }}">
                             </div>
                         </div>
                     </div>
@@ -342,13 +347,13 @@
                     ip_address: {required: true},
                 },
                 messages:{
-                    first_name:{required: "This Fields Is Required."},
-                    last_name:{required: "This Fields Is Required."},
-                    email:{required: "This Fields Is Required.", email:"Please Enter Valid Email Formate"},
-                    city:{required: "This Fields Is Required."},
-                    state:{required: "This Fields Is Required."},
-                    country:{required: "This Fields Is Required."},
-                    ip_address:{required: "This Fields Is Required."},
+                    first_name:{required: "This fields is required."},
+                    last_name:{required: "This fields is required."},
+                    email:{required: "This fields is required.", email:"Please enter valid email formate"},
+                    city:{required: "This fields is required."},
+                    state:{required: "This fields is required."},
+                    country:{required: "This fields is required."},
+                    ip_address:{required: "This fields is required."},
                 },
                 errorPlacement: function(error, element) {
                     error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
@@ -365,23 +370,48 @@
                         dataType: "json",
                         data: datastring,
                         success: function(response) {
-                            console.log(response[2]);
-                            console.log($(response[2][0]).length);
-
-                            if (response.status) {
-                                $('#Client').modal('hide');
-
+                            if (response) {
                                 Swal.fire({
                                     icon: "success",
                                     title: 'Success',
-                                    text: response.message,
-                                }).then(function() {
-                                    // window.location.reload();
+                                    text: response[1].message,
                                 });
+
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            }else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: 'Opps!',
+                                    text: response[1].message,
+                                })
                             }
                         }
                     });
                 }
+            });
+
+            //Email list in search
+            $("[name='filter_client_email']").on("change paste keyup", function() {
+                var filter_client_email = $(this).val();
+                $('.email_list,.email_not_match').html('');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.client.email-filter') }}",
+                    dataType: "json",
+                    data: {'email':filter_client_email},
+                    success: function(response) {
+                        if (response[1]) {
+                            $('.email_list').html(response[1].html);
+                            $('.loader_image').css({'display':'none'});
+                        }else{
+                            $('.loader_image').css({'display':'inline-block'});
+                            $('.email_not_match').text('No client matched the email address you entered.');
+                        }
+                    }
+                });
             });
         });
     </script>

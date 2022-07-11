@@ -61,13 +61,13 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::group(['prefix' => 'clients'], function(){
             Route::get('/', [ClientsController::class, 'index'])->name('admin.clients.index');
-            Route::post('/store',[ClientsControlle::class,'store'])->name('admin.client.store');
         });
 
         /*New order route*/
         Route::group(['prefix' => 'new-order'], function(){
             Route::get('/', [NewOrderController::class, 'index'])->name('admin.new-order');
             Route::post('/create-client', [NewOrderController::class, 'create_client'])->name('admin.create-client');
+            Route::post('/email-filter',[NewOrderController::class,'email_filter'])->name('admin.client.email-filter');
         });
     });
 });
