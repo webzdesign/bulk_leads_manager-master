@@ -361,10 +361,13 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "{{ url('new-order/add-client') }}",
+                        url: "{{ url('new-order/create-client') }}",
                         dataType: "json",
                         data: datastring,
                         success: function(response) {
+                            console.log(response[2]);
+                            console.log($(response[2][0]).length);
+
                             if (response.status) {
                                 $('#Client').modal('hide');
 

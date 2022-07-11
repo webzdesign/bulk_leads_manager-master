@@ -67,7 +67,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         /*New order route*/
         Route::group(['prefix' => 'new-order'], function(){
             Route::get('/', [NewOrderController::class, 'index'])->name('admin.new-order');
-            Route::post('/add-client', [NewOrderController::class, 'add_client'])->name('admin.add-client');
+            Route::post('/create-client', [NewOrderController::class, 'create_client'])->name('admin.create-client');
         });
     });
 });
