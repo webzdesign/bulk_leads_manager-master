@@ -445,8 +445,15 @@ aside::-webkit-scrollbar-thumb
 aside .userProfile{
     border-top: 1px solid #FFFFFF;
     border-bottom: 1px solid #FFFFFF;
-    padding: 20px 15px;
+    padding: 10px 0;
     margin: 20px 0;
+}
+aside .userProfile [data-bs-toggle="collapse"]{
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+aside .userProfile [data-bs-toggle="collapse"]:hover{
+    background: #6666EA50;
 }
 aside .userProfile img{
     border-radius: 50px;
@@ -470,6 +477,7 @@ aside .menuList li svg{
 }
 aside .menuList li{
     margin-bottom: 10px;
+    position: relative;
 }
 aside .menuList li a{
     padding: 10px 20px;
@@ -1023,4 +1031,19 @@ div.dataTables_wrapper div.dataTables_info {
 {
 	border-radius: 10px;
 	background-color: #4822a6;
+}
+
+.tooltip{
+    left: 20px !important;
+}
+.tooltip-inner {
+    font-family: 'Roboto Regular';
+    font-size: 16px;
+    background-color: #6666ea;
+}
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before, .bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: #6666ea;
+}
+.tooltip.show{
+    opacity: 1 !important;
 }
