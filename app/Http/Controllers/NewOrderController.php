@@ -71,7 +71,7 @@ class NewOrderController extends Controller
 
         if($records->isNotEmpty() && $request->email !=''){
             foreach ($records as $key => $value) {
-                $html .= '<div><a href="javascript:void(0);" data-id='.$value->id.' data-first_name='.$value->firstName.' data-last_name='.$value->lastName.' data-email='.$value->email.' data-city='.$value->city.' data-state='.$value->state.' data-country='.$value->country.' data-ip_address='.$value->ip_address.'>'.$value->email.'</a></div>';
+                $html .= '<div class="col-md-12"><a href="javascript:void(0)" class="client_details" data-id='.$value->id.' data-first_name='.$value->firstName.' data-last_name='.$value->lastName.' data-email='.$value->email.' data-city='.$value->city.' data-state='.$value->state.' data-country='.$value->country.' data-ip_address='.$value->ip_address.'>'.$value->email.'</a></div>';
             }
             return response()->json([true, ['html' => $html]]);
         }else{
