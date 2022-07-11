@@ -215,7 +215,7 @@
 
             $('#showModel').on('click', function(e) {
                 e.preventDefault();
-                $('#addClient_title').text('Add Admin');
+                $('#addClient_title').text('Add Client');
                 $('#addClient').val('');
                 $('#addClient_submit').text('Add');
                 $('#addClient_submit').attr('data-update', 'false');
@@ -288,7 +288,7 @@
                 clearFields();
                 $('.jserror').html('');
                 $('#addClient').modal('show');
-                $('#addClient_title').text('EditClient');
+                $('#addClient_title').text('Edit Client');
                 $('#addClient_submit').text('Update');
                 $('#addClient_submit').attr('data-update', 'true');
 
