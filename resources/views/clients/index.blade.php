@@ -15,15 +15,15 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id='tbody'>
                                     @foreach ($clients as $client)
 
                                     <tr>
                                         <td class="c-7b">{{$client->firstName}}</td>
-                                        <td class="c-7b">{{$client->lastNames}}</td>
+                                        <td class="c-7b">{{$client->lastName}}</td>
                                         <td class="c-7b">{{$client->email}}</td>
-                                        <td class="c-7b">{{date('d-m-Y',strtotime($client->last_order_date))}}</td>
-                                        <td class="c-7b">{{$client->last_product_ordered}}</td>
+                                        <td class="c-7b">{{isset($client->last_order_date)?date('d-m-Y',strtotime($client->last_order_date)):''}}</td>
+                                        <td class="c-7b">{{isset($client->last_product_ordered)?$client->last_product_ordered:''}}</td>
                                         <td class="c-7b">{{date('d-m-Y',strtotime($client->created_at))}}</td>
                                         <td class="c-7b tableCards">
                                             <div class="editDlbtn d-flex">
@@ -44,7 +44,7 @@
                                                         </svg>
                                                     </button>
                                                 </a>
-                                                <button class="deleteBtn" data-id="{{$client->id}}">
+                                                <button class="deleteBtn delete_record" data-id="{{$client->id}}">
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -153,6 +153,7 @@
    @endsection
 
    @section('script')
+   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script type="text/html" id="filterDropdown">
     <div class="d-flex align-items-center filterPanelbtn">
 
@@ -168,27 +169,9 @@
                 </div>
                 <div class="cardsBody settingWrpr">
                     <div class="form-group">
-                        <label class="c-gr f-500 f-16 w-100 mb-2">Leads Type</label>
-                        <select id='leadType'>
-                            <option value="hide">Select lead type</option>
-                            @foreach ($leadType as $ld)
-                            <option value='{{$ld->id}}'>{{$ld->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="c-gr f-500 f-16 w-100 mb-2">Leads Age</label>
-                        <select id='leadAge'>
-                            <option value="hide">Select leads age</option>
-                            @foreach ($ageGroup as $ag)
-                            <option value='{{$ag->id}}'>{{$ag->leadType->name}} | {{$ag->age_from}} - {{$ag->age_to}} Days old</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                        <select id='state'>
-                            <option value="hide">Select state</option>
+                        <select id='stateDD'>
+                            <option value="">Select state</option>
                             @foreach ($states as $state)
                             <option value='{{$state}}'>{{$state}}</option>
                             @endforeach
@@ -272,9 +255,11 @@
                             city:city,
                             state:state,
                             country:country,
-                            ipAdrs:ipAdrs
+                            ipAdrs:ipAdrs,
+                            id:id,
+                            type:type
                         },
-                        success: function (response) {
+                        success: function (res) {
                             if (res[0] == true) {
                                 $('#addClient').modal('hide');
                                 $('.jserror').html('');
@@ -296,6 +281,93 @@
                     });
                     $('.jserror').html('');
                 }
+            });
+
+            $(document).on('click', '.editBtn', function(e) {
+                e.preventDefault();
+                clearFields();
+                $('.jserror').html('');
+                $('#addClient').modal('show');
+                $('#addClient_title').text('EditClient');
+                $('#addClient_submit').text('Update');
+                $('#addClient_submit').attr('data-update', 'true');
+
+                var id = $(this).attr('data-id')
+                $('#client_id').val(id);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.client.edit') }}",
+                    data: {
+                        id: id
+                    },
+                    success: function(res) {
+                        console.log(res);
+                        $('#firstName').val(res['firstName']);
+                        $('#lastName').val(res['lastName']);
+                        $('#email').val(res['email']);
+                        $('#city').val(res['city']);
+                        $('#state').val(res['state']);
+                        $('#country').val(res['country']);
+                        $('#ipAdrs').val(res['ip_address']);
+                    }
+                });
+
+            });
+
+            $(document).on('click', '.delete_record', function(e) {
+                var id = $(this).attr('data-id');
+                e.preventDefault();
+                let linkUrl = $(this).attr('href');
+                Swal.fire({
+                    title: '{{ __('Are you sure?') }}',
+                    text: "{{ __('You wont delete this Client!') }}",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '{{ __('Yes') }}',
+                    cancelButtonText: "{{ __('Cancel') }}"
+                }).then(result => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{route('admin.client.delete') }}",
+                            data: {
+                                id: id
+                            },
+                            success: function(res) {
+                                if (res[0] == true) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        res[1],
+                                        'success'
+                                    ).then(function() {
+                                        window.location.reload();
+                                    });
+                                }
+                            }
+                        });
+
+                    }
+                });
+            });
+
+            $(document).on('click','#apply',function(){
+
+                var state = $('#stateDD').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('admin.client.filter')}}",
+                    data:{
+                        state : state
+                    },
+                    success: function (response) {
+                        $('#tbody').html(response.html);
+                    }
+                });
+
             });
 
             $("#email").on('keyup',function()
