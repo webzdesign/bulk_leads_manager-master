@@ -13,4 +13,9 @@ class AgeGroup extends Model
 
     protected $guarded = [];
 
+    public function leadType()
+    {
+        return $this->belongsTo(LeadType::class,'lead_type_id','id');
+    }
+
 }
