@@ -42,10 +42,10 @@ class AdminsController extends Controller
         $moduleName = $this->moduleName;
         if(isset($request->type) && $request->type == "UPDATE")
         {
-            $request->validate([
+            $validate =  $request->validate([
                 'firstName' => 'required',
                 'lastName' => 'required',
-                'email' => 'required|email',
+                'email' => 'required|email|unique:users,email,'.$request->id,
                 'password' => 'sometimes|nullable',
                 'password_confirmation' => 'sometimes|nullable|same:password'
             ]);
@@ -65,10 +65,10 @@ class AdminsController extends Controller
         }
         else
         {
-            $request->validate([
+           $validate = $request->validate([
                 'firstName' => 'required',
                 'lastName' => 'required',
-                'email' => 'required|email',
+                'email' => 'required|email|unique:users',
                 'password' => 'required',
                 'password_confirmation' => 'required|same:password'
             ]);
@@ -83,7 +83,7 @@ class AdminsController extends Controller
                 ]);
                 $message = $moduleName." Added Successfully.";
         }
-
+        dd($validate);
         return response()->json([true,$moduleName,$message]);
     }
 
@@ -106,4 +106,27 @@ class AdminsController extends Controller
         $message = $this->moduleName." Deleted Successfully.";
         return response()->json([true,$message]);
     }
+
+    public function checkEmailId(Request $request)
+    {
+        if($request->type == 'UPDATE')
+        {
+            $user = User::where('email',$request->email)->where('id','!=',$request->id)->get()->count();
+        }
+        else
+        {
+            $user = User::where('email', 'like', '%' . $request->email . '%')->get()->count();
+        }
+
+       if($user > 0)
+       {
+        return response()->json(false);
+       }
+       else
+       {
+        return response()->json(true);
+       }
+
+    }
+
 }

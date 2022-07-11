@@ -15,16 +15,16 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id='tbody'>
                                     @foreach ($clients as $client)
 
                                     <tr>
                                         <td class="c-7b">{{$client->firstName}}</td>
-                                        <td class="c-7b">{{$client->lastNames}}</td>
+                                        <td class="c-7b">{{$client->lastName}}</td>
                                         <td class="c-7b">{{$client->email}}</td>
-                                        <td class="c-7b">{{date('d-m-Y',strtotime($client->last_order_date))}}</td>
-                                        <td class="c-7b">{{$client->last_product_ordered}}</td>
-                                        <td class="c-7b">{{date('d-m-Y',strtotime($client->created_at))}}</td>
+                                        <td class="c-7b">{{isset($client->last_order_date)?date('d-m-Y',strtotime($client->last_order_date)):''}}</td>
+                                        <td class="c-7b">{{isset($client->last_product_ordered)?$client->last_product_ordered:''}}</td>
+                                        <td class="c-7b">{{date('d/m/y',strtotime($client->created_at))}}</td>
                                         <td class="c-7b tableCards">
                                             <div class="editDlbtn d-flex">
                                                 <a href="javascript:;">
@@ -44,7 +44,7 @@
                                                         </svg>
                                                     </button>
                                                 </a>
-                                                <button class="deleteBtn" data-id="{{$client->id}}">
+                                                <button class="deleteBtn delete_record" data-id="{{$client->id}}">
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -143,7 +143,7 @@
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn-primary" id='addClient_submit' style="min-width: 74px;"
-                                    data-bs-dismiss="modal" data-update="false">Add Client</button>
+                                     data-update="false">Add Client</button>
                             </div>
 
                         </div>
@@ -153,10 +153,17 @@
    @endsection
 
    @section('script')
+   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script type="text/html" id="filterDropdown">
     <div class="d-flex align-items-center filterPanelbtn">
 
-        <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
+        <div>
+            <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
+                <svg class="me-1" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.6666 2.66667H10.3333L9.66659 2H6.33325L5.66659 2.66667H3.33325V4H12.6666V2.66667ZM3.99992 12.6667C3.99992 13.0203 4.14039 13.3594 4.39044 13.6095C4.64049 13.8595 4.97963 14 5.33325 14H10.6666C11.0202 14 11.3593 13.8595 11.6094 13.6095C11.8594 13.3594 11.9999 13.0203 11.9999 12.6667V4.66667H3.99992V12.6667Z" fill="#fff"/>
+                </svg>
+            </button>
+        </div>
 
         <div class="button-dropdown position-relative">
             <button style="min-width: 104px;" class="btn-primary f-500 dropdown-toggle">
@@ -168,27 +175,9 @@
                 </div>
                 <div class="cardsBody settingWrpr">
                     <div class="form-group">
-                        <label class="c-gr f-500 f-16 w-100 mb-2">Leads Type</label>
-                        <select id='leadType'>
-                            <option value="hide">Select lead type</option>
-                            @foreach ($leadType as $ld)
-                            <option value='{{$ld->id}}'>{{$ld->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="c-gr f-500 f-16 w-100 mb-2">Leads Age</label>
-                        <select id='leadAge'>
-                            <option value="hide">Select leads age</option>
-                            @foreach ($ageGroup as $ag)
-                            <option value='{{$ag->id}}'>{{$ag->leadType->name}} | {{$ag->age_from}} - {{$ag->age_to}} Days old</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                        <select id='state'>
-                            <option value="hide">Select state</option>
+                        <select id='stateDD'>
+                            <option value="">Select state</option>
                             @foreach ($states as $state)
                             <option value='{{$state}}'>{{$state}}</option>
                             @endforeach
@@ -208,6 +197,7 @@
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6932 14.2957L10.7036 9.31023C11.386 8.35146 11.791 7.1584 11.791 5.90142C11.791 2.64178 9.14704 0 5.8847 0C2.62254 0.00017572 0 2.64196 0 5.90142C0 9.16105 2.64397 11.8028 5.90631 11.8028C7.18564 11.8028 8.35839 11.3981 9.31795 10.7163L14.3076 15.7018C14.4994 15.8935 14.7553 16 15.0113 16C15.2672 16 15.523 15.8935 15.7149 15.7018C16.0985 15.2971 16.0985 14.6792 15.6935 14.2956L15.6932 14.2957ZM1.96118 5.90155C1.96118 3.72845 3.73104 1.98133 5.88465 1.98133C8.03826 1.9815 9.82938 3.72845 9.82938 5.90155C9.82938 8.07466 8.05952 9.82178 5.90591 9.82178C3.7523 9.82178 1.96118 8.05338 1.96118 5.90155Z" fill="#7B809A"/></svg>
 </script>
     <script>
+        var emailFlag ;
         $(document).ready(function () {
            var tbl = $('#example').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
@@ -232,7 +222,7 @@
 
             $('#showModel').on('click', function(e) {
                 e.preventDefault();
-                $('#addClient_title').text('Add Admin');
+                $('#addClient_title').text('Add Client');
                 $('#addClient').val('');
                 $('#addClient_submit').text('Add');
                 $('#addClient_submit').attr('data-update', 'false');
@@ -246,44 +236,177 @@
 
             $('#addClient_submit').on('click', function(e) {
                 e.preventDefault();
+                var email = $('#email').val();
                 var mainFlag = checkValidation();
+                var type = '';
                 id = $("#client_id").val();
                 if (id != '') {
-                    var type = "UPDATE";
+                    type = "UPDATE";
                 }
-
                 if(mainFlag == true)
                 {
                     var firstName = $('#firstName').val();
                     var lastName = $('#lastName').val();
-                    var email = $('#email').val();
                     var city = $('#city').val();
                     var state = $('#state').val();
                     var country = $('#country').val();
                     var ipAdrs = $('#ipAdrs').val();
 
-                    // });
-                    // $('.jserror').html('');
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('admin.client.store')}}",
+                        data:{
+                            firstName:firstName,
+                            lastName:lastName,
+                            email:email,
+                            city:city,
+                            state:state,
+                            country:country,
+                            ipAdrs:ipAdrs,
+                            id:id,
+                            type:type
+                        },
+                        success: function (res) {
+                            if (res[0] == true) {
+                                $('#addClient').modal('hide');
+                                $('.jserror').html('');
 
+                                clearFields();
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: res[1],
+                                    text: res[2],
+                                }).then(function() {
+                                    window.location.reload();
+                                });
+                            }
+                        },
+                        fail: function(xhr, textStatus, errorThrown) {
+                            alert('request failed');
+                        }
+                    });
+                    $('.jserror').html('');
                 }
+            });
+
+            $(document).on('click', '.editBtn', function(e) {
+                e.preventDefault();
+                clearFields();
+                $('.jserror').html('');
+                $('#addClient').modal('show');
+                $('#addClient_title').text('Edit Client');
+                $('#addClient_submit').text('Update');
+                $('#addClient_submit').attr('data-update', 'true');
+
+                var id = $(this).attr('data-id')
+                $('#client_id').val(id);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.client.edit') }}",
+                    data: {
+                        id: id
+                    },
+                    success: function(res) {
+                        console.log(res);
+                        $('#firstName').val(res['firstName']);
+                        $('#lastName').val(res['lastName']);
+                        $('#email').val(res['email']);
+                        $('#city').val(res['city']);
+                        $('#state').val(res['state']);
+                        $('#country').val(res['country']);
+                        $('#ipAdrs').val(res['ip_address']);
+                    }
+                });
 
             });
 
+            $(document).on('click', '.delete_record', function(e) {
+                var id = $(this).attr('data-id');
+                e.preventDefault();
+                let linkUrl = $(this).attr('href');
+                Swal.fire({
+                    title: '{{ __('Are you sure?') }}',
+                    text: "{{ __('You wont delete this Client!') }}",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '{{ __('Yes') }}',
+                    cancelButtonText: "{{ __('Cancel') }}"
+                }).then(result => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{route('admin.client.delete') }}",
+                            data: {
+                                id: id
+                            },
+                            success: function(res) {
+                                if (res[0] == true) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        res[1],
+                                        'success'
+                                    ).then(function() {
+                                        window.location.reload();
+                                    });
+                                }
+                            }
+                        });
+
+                    }
+                });
+            });
+
+            $(document).on('click','#apply',function(){
+
+                var state = $('#stateDD').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('admin.client.filter')}}",
+                    data:{
+                        state : state
+                    },
+                    success: function (response) {
+                        $('#tbody').html(response.html);
+                    }
+                });
+
+            });
+
+            $("#email").on('keyup',function()
+            {
+                var check = isEmail($(this).val())
+                if(check == false && $(this).val() != '')
+                {
+                    $(this).siblings('.jserror').css('color','red').html('Invalid Email.');
+                }
+                else
+                {
+                    var type = '';
+                    id = $("#client_id").val();
+                    if (id != '') {
+                        type = "UPDATE";
+                    }
+                    var isValid = checkUniqueMail($(this).val(),type,id);
+                    if(isValid == false && $(this).val() != '')
+                    {
+                        $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
+                    }
+                    else
+                    {
+                         $(this).siblings('.jserror').html('');
+                    }
+                }
+
+            });
         });
 
-        $("#email").on('keyup',function(){
-           var check = isEmail($(this).val())
-           if(check == false && $(this).val() != '')
-           {
-            $(this).siblings('.jserror').css('color','red').html('Invalid Email.');
-           }
-           else
-           {
-            $(this).siblings('.jserror').html('');
-           }
-        });
-
-        function isEmail(email) {
+        function isEmail(email)
+        {
             var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
              return regex.test(email);
         }
@@ -315,7 +438,8 @@
                     return false;
                 }
         }
-        function clearFields() {
+        function clearFields()
+        {
                 $('#firstName').val('');
                 $('#lastName').val('');
                 $('#email').val('');
@@ -323,8 +447,34 @@
                 $('#state').val('');
                 $('#country').val('');
                 $('#ipAdrs').val('');
+        }
 
-            }
+        function checkUniqueMail(email,type)
+        {
+            $.ajax({
+                type: "post",
+                url: "{{route('admin.client.checkEmailId')}}",
+                data:{
+                    email:email,
+                    type:type,
+                    id:id
+                },
+                success: function (response) {
+                    console.log(response);
+                    if(response == false)
+                    {
+                        $('#email').siblings('.jserror').css('color', 'red').html('Email Already Exist');
+                       emailFlag = false;
+                    }
+                    else
+                    {
+                        emailFlag = true;
+                    }
+                }
+            });
+
+            return emailFlag;
+        }
 
     </script>
 @endsection

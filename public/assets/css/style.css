@@ -34,6 +34,13 @@
     font-style: normal;
     font-display: swap;
 }
+@font-face {
+    font-family: 'Roboto Black';
+    src: url(../fonts/Roboto-Black.ttf) format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 
 
 .main{
@@ -77,11 +84,11 @@ a{
 input::-webkit-input-placeholder { /* Edge */
     color: #7B809A !important;
 }
-
+  
 input:-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #7B809A !important;
 }
-
+  
 input::placeholder {
     color: #7B809A !important;
 }
@@ -140,6 +147,9 @@ button:disabled svg path{
 .bottom-1{
     bottom: 1px;
 }
+.mb-16{
+    margin-bottom: 16px !important;
+}
 /* colors */
 .c-primary{
     color: #4C26AA !important;
@@ -171,6 +181,16 @@ button:disabled svg path{
 .c-4b{
     color: #4BA64F !important;
 }
+.c-fb{
+    color: #FB8E03 !important;
+}
+.c-4c{
+    color: #4C26AA !important;
+}
+.c-46{
+    color: #46679D !important;
+}
+
 /* fonts */
 .f-10{
     font-size: 10px !important;
@@ -187,12 +207,25 @@ button:disabled svg path{
 .f-18{
     font-size: 18px !important;
 }
+.f-20{
+    font-size: 20px !important;
+}
 .f-22{
     font-size: 22px !important;
 }
 .f-24{
     font-size: 24px !important;
 }
+.f-28{
+    font-size: 28px !important;
+}
+.f-30{
+    font-size: 30px !important;
+}
+.f-36{
+    font-size: 36px !important;
+}
+
 
 /* font family */
 .f-300{
@@ -207,6 +240,10 @@ button:disabled svg path{
 .f-700{
     font-family: 'Roboto Bold' !important;
 }
+.f-800{
+    font-family: 'Roboto Black' !important;
+}
+
 .devider{
     background: #F0F2F5;
     width: 100%;
@@ -288,7 +325,7 @@ button:disabled svg path{
     border-radius: 8px;
     font-family: 'Roboto Medium' !important;
     color: #4F4F52;
-    max-height: 255px;
+    max-height: 205px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
     overflow: auto;
 }
@@ -408,8 +445,15 @@ aside::-webkit-scrollbar-thumb
 aside .userProfile{
     border-top: 1px solid #FFFFFF;
     border-bottom: 1px solid #FFFFFF;
-    padding: 20px 15px;
+    padding: 10px 0;
     margin: 20px 0;
+}
+aside .userProfile [data-bs-toggle="collapse"]{
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+aside .userProfile [data-bs-toggle="collapse"]:hover{
+    background: #6666EA50;
 }
 aside .userProfile img{
     border-radius: 50px;
@@ -433,6 +477,7 @@ aside .menuList li svg{
 }
 aside .menuList li{
     margin-bottom: 10px;
+    position: relative;
 }
 aside .menuList li a{
     padding: 10px 20px;
@@ -449,6 +494,22 @@ aside .menuList li a:hover{
 }
 
 /* header */
+header li.middleContent.p-0 {
+    padding: 0 !important;
+}
+@media (min-width:577px) {
+    header .userMenu .dropdown-menu {
+        left: auto !important;
+        right: 0 !important;
+    }
+}
+header .userMenu .dropdown-menu{
+    min-width: 200px;
+}
+header .userMenu .dropdown-menu li a{
+    padding: 10px 20px !important;
+    border: none;
+}
 header{
     border-bottom: 1px solid #F0F2F5;
     padding: 18px 50px 18px 20px;
@@ -465,6 +526,7 @@ header ul li .badges{
     top: -3px;
     left: 15px;
     min-height: 20px;
+    pointer-events: none;
 }
 
 /* breadcrumb */
@@ -499,6 +561,10 @@ header ul li .badges{
 }
 .cardsBody{
     padding: 15px 24px;
+}
+.settingWrpr .select-styled{
+    color: #4F4F52 !important;
+    font-family: 'Roboto Medium' !important;
 }
 .settingWrpr .cardsBody{
     padding: 30px 24px;
@@ -750,7 +816,7 @@ header ul li .badges{
 .importWrpr .stepThree table th{
     background: transparent !important;
     border-bottom: 1px solid #F0F2F5 !important;
-}
+}   
 .importWrpr .stepThree table td{
     color: #7B809A !important;
     font-family: "Roboto Regular" !important;
@@ -793,14 +859,11 @@ div.dataTables_wrapper div.dataTables_filter label{
         width: 328px;
     }
 }
-
+    
 .filterHeader{
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-div.dataTables_wrapper div.dataTables_info{
-    padding-top: 0;
 }
 div.dataTables_wrapper div.dataTables_paginate ul.pagination, table.dataTable{
     margin: 0 !important;
@@ -857,4 +920,130 @@ div.dataTables_wrapper div.dataTables_info {
     padding: 15px;
     width: 100%;
     top: 50px;
+}
+
+/* stats  */
+
+.statsWrpr .cardTop{
+    background: linear-gradient(180deg, #E93B77 0%, #DA1F63 100%);
+    box-shadow: 0px 2px 6px rgba(220, 34, 101, 0.36);
+    border-radius: 8px;
+    padding: 25px;
+    position: absolute;
+    top: -30px;
+    left: 24px;
+    width: calc(100% - 48px);
+}
+.statsCard .cards{
+    padding: 24px;
+    min-height: 100%;
+}
+.statsCard .cards li{
+    border-bottom: 1px solid #F0F2F5;
+    padding: 15px 0;
+}
+.statsCard .cards .cardYearList li:first-child{
+    margin-top: 70px;
+    border-top: 1px solid #F0F2F5;
+}
+.statsCard{
+    height: 100%;
+}
+.statsWrpr .statRow2{
+    margin-top: 60px;
+}
+.statsWrpr .statRow2 .cardTop{
+    width: 95px;
+    min-width: 95px;
+    height: 95px;
+    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
+}
+.statsWrpr .settingWrpr .cardsFooter {
+    margin: 0 -24px;
+    border-color: #4a24a947;
+    margin-top: 30px;
+}
+.statsWrpr .statRow2 .statsCard{
+    margin-bottom: 60px;
+}
+.statsWrpr .totalLead .cardYearList{
+    padding: 24px;
+}
+.statsWrpr .totalLead .cardYearList div{
+    margin-bottom: 20px;
+}
+.statsWrpr .totalLead .cardYearList div:first-child{
+    margin-top: 10px;
+}
+
+/* dashboard */
+.dashWrpr .cardTop{
+    position: initial !important;
+    padding: 15px;
+}
+.dashWrpr .dashRow .cardTop {
+    border-radius: 12px 12px 0 0;
+    margin: 0 -25px;
+    padding: 15px 24px;
+    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
+    box-shadow: none !important;
+}
+.dashWrpr .statsCard .cards .cardYearList li:first-child{
+    margin-top: 0 !important;
+}
+.dashWrpr .dashRow .cardYearList .tableCards{
+    margin: 0 -24px;
+}
+
+/* notification */
+.notificationBody li a{
+    padding: 15px 24px;
+    display: block;
+    position: relative;
+    border-bottom: 1px solid #4720a642;
+}
+.notificationBody li a:hover{
+    background: #441ea30f;
+}
+.notificationBody li:last-child a{
+    border: 0;
+}
+.notificationBody {
+    top: 20px !important;
+}
+.notificationBody .cardsBody{
+    max-height: 300px;
+    overflow: auto;
+}
+.notificationBody .cardsBody::-webkit-scrollbar-track
+{
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+.notificationBody .cardsBody::-webkit-scrollbar
+{
+	width:6px;
+	background-color: #F5F5F5;
+}
+
+.notificationBody .cardsBody::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #4822a6;
+}
+
+.tooltip{
+    left: 20px !important;
+}
+.tooltip-inner {
+    font-family: 'Roboto Regular';
+    font-size: 16px;
+    background-color: #6666ea;
+}
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before, .bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: #6666ea;
+}
+.tooltip.show{
+    opacity: 1 !important;
 }
