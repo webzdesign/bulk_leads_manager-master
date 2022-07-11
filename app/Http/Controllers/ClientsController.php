@@ -22,5 +22,9 @@ class ClientsController extends Controller
         return view($this->view.'/index',compact('moduleName','clients','leadType','ageGroup','states'));
     }
 
+    public function store(Request $request)
+    {
+        dd($request->all());
+    }
 
 }

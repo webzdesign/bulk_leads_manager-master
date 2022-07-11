@@ -61,7 +61,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::group(['prefix' => 'clients'], function(){
             Route::get('/', [ClientsController::class, 'index'])->name('admin.clients.index');
-            Route::post('/store',[ClientsControlle::class,'store'])->name('admin.client.store');
+            Route::post('/store',[ClientsController::class,'store'])->name('admin.client.store');
         });
 
         /*New order route*/

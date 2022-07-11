@@ -143,7 +143,7 @@
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn-primary" id='addClient_submit' style="min-width: 74px;"
-                                    data-bs-dismiss="modal" data-update="false">Add Client</button>
+                                     data-update="false">Add Client</button>
                             </div>
 
                         </div>
@@ -262,28 +262,59 @@
                     var country = $('#country').val();
                     var ipAdrs = $('#ipAdrs').val();
 
-                    // });
-                    // $('.jserror').html('');
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('admin.client.store')}}",
+                        data:{
+                            firstName:firstName,
+                            lastName:lastName,
+                            email:email,
+                            city:city,
+                            state:state,
+                            country:country,
+                            ipAdrs:ipAdrs
+                        },
+                        success: function (response) {
+                            if (res[0] == true) {
+                                $('#addClient').modal('hide');
+                                $('.jserror').html('');
 
+                                clearFields();
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: res[1],
+                                    text: res[2],
+                                }).then(function() {
+                                    window.location.reload();
+                                });
+                            }
+                        },
+                        fail: function(xhr, textStatus, errorThrown) {
+                            alert('request failed');
+                        }
+                    });
+                    $('.jserror').html('');
                 }
+            });
 
+            $("#email").on('keyup',function()
+            {
+                var check = isEmail($(this).val())
+                if(check == false && $(this).val() != '')
+                {
+                    $(this).siblings('.jserror').css('color','red').html('Invalid Email.');
+                }
+                else
+                {
+                    $(this).siblings('.jserror').html('');
+                }
             });
 
         });
 
-        $("#email").on('keyup',function(){
-           var check = isEmail($(this).val())
-           if(check == false && $(this).val() != '')
-           {
-            $(this).siblings('.jserror').css('color','red').html('Invalid Email.');
-           }
-           else
-           {
-            $(this).siblings('.jserror').html('');
-           }
-        });
-
-        function isEmail(email) {
+        function isEmail(email)
+        {
             var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
              return regex.test(email);
         }
@@ -315,7 +346,8 @@
                     return false;
                 }
         }
-        function clearFields() {
+        function clearFields()
+        {
                 $('#firstName').val('');
                 $('#lastName').val('');
                 $('#email').val('');
@@ -323,8 +355,7 @@
                 $('#state').val('');
                 $('#country').val('');
                 $('#ipAdrs').val('');
-
-            }
+        }
 
     </script>
 @endsection
