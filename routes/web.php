@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminsController;
 use App\Http\Controllers\AgeGroupController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ImportHistoryController;
 use App\Http\Controllers\LeadsController;
 use App\Http\Controllers\LeadTypes;
@@ -61,6 +62,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/edit',[AdminsController::class,'edit'])->name('admin.edit');
             Route::post('/delete',[AdminsController::class,'delete'])->name('admin.delete');
             Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
+        });
+
+        Route::group(['prefix' => 'import'], function() {
+            Route::get('/',[ImportController::class, 'index'])->name('admin.import.index');
+            Route::post('/importCSV',[ImportController::class, 'importCSV'])->name('admin.import.importCSV');
+            Route::post('/start_upload',[ImportController::class, 'start_upload'])->name('admin.import.start_upload');
         });
 
         Route::group(['prefix' => 'clients'], function(){
