@@ -4,11 +4,15 @@ use App\Http\Controllers\AdminsController;
 use App\Http\Controllers\AgeGroupController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImportHistoryController;
+use App\Http\Controllers\LeadsController;
 use App\Http\Controllers\LeadTypes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\NewOrderController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\StatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +70,24 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/delete',[ClientsController::class,'delete'])->name('admin.client.delete');
             Route::post('/filter',[ClientsController::class,'filter'])->name('admin.client.filter');
         });
+
+        Route::group(['prefix' => 'import-history'], function(){
+            Route::get('/', [ImportHistoryController::class, 'index'])->name('admin.import-history');
+        });
+
+        Route::group(['prefix' => 'leads'], function(){
+            Route::get('/', [LeadsController::class, 'index'])->name('admin.leads');
+        });
+
+        Route::group(['prefix' => 'orders'], function(){
+            Route::get('/', [OrdersController::class, 'index'])->name('admin.orders');
+        });
+
+        Route::group(['prefix' => 'stats'], function(){
+            Route::get('/', [StatsController::class, 'index'])->name('admin.stats');
+        });
+
+
 
         /*New order route*/
         Route::group(['prefix' => 'new-order'], function(){

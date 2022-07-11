@@ -24,7 +24,7 @@
                                         <td class="c-7b">{{$client->email}}</td>
                                         <td class="c-7b">{{isset($client->last_order_date)?date('d-m-Y',strtotime($client->last_order_date)):''}}</td>
                                         <td class="c-7b">{{isset($client->last_product_ordered)?$client->last_product_ordered:''}}</td>
-                                        <td class="c-7b">{{date('d-m-Y',strtotime($client->created_at))}}</td>
+                                        <td class="c-7b">{{date('d/m/y',strtotime($client->created_at))}}</td>
                                         <td class="c-7b tableCards">
                                             <div class="editDlbtn d-flex">
                                                 <a href="javascript:;">

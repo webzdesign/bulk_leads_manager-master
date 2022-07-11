@@ -17,6 +17,35 @@
         display: none;
     }
 }
+
+
+
+@media (max-width:1440px) {
+    .loginBanner img,
+    .loginBanner{
+        height: 370px;
+    }
+    .statsCard .cardTop div{
+        font-size: 20px !important;
+    }
+}
+@media (max-width:1200px) {
+    .importWrpr .uploadStatus .colOne {
+        min-width: 160px;
+    }
+    .statsWrpr .cardTop{
+        padding: 15px;
+    }
+    .statsCard .cardTop div{
+        font-size: 18px !important;
+    }
+    .statsCard .cards .cardYearList li:first-child {
+        margin-top: 30px;
+    }
+    .dashWrpr .statsCard .cardTop div{
+        font-size: 16px !important;
+    }
+}
 @media (max-width:1024px) {
     aside{
         transform: translateX(-260px);
@@ -37,18 +66,6 @@
         display: block !important;
     }
 }
-
-@media (max-width:1440px) {
-    .loginBanner img,
-    .loginBanner{
-        height: 370px;
-    }
-}
-@media (max-width:1200px) {
-    .importWrpr .uploadStatus .colOne {
-        min-width: 160px;
-    }
-}
 @media (max-width:992px) {
     .loginBanner img,
     .loginBanner{
@@ -59,6 +76,9 @@
     }
 }
 @media (max-width:768px) {
+    .statsWrpr .statRow2 .statsCard, .dashWrpr .statsCard{
+        margin-top: 0 !important;
+    }
     .d-block-768{
         display: block !important;
     }
@@ -70,6 +90,9 @@
     }
     div.dataTables_wrapper div.dataTables_info{
         margin-bottom: 10px;
+    }
+    .statsWrpr .statRow2 .col-md-6 .statsCard:last-child, .dashWrpr .mb-5 {
+        margin-bottom: 30px !important;
     }
     .importWrpr .pr-80{
         padding-right: 15px;
@@ -93,26 +116,76 @@
         min-width: 100%;
         margin-bottom: 5px;
     }
-    
+    .statsCard {
+        height: auto;
+        margin-top: 60px !important;
+    }
+    .statsWrpr .statRow .col-md-6:first-child .statsCard, .statsWrpr .statRow2{
+        margin-top: 30px !important;
+    }
 }
 @media (max-width:576px) {
-    .importWrpr .file-upload-wrapper:after, .f-14-500{
+    .importWrpr .file-upload-wrapper:after, .f-14-500, .dashWrpr .statsCard .cardTop div{
         font-size: 14px !important;
     }
     .importWrpr .uploadStatus .colOne, .importWrpr .uploadStatus .colTwo{
         font-size: 13px !important;
     }
-    .f-16-500{
+    .f-16-500, .statsCard .cardTop div{
         font-size: 16px !important;
     }
     .w-100-500{
         width: 100% !important;
     }
-    .breadcrumb h2{
+    .breadcrumb h2, .f-18-500{
         font-size: 18px !important;
+    }
+    .f-20-500{
+        font-size: 20px !important;
+    }
+    .position-initial-500{
+        position: initial !important;
+    }
+    .mb-20-500{
+        margin-bottom: 20px !important;
     }
     .d-block-500{
         display: block !important; 
+    }
+    .statsWrpr .statRow2  .cardTop svg{
+        margin-right: 0 !important;
+    }
+    .dashWrpr .statsCard .cards{
+        padding-top: 0 !important;
+    }
+    .statsWrpr .totalLead .cardYearList{
+        padding: 0 !important;
+    }
+    .statsWrpr .statRow2 .cardTop {
+        width: 65px;
+        min-width: 65px;
+        height: 65px;
+    }
+    .dashWrpr .dashRow .cardTop, .dashWrpr .dashRow .cardYearList .tableCards{
+        margin: 0 -15px;
+    }
+    header {
+        padding: 12px 30px 12px 15px;
+    }
+    .statsWrpr .settingWrpr .cardsFooter {
+        margin: 0 -15px;
+        padding-bottom: 0 !important;
+    }
+    .statsWrpr .totalLead .cardsHeader {
+        margin: 0 -15px;
+        padding-top: 0 !important;
+    }
+    .statsWrpr .totalLead .cardsHeader svg{
+        width: 30px;
+        margin-right: 10px !important;
+    }
+    .statsWrpr .totalLead .cardYearList div {
+        margin-bottom: 10px;
     }
     .filterDropdownBx{
         left: 0;
@@ -120,8 +193,19 @@
         width: calc(100% - 0px);
         min-width: auto;
     }
-    .settingWrpr .cardsFooter, .importWrpr .fileProgress, .importWrpr .uploadStatus, .middleContent, .tableCards .cardsHeader, .cardsHeader, .importWrpr .fileUploadBx {
+    header .notificationDrop .notificationBody.filterDropdownBx {
+        top: 10px !important;
+        width: calc(100% - 30px) !important;
+        left: 45px !important;
+    }
+    header .userMenu .dropdown-menu{
+        min-width: 170px;
+    }
+    footer, .dashWrpr .dashRow .cardTop, .notificationBody li a, .statsCard .cards, .settingWrpr .cardsFooter, .importWrpr .fileProgress, .importWrpr .uploadStatus, .middleContent, .tableCards .cardsHeader, .cardsHeader, .importWrpr .fileUploadBx {
         padding: 15px !important;
+    }
+    header ul li{
+        margin-left: 20px;
     }
     .loginBanner img,
     .loginBanner{
@@ -167,7 +251,17 @@
     #filterBtn{
         margin-top: 10px;
     }
-    
+    .statsWrpr .cardTop{
+        left: 12px;
+        width: calc(100% - 24px);
+    }
+    .statsCard .cardTop svg{
+        margin-right: 10px !important;
+        width: 25px;
+    }
+    .statsCard .cards li{
+        padding: 12px 0;
+    }
 }
 
 @media (max-width:450px) {
