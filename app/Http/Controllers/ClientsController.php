@@ -96,4 +96,26 @@ class ClientsController extends Controller
 
     }
 
+    public function checkEmailId(Request $request)
+    {
+        if($request->type == 'UPDATE')
+        {
+            $client = Client::where('email',$request->email)->where('id','!=',$request->id)->get()->count();
+        }
+        else
+        {
+            $client = Client::where('email', 'like', '%' . $request->email . '%')->get()->count();
+        }
+
+       if($client > 0)
+       {
+        return response()->json(false);
+       }
+       else
+       {
+        return response()->json(true);
+       }
+
+    }
+
 }
