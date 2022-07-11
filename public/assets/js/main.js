@@ -1,11 +1,35 @@
 
 $(document).ready(function(){
-
+    
+    var tooltipCus = $('[data-bs-toggle="tooltip"]');
+    tooltipCus.tooltip('disable');
     $('.menuicn').click(function () {
         $('aside').toggleClass('sidebarClose');
         $('.d-none-add').addClass('displayNone');
         $('.sidebarOverlay').removeClass('d-none');
+
+        
+        if( $('aside').hasClass('sidebarClose') ){
+            
+            tooltipCus.tooltip('enable')
+        }else{
+            tooltipCus.tooltip('disable')
+        }
+        
+
     });
+
+    $(document).load($(window).bind("resize", checkPosition));
+
+    function checkPosition()
+    {
+        if($(window).width() < 1024)
+        {
+            tooltipCus.tooltip('disable');
+        } else {
+            tooltipCus.tooltip('enable');
+        }
+    }
     
     $('.sidebarOverlay').click(function(){
         $('.sidebarOverlay').addClass('d-none');
