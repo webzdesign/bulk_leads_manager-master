@@ -25,6 +25,7 @@ class ClientsController extends Controller
     public function store(Request $request)
     {
         $moduleName = $this->moduleName;
+        
         $request->validate([
             'firstName' => 'required',
             'lastName' => 'required',

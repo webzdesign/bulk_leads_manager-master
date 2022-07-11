@@ -62,6 +62,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/edit',[AdminsController::class,'edit'])->name('admin.edit');
             Route::post('/delete',[AdminsController::class,'delete'])->name('admin.delete');
             Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
+            Route::post('/checkEmailId',[AdminsController::class,'checkEmailId'])->name('admin.checkEmailId');
         });
 
         Route::group(['prefix' => 'import'], function() {

@@ -157,7 +157,13 @@
    <script type="text/html" id="filterDropdown">
     <div class="d-flex align-items-center filterPanelbtn">
 
-        <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
+        <div>
+            <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
+                <svg class="me-1" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.6666 2.66667H10.3333L9.66659 2H6.33325L5.66659 2.66667H3.33325V4H12.6666V2.66667ZM3.99992 12.6667C3.99992 13.0203 4.14039 13.3594 4.39044 13.6095C4.64049 13.8595 4.97963 14 5.33325 14H10.6666C11.0202 14 11.3593 13.8595 11.6094 13.6095C11.8594 13.3594 11.9999 13.0203 11.9999 12.6667V4.66667H3.99992V12.6667Z" fill="#fff"/>
+                </svg>
+            </button>
+        </div>
 
         <div class="button-dropdown position-relative">
             <button style="min-width: 104px;" class="btn-primary f-500 dropdown-toggle">
@@ -385,8 +391,8 @@
                     if (id != '') {
                         type = "UPDATE";
                     }
-                     var isValid = checkUniqueMail($(this).val(),type,id);
-                     if(isValid == false && $(this).val() != '')
+                    var isValid = checkUniqueMail($(this).val(),type,id);
+                    if(isValid == false && $(this).val() != '')
                     {
                         $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
                     }
