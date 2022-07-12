@@ -36,7 +36,7 @@
     <h3 class="f-12 f-700 text-white">MAIN MENU</h3>
     <ul class="p-0 mt-3 menuList">
         <li>
-            <a data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard" href="#" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('dashboard') ? 'active' : '' }}" >
+            <a data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard" href="{{ route('home') }}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('dashboard') ? 'active' : '' }}" >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="7" height="10" rx="1" fill="white"/>
                     <rect y="11" width="7" height="5" rx="1" fill="white"/>
