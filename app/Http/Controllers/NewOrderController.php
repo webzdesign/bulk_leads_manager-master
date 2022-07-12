@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
-use Auth;
-use Validator;
+use Auth,Validator,DB;
 
 class NewOrderController extends Controller
 {
@@ -18,7 +17,7 @@ class NewOrderController extends Controller
     }
 
     public function create_client(Request $request){
-        $response_arrray = ['status' => false, 'message' => ''];
+        $response_arrray = ['message' => ''];
 
         $validation = Validator::make($request->all(),[
             'first_name' => ['required'],
@@ -29,24 +28,22 @@ class NewOrderController extends Controller
             'country' => ['required'],
             'ip_address' => ['required'],
         ], [
-            'first_name.required' => "Please Enter First Name.",
-            'last_name.required' => "Please Enter First Name.",
-            'email.required' => "Please Enter First Name.",
-            'email.email' => "Please Enter Valid Email Formate.",
-            'email.unique' => "Email Already Exist.",
-            'city.required' => "Please Enter First Name.",
-            'state.required' => "Please Enter First Name.",
-            'country.required' => "Please Enter First Name.",
-            'ip_address.required' => "Please Enter First Name.",
+            'first_name.required' => "Please enter first name.",
+            'last_name.required' => "Please enter last name.",
+            'email.required' => "Please enter email address.",
+            'email.email' => "Please enter valid email formate.",
+            'email.unique' => "Email already exist.",
+            'city.required' => "Please enter city.",
+            'state.required' => "Please enter state.",
+            'country.required' => "Please enter country.",
+            'ip_address.required' => "Please enter IP address.",
         ]);
 
-        if($validation->errors()){
-            // foreach ($validation->errors() as $key => $value) {
-                $response_arrray[] = $validation->errors();
-                // break;
-            // }
-            // dd($response_arrray);
-            return response()->json([true,$this->moduleName,$response_arrray]);
+        if ($validation->errors()->all()) {
+            foreach ($validation->errors()->all() as $error) {
+                $response_arrray['message'] = $error;
+                return response()->json([false, $response_arrray]);
+            }
         }else {
             $records = array(
                 'firstName' => $request['first_name'],
@@ -61,9 +58,24 @@ class NewOrderController extends Controller
             );
             Client::create($records);
 
-            $response_arrray['status'] = true;
             $response_arrray['message'] = "Client Added Successfully.";
+            return response()->json([false, $response_arrray]);
         }
-        return response()->json([true,$this->moduleName,$response_arrray]);
+    }
+
+    public function email_filter(Request $request){
+        DB::enableQueryLog();
+        $html = '';
+
+        $records = Client::select('*')->where('email','LIKE', '%'.$request->email.'%')->get();
+
+        if($records->isNotEmpty() && $request->email !=''){
+            foreach ($records as $key => $value) {
+                $html .= '<div class="col-md-12"><a href="javascript:void(0)" class="client_details" data-id='.$value->id.' data-first_name='.$value->firstName.' data-last_name='.$value->lastName.' data-email='.$value->email.' data-city='.$value->city.' data-state='.$value->state.' data-country='.$value->country.' data-ip_address='.$value->ip_address.'>'.$value->email.'</a></div>';
+            }
+            return response()->json([true, ['html' => $html]]);
+        }else{
+            return response()->json([false, '']);
+        }
     }
 }

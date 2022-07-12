@@ -97,12 +97,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::get('/', [StatsController::class, 'index'])->name('admin.stats');
         });
 
-
-
         /*New order route*/
         Route::group(['prefix' => 'new-order'], function(){
             Route::get('/', [NewOrderController::class, 'index'])->name('admin.new-order');
             Route::post('/create-client', [NewOrderController::class, 'create_client'])->name('admin.create-client');
+            Route::post('/email-filter',[NewOrderController::class,'email_filter'])->name('admin.client.email-filter');
         });
     });
 });
