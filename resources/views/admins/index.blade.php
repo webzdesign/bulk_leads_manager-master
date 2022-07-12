@@ -2,7 +2,7 @@
 @section('content')
     <div class="middleContent">
 
-            <div class="cards">
+            <div class="cards tableCards">
                 <table class="table datatable" id="example" style="width:100%">
                     <thead>
                         <tr>
@@ -14,8 +14,8 @@
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($users as $user)
+                    <tbody id='tbody'>
+                        {{-- @foreach ($users as $user)
                         <tr>
                             <td class="c-7b">{{$user->firstName}}</td>
                             <td class="c-7b">{{$user->lastName}}</td>
@@ -45,7 +45,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
             </div>
@@ -218,13 +218,38 @@
                 )
             @endif
 
-            var datatable = $('#example').DataTable({
+            var datatable = $('.datatable').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
                 "ordering": false,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search here"
-                }
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('admins.getData') }}",
+                    "dataType": "json",
+                    "type": "GET",
+                },
+                columns: [
+                    {
+                        data: 'firstName'
+                    },
+                    {
+                        data: 'lastName'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'lastlogin'
+                    },
+                    {
+                        data: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
             });
 
             $('#filterInput').html($('#searchPannel').html());
@@ -233,6 +258,8 @@
             $('#filterInput > input').keyup(function(){
                 datatable.search($(this).val()).draw();
             });
+
+
 
             $('#showModel').on('click', function(e) {
                 e.preventDefault();
@@ -299,8 +326,9 @@
                                     icon: "success",
                                     title: res[1],
                                     text: res[2],
+
                                 }).then(function() {
-                                    window.location.reload();
+                                    datatable.draw();
                                 });
                             }
                         },
@@ -309,9 +337,7 @@
                         }
                     });
                     $('.jserror').html('');
-
                 }
-
             });
 
 
@@ -344,7 +370,7 @@
                                         res[1],
                                         'success'
                                     ).then(function() {
-                                        window.location.reload();
+                                        datatable.draw();
                                     });
                                 }
                             }
@@ -392,6 +418,7 @@
             });
 
             $("#email").on('keyup',function(){
+                $(this).siblings('.jserror').html('');
            var check = isEmail($(this).val())
            if(check == false && $(this).val() != '')
            {
@@ -400,12 +427,13 @@
            else
            {
                     var type = '';
-                    id = $("#client_id").val();
+                    id = $("#admin_id").val();
                     if (id != '') {
                         type = "UPDATE";
                     }
                     var isValid = checkUniqueMail($(this).val(),type,id);
-                    if(isValid == false && $(this).val() != '')
+                    console.log(isValid);
+                    if(isValid)
                     {
                         $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
                     }
@@ -500,6 +528,7 @@
 
         function checkUniqueMail(email,type)
         {
+            var emailFlag = false;
             $.ajax({
                 type: "post",
                 url: "{{route('admin.checkEmailId')}}",
@@ -510,9 +539,8 @@
                 },
                 success: function (response) {
                     console.log(response);
-                    if(response == false)
+                    if(response == 0)
                     {
-                        $('#email').siblings('.jserror').css('color', 'red').html('Email Already Exist');
                        emailFlag = false;
                     }
                     else

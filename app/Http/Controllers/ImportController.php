@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Lead;
 use App\Models\LeadType;
-use DateTime;
 use Illuminate\Http\Request;
+use PHPExcel_IOFactory;
 
 class ImportController extends Controller
 {
@@ -61,7 +61,18 @@ class ImportController extends Controller
 
     public function start_upload(Request $request)
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+
         $lead = Lead::find($request->id);
-        dd($lead);
+        $fileName = $lead->file_name . "_" . strtotime($lead->uploaded_datetime). ".csv";
+
+        $url = storage_path("app/import/$fileName");
+		$excelReader = PHPExcel_IOFactory::createReaderForFile($url);
+		$excelObj = $excelReader->load($url);
+		$worksheet = $excelObj->getActiveSheet();
+		$lastRow = $worksheet->getHighestRow();
+
+        return $lastRow;
     }
 }

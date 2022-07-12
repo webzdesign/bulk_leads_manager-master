@@ -2,7 +2,7 @@
 @section('content')
                 <div class="middleContent">
                     <div class="importWrpr">
-                        <div class="cards">
+                        <div class="cards tableCards">
                             <table id="example" class="table" style="width:100%">
                                 <thead>
                                     <tr>
@@ -16,7 +16,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id='tbody'>
-                                    @foreach ($clients as $client)
+                                    {{-- @foreach ($clients as $client)
 
                                     <tr>
                                         <td class="c-7b">{{$client->firstName}}</td>
@@ -55,7 +55,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @endforeach --}}
 
                                 </tbody>
                             </table>
@@ -198,14 +198,48 @@
 </script>
     <script>
         var emailFlag ;
+        var statDD;
         $(document).ready(function () {
            var tbl = $('#example').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
                 "ordering": false,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search here"
-                }
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('admin.clients.getData') }}",
+                    "dataType": "json",
+                    "type": "GET",
+                    "data":{
+                        state: function() {
+						    return $("#stateDD").val();
+					    }
+                    }
+                },
+                columns: [
+                    {
+                        data: 'firstName'
+                    },
+                    {
+                        data: 'lastName'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'lastOrderDate'
+                    },
+                    {
+                        data: 'lastProductOrder'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
             });
 
             $('#filterInput').html($('#searchPannel').html());
@@ -278,7 +312,7 @@
                                     title: res[1],
                                     text: res[2],
                                 }).then(function() {
-                                    window.location.reload();
+                                   tbl.draw();
                                 });
                             }
                         },
@@ -350,7 +384,7 @@
                                         res[1],
                                         'success'
                                     ).then(function() {
-                                        window.location.reload();
+                                      tbl.draw();
                                     });
                                 }
                             }
@@ -362,19 +396,9 @@
 
             $(document).on('click','#apply',function(){
 
-                var state = $('#stateDD').val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('admin.client.filter')}}",
-                    data:{
-                        state : state
-                    },
-                    success: function (response) {
-                        $('#tbody').html(response.html);
-                    }
-                });
-
+                var statDD = $('#stateDD').val();
+                console.log(statDD);
+                tbl.draw();
             });
 
             $("#email").on('keyup',function()
@@ -392,7 +416,7 @@
                         type = "UPDATE";
                     }
                     var isValid = checkUniqueMail($(this).val(),type,id);
-                    if(isValid == false && $(this).val() != '')
+                    if(isValid == false)
                     {
                         $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
                     }
@@ -461,9 +485,8 @@
                 },
                 success: function (response) {
                     console.log(response);
-                    if(response == false)
+                    if(response == 0)
                     {
-                        $('#email').siblings('.jserror').css('color', 'red').html('Email Already Exist');
                        emailFlag = false;
                     }
                     else
