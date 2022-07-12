@@ -176,9 +176,9 @@
                             <h3 class="f-16 f-500 c-gr">Scanning the uploaded file, please wait...</h3>
                             <div class="progressBar d-flex align-items-center">
                                 <div class="progress w-100">
-                                    <div class="progress-bar" style="width:80%"></div>
+                                    <div class="progress-bar" style="width:0%"></div>
                                 </div>
-                                <span class="ms-3 c-19 f-16 f-500 f-14-500">80%</span>
+                                <span class="ms-3 c-19 f-16 f-500 f-14-500" id="progress-bar">0%</span>
                             </div>
                         </div>
                         <div class="row uploadStatus">
@@ -350,7 +350,7 @@
                 </div>
 
                 <div class="cardsFooter d-flex justify-content-end">
-                    <button class="btn-primary f-500 f-14" id="next" disabled>Save & continue import</button>
+                    <button class="btn-primary f-500 f-14" id="next">Save & continue import</button>
                 </div>
             </div>
         </div>
@@ -410,7 +410,14 @@
                                     $('#invalidFile_error').removeClass('d-none');
                                 } else {
                                     setpwizard();
-                                    import_start(res.id);
+
+                                    var importStart = import_start(res.id)
+                                    $('#next').prop('disabled', true);
+
+                                    if(importStart == true) {
+                                        $('#next').prop('disabled', false);
+                                    }
+
                                     $('#invalidFile_error').addClass('d-none');
                                 }
                             }
@@ -462,13 +469,29 @@
 
             function import_start(id)
             {
+
                 $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+
+                        xhr.upload.addEventListener("progress", function(evt){
+                            console.log(evt);
+                            if (evt.lengthComputable) {
+                                var percentComplete = Math.ceil((evt.loaded / evt.total) * 100);
+                                $(".progress-bar").width(percentComplete + '%');
+                                $("#progress-bar").text(percentComplete + '%');
+                                console.log(percentComplete);
+                            }
+                        }, false);
+
+                    return xhr;
+                    },
                     type: "POST",
                     url: "{{ route('admin.import.start_upload') }}",
                     data: {id, id},
                     success: function(res) {
-
-                    }
+                        alert(res)
+                    },
                 });
             }
 
