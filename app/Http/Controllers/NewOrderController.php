@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
-use Auth,Validator,DB;
+use App\Models\AgeGroup;
+use App\Models\LeadFields;
+use App\Models\LeadType;
+use Auth,Validator,DB,ckeditor;
 
 class NewOrderController extends Controller
 {
@@ -12,8 +15,9 @@ class NewOrderController extends Controller
 
     public function index(){
         $moduleName = $this->moduleName;
+        $LeadTypes = LeadType::orderBy('id','desc')->get();
 
-        return view('new_order/index',compact('moduleName'));
+        return view('new_order/index',compact('moduleName','LeadTypes'));
     }
 
     public function create_client(Request $request){

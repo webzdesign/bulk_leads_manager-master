@@ -14,6 +14,7 @@
 <script src="{{ asset('public/assets/js/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('public/assets/js/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script defer src="{{ asset('public/assets/js/main.js') }}"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
 
 <script>
     $(document).ready(function () {
