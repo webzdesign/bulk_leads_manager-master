@@ -2,7 +2,7 @@
 @section('content')
                 <div class="middleContent">
                     <div class="importWrpr">
-                        <div class="cards">
+                        <div class="cards tableCards">
                             <table id="example" class="table" style="width:100%">
                                 <thead>
                                     <tr>
@@ -16,7 +16,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id='tbody'>
-                                    @foreach ($clients as $client)
+                                    {{-- @foreach ($clients as $client)
 
                                     <tr>
                                         <td class="c-7b">{{$client->firstName}}</td>
@@ -55,7 +55,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @endforeach --}}
 
                                 </tbody>
                             </table>
@@ -157,7 +157,13 @@
    <script type="text/html" id="filterDropdown">
     <div class="d-flex align-items-center filterPanelbtn">
 
-        <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
+        <div>
+            <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
+                <svg class="me-1" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.6666 2.66667H10.3333L9.66659 2H6.33325L5.66659 2.66667H3.33325V4H12.6666V2.66667ZM3.99992 12.6667C3.99992 13.0203 4.14039 13.3594 4.39044 13.6095C4.64049 13.8595 4.97963 14 5.33325 14H10.6666C11.0202 14 11.3593 13.8595 11.6094 13.6095C11.8594 13.3594 11.9999 13.0203 11.9999 12.6667V4.66667H3.99992V12.6667Z" fill="#fff"/>
+                </svg>
+            </button>
+        </div>
 
         <div class="button-dropdown position-relative">
             <button style="min-width: 104px;" class="btn-primary f-500 dropdown-toggle">
@@ -191,14 +197,49 @@
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6932 14.2957L10.7036 9.31023C11.386 8.35146 11.791 7.1584 11.791 5.90142C11.791 2.64178 9.14704 0 5.8847 0C2.62254 0.00017572 0 2.64196 0 5.90142C0 9.16105 2.64397 11.8028 5.90631 11.8028C7.18564 11.8028 8.35839 11.3981 9.31795 10.7163L14.3076 15.7018C14.4994 15.8935 14.7553 16 15.0113 16C15.2672 16 15.523 15.8935 15.7149 15.7018C16.0985 15.2971 16.0985 14.6792 15.6935 14.2956L15.6932 14.2957ZM1.96118 5.90155C1.96118 3.72845 3.73104 1.98133 5.88465 1.98133C8.03826 1.9815 9.82938 3.72845 9.82938 5.90155C9.82938 8.07466 8.05952 9.82178 5.90591 9.82178C3.7523 9.82178 1.96118 8.05338 1.96118 5.90155Z" fill="#7B809A"/></svg>
 </script>
     <script>
+        var emailFlag ;
+        var statDD;
         $(document).ready(function () {
            var tbl = $('#example').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
                 "ordering": false,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search here"
-                }
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('admin.clients.getData') }}",
+                    "dataType": "json",
+                    "type": "GET",
+                    "data":{
+                        state: function() {
+						    return $("#stateDD").val();
+					    }
+                    }
+                },
+                columns: [
+                    {
+                        data: 'firstName'
+                    },
+                    {
+                        data: 'lastName'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'lastOrderDate'
+                    },
+                    {
+                        data: 'lastProductOrder'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
             });
 
             $('#filterInput').html($('#searchPannel').html());
@@ -229,17 +270,17 @@
 
             $('#addClient_submit').on('click', function(e) {
                 e.preventDefault();
+                var email = $('#email').val();
                 var mainFlag = checkValidation();
+                var type = '';
                 id = $("#client_id").val();
                 if (id != '') {
-                    var type = "UPDATE";
+                    type = "UPDATE";
                 }
-
                 if(mainFlag == true)
                 {
                     var firstName = $('#firstName').val();
                     var lastName = $('#lastName').val();
-                    var email = $('#email').val();
                     var city = $('#city').val();
                     var state = $('#state').val();
                     var country = $('#country').val();
@@ -271,7 +312,7 @@
                                     title: res[1],
                                     text: res[2],
                                 }).then(function() {
-                                    window.location.reload();
+                                   tbl.draw();
                                 });
                             }
                         },
@@ -343,7 +384,7 @@
                                         res[1],
                                         'success'
                                     ).then(function() {
-                                        window.location.reload();
+                                      tbl.draw();
                                     });
                                 }
                             }
@@ -355,19 +396,9 @@
 
             $(document).on('click','#apply',function(){
 
-                var state = $('#stateDD').val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "{{route('admin.client.filter')}}",
-                    data:{
-                        state : state
-                    },
-                    success: function (response) {
-                        $('#tbody').html(response.html);
-                    }
-                });
-
+                var statDD = $('#stateDD').val();
+                console.log(statDD);
+                tbl.draw();
             });
 
             $("#email").on('keyup',function()
@@ -379,10 +410,23 @@
                 }
                 else
                 {
-                    $(this).siblings('.jserror').html('');
+                    var type = '';
+                    id = $("#client_id").val();
+                    if (id != '') {
+                        type = "UPDATE";
+                    }
+                    var isValid = checkUniqueMail($(this).val(),type,id);
+                    if(isValid == false)
+                    {
+                        $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
+                    }
+                    else
+                    {
+                         $(this).siblings('.jserror').html('');
+                    }
                 }
-            });
 
+            });
         });
 
         function isEmail(email)
@@ -427,6 +471,32 @@
                 $('#state').val('');
                 $('#country').val('');
                 $('#ipAdrs').val('');
+        }
+
+        function checkUniqueMail(email,type)
+        {
+            $.ajax({
+                type: "post",
+                url: "{{route('admin.client.checkEmailId')}}",
+                data:{
+                    email:email,
+                    type:type,
+                    id:id
+                },
+                success: function (response) {
+                    console.log(response);
+                    if(response == 0)
+                    {
+                       emailFlag = false;
+                    }
+                    else
+                    {
+                        emailFlag = true;
+                    }
+                }
+            });
+
+            return emailFlag;
         }
 
     </script>

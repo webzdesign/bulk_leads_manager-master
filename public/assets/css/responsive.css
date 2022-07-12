@@ -11,7 +11,7 @@
         margin-right: 0;
     }
     aside.sidebarClose .userProfile{
-        padding: 20px 0;
+        padding: 10px 0;
     }
     aside.sidebarClose .displayNone{
         display: none;
@@ -64,6 +64,9 @@
     }
     .d-block-992{
         display: block !important;
+    }
+    .tooltip{
+        display: none !important;
     }
 }
 @media (max-width:992px) {

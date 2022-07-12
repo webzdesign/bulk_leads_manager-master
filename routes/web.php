@@ -62,6 +62,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/edit',[AdminsController::class,'edit'])->name('admin.edit');
             Route::post('/delete',[AdminsController::class,'delete'])->name('admin.delete');
             Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
+            Route::post('/checkEmailId',[AdminsController::class,'checkEmailId'])->name('admin.checkEmailId');
         });
 
         Route::group(['prefix' => 'import'], function() {
@@ -72,10 +73,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::group(['prefix' => 'clients'], function(){
             Route::get('/', [ClientsController::class, 'index'])->name('admin.clients.index');
+            Route::get('/get-data',[ClientsController::class,'getData'])->name('admin.clients.getData');
             Route::post('/store',[ClientsController::class,'store'])->name('admin.client.store');
             Route::post('/edit',[ClientsController::class,'edit'])->name('admin.client.edit');
             Route::post('/delete',[ClientsController::class,'delete'])->name('admin.client.delete');
             Route::post('/filter',[ClientsController::class,'filter'])->name('admin.client.filter');
+            Route::post('/checkEmailId',[ClientsController::class,'checkEmailId'])->name('admin.client.checkEmailId');
         });
 
         Route::group(['prefix' => 'import-history'], function(){
@@ -94,12 +97,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::get('/', [StatsController::class, 'index'])->name('admin.stats');
         });
 
-
-
         /*New order route*/
         Route::group(['prefix' => 'new-order'], function(){
             Route::get('/', [NewOrderController::class, 'index'])->name('admin.new-order');
             Route::post('/create-client', [NewOrderController::class, 'create_client'])->name('admin.create-client');
+            Route::post('/email-filter',[NewOrderController::class,'email_filter'])->name('admin.client.email-filter');
         });
     });
 });
