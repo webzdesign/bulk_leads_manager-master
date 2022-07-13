@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\GetData;
 use App\Models\Lead;
 use App\Models\LeadFields;
 use App\Models\LeadType;
 use Illuminate\Http\Request;
-use PHPExcel_IOFactory;
+use Excel;
 
 class ImportController extends Controller
 {
@@ -60,11 +61,11 @@ class ImportController extends Controller
             $lead = Lead::with(['user','lead_type'])->find($leadData->id);
             $date = explode(" ",$lead->uploaded_datetime);
 
-            return [true, 'uploaded_date' => $date[0], 'uploaded_by' => $lead->user->firstName, 'lead_type' => $lead->lead_type->name];
+            return [true, 'uploaded_date' => $date[0], 'uploaded_by' => $lead->user->firstName, 'file_name' => $lead->file_name ,'lead_type' => $lead->lead_type->name, 'lead_type_id' => $leadData->id];
         }
     }
 
-    public function start_upload(Request $request)
+    public function getData(Request $request)
     {
         ini_set('memory_limit', '-1');
         set_time_limit(0);
@@ -72,12 +73,35 @@ class ImportController extends Controller
         $lead = Lead::find($request->id);
         $fileName = $lead->file_name . "_" . strtotime($lead->uploaded_datetime). ".csv";
 
-        $url = storage_path("app/import/$fileName");
-		$excelReader = PHPExcel_IOFactory::createReaderForFile($url);
-		$excelObj = $excelReader->load($url);
-		$worksheet = $excelObj->getActiveSheet();
-		$lastRow = $worksheet->getHighestRow();
+        $getData = Excel::toArray(new GetData,storage_path('app/import/'.$fileName));
+        $values = array();
+        foreach($getData[0] as $key => $row) {
+            if($key == 0) {
+                continue;
+            }
+            if($key == 16) {
+                break;
+            }
+            $values[] = $row;
+        }
 
-        return $lastRow;
+        return json_encode($values);
+    }
+
+    public function start_upload(Request $request)
+    {
+        // ini_set('memory_limit', '-1');
+        // set_time_limit(0);
+
+        // $lead = Lead::find($request->id);
+        // $fileName = $lead->file_name . "_" . strtotime($lead->uploaded_datetime). ".csv";
+
+        // $url = storage_path("app/import/$fileName");
+		// $excelReader = PHPExcel_IOFactory::createReaderForFile($url);
+		// $excelObj = $excelReader->load($url);
+		// $worksheet = $excelObj->getActiveSheet();
+		// $lastRow = $worksheet->getHighestRow();
+
+        // return $lastRow;
     }
 }

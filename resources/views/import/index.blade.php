@@ -73,7 +73,7 @@
             </ul>
             <div class="cards addStep3 d-none">
                 <div class="cardsHeader" style="background: linear-gradient(0deg, #FB8E03 0.08%, #FEA321 100.08%);">
-                    <h3 class="text-white f-18 f-500 mb-0 f-16-500">File Name <span class="f-400">(upload started 6 minutes
+                    <h3 class="text-white f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400">(upload started 6 minutes
                             ago)</span></h3>
                 </div>
                 <div class="cardsBody p-0">
@@ -169,7 +169,7 @@
                 </div>
                 <div class="step ">
                     <div class="cardsHeader">
-                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500"> <span class="f-400">(upload started 2 seconds ago)</span></h3>
+                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400">(upload started 2 seconds ago)</span></h3>
                     </div>
                     <div class="cardsBody p-0">
                         <div class="fileProgress">
@@ -242,19 +242,8 @@
                                     @endforeach
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>johndoe@gmail.com</td>
-                                    <td>M</td>
-                                    <td>Mark</td>
-                                    <td>Forde</td>
-                                    <td>02-07-59</td>
-                                    <td>22 shardllow loop. Carine</td>
-                                    <td>Marmion</td>
-                                    <td>WA</td>
-                                    <td>6020</td>
-                                    <td>2344325234</td>
-                                </tr>
+                            <tbody id="tbody">
+
                             </tbody>
                         </table>
                     </div>
@@ -262,7 +251,7 @@
 
                 <div class="step">
                     <div class="cardsHeader">
-                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500">File Name <span class="f-400">(uploaded 3 hours
+                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400">(uploaded 3 hours
                                 ago)</span></h3>
                     </div>
                     <div class="cardsBody p-0">
@@ -372,7 +361,6 @@
                                 } else {
                                     setpwizard();
 
-
                                     let count = 0
                                     let innerbar = document.querySelector('.progress-bar')
 
@@ -391,6 +379,9 @@
                                         progress()
                                     },[100])
 
+                                    getSheetData(res.lead_type_id);
+
+                                    $('.file_name').text(res.file_name);
                                     $('.uploaded_date').text(res.uploaded_date);
                                     $('.uploaded_by').text(res.uploaded_by);
                                     $('.lead_type_name').text(res.lead_type);
@@ -403,7 +394,13 @@
                 }
 
                 if(index == 2) {
-                    alert("ok");
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('admin.import.start_upload') }}",
+                        success: function (res) {
+
+                        }
+                    });
                 }
 
             });
@@ -435,7 +432,30 @@
                 return status;
             }
 
+            function getSheetData(id) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.import.getData') }}",
+                    dataType: "json",
+                    data:{ id: id},
+                    success: function(res) {
+                        var tbody = '';
 
+                        $.each(res, function (key, value) {
+                            tbody += "<tr>";
+                            $.each(value, function(subkey, subvalue){
+                                tbody += "<td>"
+                                tbody += subvalue
+                                tbody += "</td>"
+                            });
+                            tbody += "</tr>";
+                        });
+
+                        $('#tbody').append(tbody);
+
+                    }
+                })
+            }
 
             function setpwizard()
             {

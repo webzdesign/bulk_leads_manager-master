@@ -68,6 +68,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::group(['prefix' => 'import'], function() {
             Route::get('/',[ImportController::class, 'index'])->name('admin.import.index');
             Route::post('/importCSV',[ImportController::class, 'importCSV'])->name('admin.import.importCSV');
+            Route::post('/getData', [ImportController::class, 'getData'])->name('admin.import.getData');
             Route::post('/start_upload',[ImportController::class, 'start_upload'])->name('admin.import.start_upload');
         });
 
