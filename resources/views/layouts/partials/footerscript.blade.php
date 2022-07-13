@@ -6,6 +6,8 @@
 <script src="{{ asset('public/assets/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('public/assets/js/dataTables.bootstrap5.min.js') }}"></script>
 
+<script src="{{ asset('public/assets/js/jquery.custom.selectbox.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 <script defer src="{{ asset('public/assets/js/main.js') }}"></script>
 
