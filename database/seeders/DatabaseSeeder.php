@@ -29,5 +29,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(LeadTypeSeeder::class);
         $this->call(LeadFieldSeeder::class);
+        $this->call(SiteSettingSeeder::class);
     }
 }
