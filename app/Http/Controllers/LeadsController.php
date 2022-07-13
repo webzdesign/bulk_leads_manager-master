@@ -35,7 +35,7 @@ class LeadsController extends Controller
             $leads = $leadDetail;
            foreach($leads as $us)
            {
-                if($us->lead->leadType->id == $request->leadType)
+                if($us->lead->lead_type->id == $request->leadType)
                 {
                     $data[] = $us->id;
                 }

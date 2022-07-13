@@ -61,7 +61,7 @@
             <div>
                 <form id="order_form" method="post">
                     @csrf
-                    <input type="hidden" name="id_client" value="">
+                    <input type="hidden" name="client_id" value="">
 
                     <div class="step active">
                         <div class="cards">
@@ -73,7 +73,7 @@
                                     <div class="d-flex align-items-center d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Email:</label>
                                         <div class="col-order-2 position-relative">
-                                            <input type="text" placeholder="Enter email address" class="form-control" name="filter_client_email">
+                                            <input type="text" placeholder="Enter email address" class="form-control" name="filter_client_email" autocomplete="off">
                                             <div class="emailErrorDiv text-center position-absolute bg-white">
                                                 <div class="loadingClient c-7b f-14 f-400">
                                                     Searching client with same email address
@@ -85,7 +85,7 @@
                                                 </div>
 
                                                 <span class="c-e9 f-14 f-400 d-block mb-2 email_not_match"></span>
-                                                <button class="btn-add" data-bs-toggle="modal" data-bs-target="#Client">Add client</button>
+                                                <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#Client">Add client</button>
                                             </div>
                                         </div>
                                     </div>
@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <div class="cardsFooter d-flex justify-content-end">
-                                <button class="btn-primary f-500 f-14 next" style="min-width: 78px !important;">Next</button>
+                                <button type="button" class="btn-primary f-500 f-14 next" style="min-width: 78px !important;">Next</button>
                             </div>
                         </div>
                     </div>
@@ -158,18 +158,21 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Type:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
-                                                <option value="hide">Select a lead type</option>
-                                                <option>John Doe</option>
+                                            <select name="lead_type_id" class="form-control">
+                                                <option value=" ">Select a lead type</option>
+                                                @if ($LeadTypes->isNotEmpty())
+                                                    @foreach ($LeadTypes as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Age:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
-                                                <option value="hide">Enter lead age</option>
-                                                <option>John Doe</option>
+                                            <select name="age_group_id" class="form-control">
+                                                <option value="">Select Age</option>
                                             </select>
                                         </div>
                                     </div>
@@ -184,26 +187,27 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Gender:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
-                                                <option value="hide">Select gender</option>
-                                                <option>John Doe</option>
+                                            <select name="gender" class="form-control">
+                                                <option value="">Select gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">State(s): </label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
-                                                <option value="hide">Select states</option>
-                                                <option>John Doe</option>
+                                            <select name="state_id" class="form-control">
+                                                <option value="">Select states</option>
+                                                <option >John Doe</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="cardsFooter d-flex justify-content-end">
-                                <button class="btn-default f-500 f-14 prev" style="min-width: 78px !important;">Previous</button>
-                                <button class="btn-primary f-500 f-14 next" style="min-width: 78px !important;">Next</button>
+                                <button type="button" class="btn-default f-500 f-14 prev" style="min-width: 78px !important;">Previous</button>
+                                <button type="button" class="btn-primary f-500 f-14 next" style="min-width: 78px !important;">Next</button>
                             </div>
                         </div>
                     </div>
@@ -322,7 +326,7 @@
                                 <label class="c-gr f-16 f-500">IP Address</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control f-14 c-19" name="ip_address" placeholder="Enter IP address" value="{{ Request::ip();                                }}">
+                                <input type="text" class="form-control f-14 c-19" name="ip_address" placeholder="Enter IP address" value="{{ Request::ip(); }}">
                             </div>
                         </div>
                     </div>
@@ -398,7 +402,7 @@
             });
 
             //Email list in search
-            $("[name='filter_client_email']").on("change paste keyup", function() {
+            $("[name='filter_client_email']").on("keyup paste", function() {
                 var filter_client_email = $(this).val();
                 $('.email_list,.email_not_match').html('');
 
@@ -407,6 +411,7 @@
                     url: "{{ route('admin.client.email-filter') }}",
                     dataType: "json",
                     data: {'email':filter_client_email},
+                    async:false,
                     success: function(response) {
                         if (response[1]) {
                             $('.email_list').html(response[1].html);
@@ -419,7 +424,7 @@
                 });
             });
 
-            $(document).on('click','.client_details', function() {
+            $(document).on('click','.client_details', function(e) {
 
                 var id = $(this).data('id');
                 var first_name = $(this).data('first_name');
@@ -430,7 +435,7 @@
                 var country = $(this).data('country');
                 var ip_address = $(this).data('ip_address');
 
-                $('[name="id_client"]').val(id);
+                $('[name="client_id"]').val(id);
                 $('.first_name_text').text(first_name);
                 $('.last_name_text').text(last_name);
                 $('.email_text').text(email);
@@ -441,6 +446,22 @@
 
                 $('[name="filter_client_email"]').val(email);
                 $('.email_list').html('');
+                $('.btn_next1').addClass('next');
+            });
+
+            $(document).on('change','[name="lead_type_id"]', function(e) {
+                var lead_type_id = $('[name="lead_type_id"] option:selected').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.age-group') }}",
+                    dataType: "json",
+                    data: {'lead_type_id':lead_type_id},
+                    async:false,
+                    success: function(response) {
+                        $('[name="age_group_id"]').html(response[1].html);
+                    }
+                });
             });
         });
     </script>

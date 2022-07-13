@@ -13,9 +13,11 @@ class Lead extends Model
 
     protected $guarded = [];
 
-    public function leadType()
-    {
-        return $this->belongsTo(LeadType::class,'lead_type_id','id');
+    public function user() {
+        return $this->belongsTo(User::class, 'added_by', 'id');
     }
 
+    public function lead_type() {
+        return $this->belongsTo(LeadType::class, 'lead_type_id', 'id');
+    }
 }

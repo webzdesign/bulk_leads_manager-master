@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 <script defer src="{{ asset('public/assets/js/main.js') }}"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.4.1.min.js"></script>
 
 <script>
     $(document).ready(function () {
