@@ -24,7 +24,7 @@
                         <div class="col-lg-6 pr-40">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Auto delete records after:</label>
-                                <select name="auto_delete_rec_after">
+                                <select name="auto_delete_rec_after" class="select2">
                                     @for ($i=1; $i<=12; $i++)
                                         <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['auto_delete_rec_after'] == $i ? 'selected' : '';?>>{{ $i }} Months</option>
                                     @endfor
@@ -39,7 +39,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Disallow import of leads older than:</label>
-                                <select name="disallow_import_lead_older">
+                                <select name="disallow_import_lead_older" class="select2">
                                     @for ($i=1; $i<=12; $i++)
                                         <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['disallow_import_lead_older'] == $i ? 'selected' : '';?>>{{ $i }} Months</option>
                                     @endfor
@@ -58,7 +58,7 @@
                         <div class="col-lg-6 pl-40">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Frequency of deleted archives:</label>
-                                <select name="frequency_of_deleted_archives">
+                                <select name="frequency_of_deleted_archives" class="select2">
                                     @for ($i=1; $i<=30; $i++)
                                         <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['frequency_of_deleted_archives'] == $i ? 'selected' : '';?>>{{ $i }} Days</option>
                                     @endfor
@@ -74,7 +74,7 @@
                             </div>
                             <div class="form-group mt-4">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Number of times each lead can be downloaded:</label>
-                                <select name="no_of_time_lead_download">
+                                <select name="no_of_time_lead_download" class="select2">
                                     @for ($i=1; $i<=30; $i++)
                                         <option value="{{ $i }}" <?= isset($site_settings) && $site_settings !=null && $site_settings['no_of_time_lead_download'] == $i ? 'selected' : '';?>>{{ $i }} </option>
                                     @endfor
@@ -204,7 +204,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
-                                <select name="email_subject">
+                                <select name="email_subject" class="select2">
                                     <option value="lead-send" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-send' ? 'selected' : '';?>>Leads Send</option>
                                     <option value="lead-delete" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-delete' ? 'selected' : '';?>>Leads Delete</option>
                                 </select>
@@ -252,25 +252,6 @@
                 'success'
             );
         @endif
-
-        //Dropdown selected text logic
-
-        setTimeout(() => {
-            var auto_delete_rec_after = $('[name="auto_delete_rec_after"] option:selected').val();
-            $('[name="auto_delete_rec_after"]').next('.select-styled').text(auto_delete_rec_after + ' Months');
-
-            var disallow_import_lead_older = $('[name="disallow_import_lead_older"] option:selected').val();
-            $('[name="disallow_import_lead_older"]').next('.select-styled').text(disallow_import_lead_older + ' Months');
-
-            var frequency_of_deleted_archives = $('[name="frequency_of_deleted_archives"] option:selected').val();
-            $('[name="frequency_of_deleted_archives"]').next('.select-styled').text(frequency_of_deleted_archives + ' Days');
-
-            var no_of_time_lead_download = $('[name="no_of_time_lead_download"] option:selected').val();
-            $('[name="no_of_time_lead_download"]').next('.select-styled').text(no_of_time_lead_download);
-
-            var email_subject = $('[name="email_subject"] option:selected').text();
-            $('[name="email_subject"]').next('.select-styled').text(email_subject);
-        }, 100);
 
         $("#form1").validate({
             rules:{

@@ -161,7 +161,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Type:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="lead_type_id" class="form-control">
+                                            <select name="lead_type_id" class="select2">
                                                 <option value="">Select a lead type</option>
                                                 @if ($LeadTypes->isNotEmpty())
                                                     @foreach ($LeadTypes as $value)
@@ -175,7 +175,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Age:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="age_group_id" class="form-control">
+                                            <select name="age_group_id" class="select2">
                                                 <option value="">Select Age</option>
                                             </select>
                                             <span class="text-danger" id="age_group_id_validate"></span>
