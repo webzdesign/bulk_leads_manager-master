@@ -183,7 +183,7 @@
                 <div class="cardsBody settingWrpr">
                     <div class="form-group">
                         <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                        <select id='stateDD'>
+                        <select id='stateDD' class="select2">
                             <option value="">Select state</option>
                             @foreach ($states as $state)
                             <option value='{{$state}}'>{{$state}}</option>
