@@ -103,6 +103,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/create-client', [NewOrderController::class, 'create_client'])->name('admin.create-client');
             Route::post('/email-filter',[NewOrderController::class,'email_filter'])->name('admin.client.email-filter');
             Route::post('/age-group',[NewOrderController::class,'age_group'])->name('admin.age-group');
+            Route::post('/count-total-leads-available',[NewOrderController::class,'count_total_leads_available'])->name('admin.count-total-leads-available');
+            Route::post('/create-order',[NewOrderController::class,'create_order'])->name('admin.create-order');
         });
     });
 });
