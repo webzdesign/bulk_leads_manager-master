@@ -158,7 +158,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Type:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="lead_type_id" id="select">
+                                            <select name="lead_type_id" class="form-control">
                                                 <option value=" ">Select a lead type</option>
                                                 @if ($LeadTypes->isNotEmpty())
                                                     @foreach ($LeadTypes as $value)
@@ -171,8 +171,8 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Age:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="age_group_id">
-                                                <option value=" ">Enter lead age</option>
+                                            <select name="age_group_id" class="form-control">
+                                                <option value="">Select Age</option>
                                             </select>
                                         </div>
                                     </div>
@@ -187,18 +187,19 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Gender:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
-                                                <option value="hide">Select gender</option>
-                                                <option>John Doe</option>
+                                            <select name="gender" class="form-control">
+                                                <option value="">Select gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">State(s): </label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
-                                                <option value="hide">Select states</option>
-                                                <option>John Doe</option>
+                                            <select name="state_id" class="form-control">
+                                                <option value="">Select states</option>
+                                                <option >John Doe</option>
                                             </select>
                                         </div>
                                     </div>
@@ -446,6 +447,21 @@
                 $('[name="filter_client_email"]').val(email);
                 $('.email_list').html('');
                 $('.btn_next1').addClass('next');
+            });
+
+            $(document).on('change','[name="lead_type_id"]', function(e) {
+                var lead_type_id = $('[name="lead_type_id"] option:selected').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.age-group') }}",
+                    dataType: "json",
+                    data: {'lead_type_id':lead_type_id},
+                    async:false,
+                    success: function(response) {
+                        $('[name="age_group_id"]').html(response[1].html);
+                    }
+                });
             });
         });
     </script>

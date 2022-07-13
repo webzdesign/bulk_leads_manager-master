@@ -68,9 +68,7 @@ class NewOrderController extends Controller
     }
 
     public function email_filter(Request $request){
-        DB::enableQueryLog();
         $html = '';
-
         $records = Client::select('*')->where('email','LIKE', '%'.$request->email.'%')->get();
 
         if($records->isNotEmpty() && $request->email !=''){
@@ -80,6 +78,23 @@ class NewOrderController extends Controller
             return response()->json([true, ['html' => $html]]);
         }else{
             return response()->json([false, '']);
+        }
+    }
+
+    public function age_group(Request $request){
+        // DB::enableQueryLog();
+        $html = '';
+
+        $records = AgeGroup::where('lead_type_id',$request->lead_type_id)->get();
+        $html .='<option value="">Select Age</option>';
+
+        if($records->isNotEmpty()){
+            foreach ($records as $key => $value) {
+                $html .= '<option value="'.$value->id.'">'.$value->age_from.' '.$value->age_to.'</option>';
+            }
+            return response()->json([true, ['html' => $html]]);
+        }else{
+            return response()->json([false, ['html' => $html]]);
         }
     }
 }
