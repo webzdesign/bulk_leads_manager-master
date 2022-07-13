@@ -2,7 +2,7 @@
 @section('content')
                 <div class="middleContent">
                     <div class="importWrpr">
-                        <div class="cards tableCards">
+                        <div class="cards">
                             <table id="example" class="table" style="width:100%">
                                 <thead>
                                     <tr>
@@ -15,7 +15,7 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id='tbody'>
+                                <tbody id='tbody' class="tableCards" style="overflow: initial !important;">
                                     {{-- @foreach ($clients as $client)
 
                                     <tr>
@@ -157,11 +157,18 @@
    <script type="text/html" id="filterDropdown">
     <div class="d-flex align-items-center filterPanelbtn">
 
-        <div>
-            <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">Add client</button>
-                <svg class="me-1" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.6666 2.66667H10.3333L9.66659 2H6.33325L5.66659 2.66667H3.33325V4H12.6666V2.66667ZM3.99992 12.6667C3.99992 13.0203 4.14039 13.3594 4.39044 13.6095C4.64049 13.8595 4.97963 14 5.33325 14H10.6666C11.0202 14 11.3593 13.8595 11.6094 13.6095C11.8594 13.3594 11.9999 13.0203 11.9999 12.6667V4.66667H3.99992V12.6667Z" fill="#fff"/>
+        <div class="me-2">
+            <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">
+                <svg class="me-1" width="16" height="16" viewBox="0 0 16 16" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.00008 13.3332V7.99984M8.00008 7.99984V2.6665M8.00008 7.99984H13.3334M8.00008 7.99984H2.66675" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+                    <defs>
+                        <linearGradient id="paint0_linear_1524_12120" x1="8.00008" y1="2.6665" x2="8.00008" y2="13.3332" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#ffffff"></stop>
+                            <stop offset="1" stop-color="#ffffff"></stop>
+                        </linearGradient>
+                    </defs>
                 </svg>
+                Add client
             </button>
         </div>
 
@@ -176,7 +183,7 @@
                 <div class="cardsBody settingWrpr">
                     <div class="form-group">
                         <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                        <select id='stateDD'>
+                        <select id='stateDD' class="select2">
                             <option value="">Select state</option>
                             @foreach ($states as $state)
                             <option value='{{$state}}'>{{$state}}</option>
@@ -205,6 +212,10 @@
                 "ordering": false,
                 processing: true,
                 serverSide: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search here"
+                },
                 ajax: {
                     "url": "{{ route('admin.clients.getData') }}",
                     "dataType": "json",
@@ -395,9 +406,7 @@
             });
 
             $(document).on('click','#apply',function(){
-
                 var statDD = $('#stateDD').val();
-                console.log(statDD);
                 tbl.draw();
             });
 

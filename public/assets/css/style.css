@@ -84,11 +84,11 @@ a{
 input::-webkit-input-placeholder { /* Edge */
     color: #7B809A !important;
 }
-  
+
 input:-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #7B809A !important;
 }
-  
+
 input::placeholder {
     color: #7B809A !important;
 }
@@ -277,89 +277,97 @@ button:disabled svg path{
 /* custom select */
 
 .select-hidden {
-  display: none;
-  visibility: hidden;
-  padding-right: 10px;
-}
-.select {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  width: 100%;
-}
-.select svg{
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    pointer-events: none;
-}
-.select-styled {
-    background: #FFFFFF !important;
-    border: 1px solid #C7CCD0;
-    border-radius: 8px;
-    height: 42px;
-    color: #4F4F52;
-    display: flex;
-    align-items: center;
-    padding: 5px 15px;
-    font-family: 'Roboto Medium';
-    user-select: none;
-}
-.select-styled.selected{
-    color: #191919 !important;
-    font-family: 'Roboto Regular' !important;
-}
-.select-options {
     display: none;
-    position: absolute;
-    top: 103%;
-    right: 0;
-    left: 0;
-    z-index: 999;
-    margin: 0;
-    padding: 10px 0;
-    list-style: none;
-    background: #FFFFFF !important;
-    border: 1px solid #C7CCD0;
-    border-radius: 8px;
-    font-family: 'Roboto Medium' !important;
-    color: #4F4F52;
-    max-height: 205px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
-    overflow: auto;
-}
-.select-options::-webkit-scrollbar-track
-{
-	background-color: #F5F5F5;
-    border-radius: 10px;
-}
+    visibility: hidden;
+    padding-right: 10px;
+  }
+  .select {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+  }
+  .styled-select svg{
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+  }
+  .select-styled {
+      background: #FFFFFF !important;
+      border: 1px solid #C7CCD0;
+      border-radius: 8px;
+      height: 42px;
+      color: #4F4F52;
+      display: flex;
+      align-items: center;
+      padding: 5px 15px;
+      font-family: 'Roboto Medium';
+      user-select: none;
+      cursor: pointer;
+  }
+  .select-styled.selectedValue{
+      color: #191919 !important;
+      font-family: 'Roboto Regular' !important;
+  }
+  .styled-select{
+      position: relative;
+  }
+  .styled-select select{
+      display: none;
+  }
+  .select-options {
+      /* display: none; */
+      position: absolute;
+      top: 103%;
+      right: 0;
+      left: 0;
+      z-index: 999;
+      margin: 0;
+      padding: 10px 0;
+      list-style: none;
+      background: #FFFFFF !important;
+      border: 1px solid #C7CCD0;
+      border-radius: 8px;
+      font-family: 'Roboto Medium' !important;
+      color: #4F4F52;
+      max-height: 205px;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+      overflow: auto;
+  }
+  .select-options::-webkit-scrollbar-track
+  {
+      background-color: #F5F5F5;
+      border-radius: 10px;
+  }
 
-.select-options::-webkit-scrollbar
-{
-	width: 5px;
-    border-radius: 10px;
-	background-color: #F5F5F5;
-}
+  .select-options::-webkit-scrollbar
+  {
+      width: 5px;
+      border-radius: 10px;
+      background-color: #F5F5F5;
+  }
 
-.select-options::-webkit-scrollbar-thumb
-{
-    border-radius: 10px;
-	background-color: #4C26AA ;
-}
-.select-options li {
-    padding: 5px 15px;
-    color: #7B809A;
-    font-family: "Roboto Regular";
-    font-weight: normal;
-    font-size: 14px !important;
-}
-.select-options li:hover, .select-options li.is-selected {
-    background: #ededed99;
-}
-.select-options li[rel="hide"] {
-    display: none;
-}
+  .select-options::-webkit-scrollbar-thumb
+  {
+      border-radius: 10px;
+      background-color: #4C26AA ;
+  }
+  .select-options li {
+      padding: 5px 15px;
+      color: #7B809A;
+      font-family: "Roboto Regular";
+      font-weight: normal;
+      font-size: 14px !important;
+      cursor: pointer;
+  }
+  .select-options li:hover, .select-options li.is-selected {
+      background: #ededed99;
+  }
+  .select-options li[rel="hide"] {
+      display: none;
+  }
 
 
 /* login */
@@ -816,7 +824,7 @@ header ul li .badges{
 .importWrpr .stepThree table th{
     background: transparent !important;
     border-bottom: 1px solid #F0F2F5 !important;
-}   
+}
 .importWrpr .stepThree table td{
     color: #7B809A !important;
     font-family: "Roboto Regular" !important;
@@ -859,7 +867,7 @@ div.dataTables_wrapper div.dataTables_filter label{
         width: 328px;
     }
 }
-    
+
 .filterHeader{
     display: flex;
     justify-content: space-between;

@@ -78,7 +78,6 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/store',[ClientsController::class,'store'])->name('admin.client.store');
             Route::post('/edit',[ClientsController::class,'edit'])->name('admin.client.edit');
             Route::post('/delete',[ClientsController::class,'delete'])->name('admin.client.delete');
-            Route::post('/filter',[ClientsController::class,'filter'])->name('admin.client.filter');
             Route::post('/checkEmailId',[ClientsController::class,'checkEmailId'])->name('admin.client.checkEmailId');
         });
 
@@ -88,6 +87,9 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::group(['prefix' => 'leads'], function(){
             Route::get('/', [LeadsController::class, 'index'])->name('admin.leads');
+            Route::get('/get-data', [LeadsController::class, 'getData'])->name('admin.leads.getData');
+            Route::post('/bulkRemove', [LeadsController::class, 'bulkRemove'])->name('admin.leads.bulkRemove');
+            Route::post('/getAge', [LeadsController::class, 'getAge'])->name('admin.leads.getAge');
         });
 
         Route::group(['prefix' => 'orders'], function(){
@@ -104,6 +106,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/create-client', [NewOrderController::class, 'create_client'])->name('admin.create-client');
             Route::post('/email-filter',[NewOrderController::class,'email_filter'])->name('admin.client.email-filter');
             Route::post('/age-group',[NewOrderController::class,'age_group'])->name('admin.age-group');
+            Route::post('/count-total-leads-available',[NewOrderController::class,'count_total_leads_available'])->name('admin.count-total-leads-available');
+            Route::post('/create-order',[NewOrderController::class,'create_order'])->name('admin.create-order');
         });
     });
 });

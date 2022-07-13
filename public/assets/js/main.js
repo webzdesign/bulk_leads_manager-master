@@ -13,57 +13,65 @@ $(document).ready(function() {
 
     // custom select
 
-    $('select').each(function() {
-        var $this = $(this),
-            numberOfOptions = $(this).children('option').length;
+    // $('select').each(function() {
+    //     var $this = $(this),
+    //         numberOfOptions = $(this).children('option').length;
 
-        $this.addClass('select-hidden');
-        $this.wrap('<div class="select"></div>');
-        $this.after('<div class="select-styled"></div>');
-        $('.select').append('<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 6L8.00008 11.3333L13.3334 6" stroke="#7B809A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+    //     $this.addClass('select-hidden');
+    //     $this.wrap('<div class="select"></div>');
+    //     $this.after('<div class="select-styled"></div>');
+    //     $('.select').append('<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 6L8.00008 11.3333L13.3334 6" stroke="#7B809A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 
-        var $styledSelect = $this.next('div.select-styled');
-        $styledSelect.text($this.children('option').eq(0).text());
+    //     var $styledSelect = $this.next('div.select-styled');
+    //     $styledSelect.text($this.children('option').eq(0).text());
 
-        var $list = $('<ul />', {
-            'class': 'select-options'
-        }).insertAfter($styledSelect);
+    //     var $list = $('<ul />', {
+    //         'class': 'select-options'
+    //     }).insertAfter($styledSelect);
 
-        for (var i = 0; i < numberOfOptions; i++) {
-            $('<li />', {
-                text: $this.children('option').eq(i).text(),
-                rel: $this.children('option').eq(i).val()
-            }).appendTo($list);
-            //if ($this.children('option').eq(i).is(':selected')){
-            //  $('li[rel="' + $this.children('option').eq(i).val() + '"]').addClass('is-selected')
-            //}
-        }
+    //     for (var i = 0; i < numberOfOptions; i++) {
+    //         $('<li />', {
+    //             text: $this.children('option').eq(i).text(),
+    //             rel: $this.children('option').eq(i).val()
+    //         }).appendTo($list);
+    //         //if ($this.children('option').eq(i).is(':selected')){
+    //         //  $('li[rel="' + $this.children('option').eq(i).val() + '"]').addClass('is-selected')
+    //         //}
+    //     }
 
-        var $listItems = $list.children('li');
+    //     var $listItems = $list.children('li');
 
-        $styledSelect.click(function(e) {
-            e.stopPropagation();
-            $('div.select-styled.active').not(this).each(function() {
-                $(this).removeClass('active').next('ul.select-options').hide();
-            });
-            $(this).toggleClass('active').next('ul.select-options').toggle();
-        });
+    //     $styledSelect.click(function(e) {
+    //         e.stopPropagation();
+    //         $('div.select-styled.active').not(this).each(function() {
+    //             $(this).removeClass('active').next('ul.select-options').hide();
+    //         });
+    //         $(this).toggleClass('active').next('ul.select-options').toggle();
+    //     });
 
-        $listItems.click(function(e) {
-            $(this).parent().parent().find('.select-styled').addClass('selected');
-            e.stopPropagation();
-            $styledSelect.text($(this).text()).removeClass('active');
-            $this.val($(this).attr('rel'));
-            $list.hide();
-            //console.log($this.val());
-        });
+    //     $listItems.click(function(e) {
 
-        $(document).click(function() {
-            $styledSelect.removeClass('active');
-            $list.hide();
-        });
+    //         $(this).parent().parent().find('.select-styled').addClass('selected');
+    //         e.stopPropagation();
+    //         $styledSelect.text($(this).text()).removeClass('active');
+    //         $this.val($(this).attr('rel'));
+    //         $list.hide();
 
-    });
+    //         if($this.attr('id') == 'leadTypeDD')
+    //         {
+    //             $("#leadType").val($(this).text());
+    //             $('#leadType').trigger('change');
+
+    //         }
+
+    //     });
+
+    //     $(document).click(function() {
+    //         $styledSelect.removeClass('active');
+    //         $list.hide();
+    //     });
+
+    // });
 
     // file upload
     $("form").on("change", ".file-upload-field", function() {
@@ -157,4 +165,9 @@ $(document).ready(function() {
         var n = $(t.target);
         if (!n.parents().hasClass("button-dropdown")) $(".button-dropdown .dropdown-toggle").removeClass("active");
     })
+
+    $('.select2').select2({
+        width:'100%',
+        minimumResultsForSearch: -1
+    });
 });
