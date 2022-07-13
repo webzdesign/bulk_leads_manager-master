@@ -13,7 +13,7 @@ class LeadsController extends Controller
 {
     //
     private $moduleName = "Leads";
-    private $view = "leads";
+    private $view = "Leads";
 
     public function index()
     {

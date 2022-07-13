@@ -526,7 +526,7 @@
             }
         });
 
-        function checkUniqueMail(email,type)
+        function checkUniqueMail(email,type,id)
         {
             var emailFlag = false;
             $.ajax({
