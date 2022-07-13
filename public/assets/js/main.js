@@ -67,7 +67,10 @@ $(document).ready(function() {
 
     // file upload
     $("form").on("change", ".file-upload-field", function() {
-        $(this).parent(".fileUpload").find('.file-upload-wrapper').attr("data-text",
+        // $(this).parent(".fileUpload").find('.file-upload-wrapper').attr("data-text",
+        //     $(this).val().replace(/.*(\/|\\)/, ''));
+
+        $(this).parent().find('.file-upload-wrapper').attr("data-text",
             $(this).val().replace(/.*(\/|\\)/, ''));
     });
 

@@ -12,4 +12,12 @@ class Lead extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    public function user() {
+        return $this->belongsTo(User::class, 'added_by', 'id');
+    }
+
+    public function lead_type() {
+        return $this->belongsTo(LeadType::class, 'lead_type_id', 'id');
+    }
 }

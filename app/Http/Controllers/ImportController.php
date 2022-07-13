@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\LeadFields;
 use App\Models\LeadType;
 use Illuminate\Http\Request;
 use PHPExcel_IOFactory;
@@ -16,7 +17,8 @@ class ImportController extends Controller
     {
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::get();
-        return view("$this->view/index",compact('moduleName','leadTypes'));
+        $leadFields = LeadFields::get();
+        return view("$this->view/index",compact('moduleName','leadTypes','leadFields'));
     }
 
     public function importCSV(Request $request)
@@ -47,7 +49,7 @@ class ImportController extends Controller
                 $file->move('storage/app/import', $fileName);
             }
 
-            $lead = Lead::create([
+            $leadData = Lead::create([
                 'lead_type_id' => $request->lead_type_id,
                 'file_name' => $title,
                 'uploaded_datetime' => date(now()),
@@ -55,7 +57,10 @@ class ImportController extends Controller
                 'added_by' => auth()->user()->id,
             ]);
 
-            return [true,'id' => $lead->id];
+            $lead = Lead::with(['user','lead_type'])->find($leadData->id);
+            $date = explode(" ",$lead->uploaded_datetime);
+
+            return [true, 'uploaded_date' => $date[0], 'uploaded_by' => $lead->user->firstName, 'lead_type' => $lead->lead_type->name];
         }
     }
 
