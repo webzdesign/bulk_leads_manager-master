@@ -12,4 +12,9 @@ class LeadDetail extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class,'lead_id','id');
+    }
 }

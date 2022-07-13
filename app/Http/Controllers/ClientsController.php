@@ -108,8 +108,7 @@ class ClientsController extends Controller
             ]);
             $message = $moduleName." Added Successfully.";
         }
-        $clients = Client::all();
-        return response()->json([true,$moduleName,$message,'html' => view('clients.filter', compact('clients'))->render()]);
+        return response()->json([true,$moduleName,$message]);
     }
 
     public function edit(Request $request)
@@ -130,20 +129,7 @@ class ClientsController extends Controller
         $client->delete();
         $message = $this->moduleName." Deleted Successfully.";
         $clients = Client::all();
-        return response()->json([true,$message,'html' => view('clients.filter', compact('clients'))->render()]);
-    }
-
-
-    public function filter(Request $request)
-    {
-        $clients = [];
-        if($request->state)
-        {
-            $clients = Client::where('state',$request->state)->get();
-        }
-
-        return response()->json(['html' => view('clients.filter', compact('clients'))->render()]);
-
+        return response()->json([true,$message]);
     }
 
     public function checkEmailId(Request $request)

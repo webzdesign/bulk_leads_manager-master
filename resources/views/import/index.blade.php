@@ -81,11 +81,11 @@
                         <div class="col-md-6">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="colOne c-gr f-16 f-500">Uploaded date:</div>
-                                <div class="colTwo c-19 f-16 f-500">2022-06-27</div>
+                                <div class="colTwo c-19 f-16 f-500 uploaded_date"></div>
                             </div>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="colOne c-gr f-16 f-500">Uploaded by:</div>
-                                <div class="colTwo c-43 f-16 f-500">Steeve</div>
+                                <div class="colTwo c-43 f-16 f-500 uploaded_by"></div>
                             </div>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="colOne c-gr f-16 f-500">Status:</div>
@@ -93,7 +93,7 @@
                             </div>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="colOne c-gr f-16 f-500">Lead Type:</div>
-                                <div class="colTwo c-19 f-16 f-500">Australian Bulk Leads</div>
+                                <div class="colTwo c-19 f-16 f-500 lead_type_name"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -176,7 +176,7 @@
                             <h3 class="f-16 f-500 c-gr">Scanning the uploaded file, please wait...</h3>
                             <div class="progressBar d-flex align-items-center">
                                 <div class="progress w-100">
-                                    <div class="progress-bar" style="width:0%"></div>
+                                    <div class="progress-bar" style="width:0%" data-parcent="100"></div>
                                 </div>
                                 <span class="ms-3 c-19 f-16 f-500 f-14-500" id="progress-bar">0%</span>
                             </div>
@@ -185,11 +185,11 @@
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Uploaded date:</div>
-                                    <div class="colTwo c-19 f-16 f-500">2022-06-27</div>
+                                    <div class="colTwo c-19 f-16 f-500 uploaded_date"></div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Uploaded by:</div>
-                                    <div class="colTwo c-43 f-16 f-500">Steeve</div>
+                                    <div class="colTwo c-43 f-16 f-500 uploaded_by"></div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Status:</div>
@@ -197,7 +197,7 @@
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Lead Type:</div>
-                                    <div class="colTwo c-19 f-16 f-500">Australian Bulk Leads</div>
+                                    <div class="colTwo c-19 f-16 f-500 lead_type_name"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -230,56 +230,16 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <select>
-                                            <option>Email</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>Gender</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>First Name</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>Last Name</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>DOB</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>Address</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>City</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>State</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>ZIP</option>
-                                        </select>
-                                    </th>
-                                    <th>
-                                        <select>
-                                            <option>Phone</option>
-                                        </select>
-                                    </th>
+                                    @foreach ($leadFields as $leadField)
+                                        <th>
+                                            <select>
+                                                <option value=""> -- Select --</option>
+                                                @foreach ($leadFields as $leadField)
+                                                    <option value="{{ $leadField->id }}">{{ $leadField->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </th>
+                                    @endforeach
                                 </tr>
                             </thead>
                             <tbody>
@@ -310,11 +270,11 @@
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Uploaded date:</div>
-                                    <div class="colTwo c-19 f-16 f-500">2022-06-27</div>
+                                    <div class="colTwo c-19 f-16 f-500 uploaded_date"></div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Uploaded by:</div>
-                                    <div class="colTwo c-43 f-16 f-500">Steeve</div>
+                                    <div class="colTwo c-43 f-16 f-500 uploaded_by"></div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Status:</div>
@@ -322,7 +282,7 @@
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Lead Type:</div>
-                                    <div class="colTwo c-19 f-16 f-500">Australian Bulk Leads</div>
+                                    <div class="colTwo c-19 f-16 f-500 lead_type_name"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -376,6 +336,7 @@
 
             $('#next').on('click', function(e) {
                 e.preventDefault();
+                count = 0;
                 var index = $(".step.active").index(".step")
 
                 if(index == 0) {
@@ -411,13 +372,28 @@
                                 } else {
                                     setpwizard();
 
-                                    var importStart = import_start(res.id)
-                                    $('#next').prop('disabled', true);
 
-                                    if(importStart == true) {
-                                        $('#next').prop('disabled', false);
+                                    let count = 0
+                                    let innerbar = document.querySelector('.progress-bar')
+
+                                    function progress(){
+                                        count++
+                                        innerbar.style.width =`${count}%`
+                                        $("#progress-bar").text(innerbar.style.width);
+                                        if(count==100){
+                                            setpwizard();
+                                            $('#next').show();
+                                            clearInterval(stop)
+                                        }
                                     }
 
+                                    let stop = setInterval(function(){
+                                        progress()
+                                    },[100])
+
+                                    $('.uploaded_date').text(res.uploaded_date);
+                                    $('.uploaded_by').text(res.uploaded_by);
+                                    $('.lead_type_name').text(res.lead_type);
                                     $('#invalidFile_error').addClass('d-none');
                                 }
                             }
@@ -426,16 +402,8 @@
                     }
                 }
 
-                if(index == 1) {
-                    // setpwizard()
-                    // import_start();
-                    alert("Mapping call");
-                }
-
                 if(index == 2) {
-                    // setpwizard()
-                    // mapping();
-                    alert("Report Call")
+                    alert("ok");
                 }
 
             });
@@ -467,38 +435,7 @@
                 return status;
             }
 
-            function import_start(id)
-            {
 
-                $.ajax({
-                    xhr: function() {
-                        var xhr = new window.XMLHttpRequest();
-
-                        xhr.upload.addEventListener("progress", function(evt){
-                            console.log(evt);
-                            if (evt.lengthComputable) {
-                                var percentComplete = Math.ceil((evt.loaded / evt.total) * 100);
-                                $(".progress-bar").width(percentComplete + '%');
-                                $("#progress-bar").text(percentComplete + '%');
-                                console.log(percentComplete);
-                            }
-                        }, false);
-
-                    return xhr;
-                    },
-                    type: "POST",
-                    url: "{{ route('admin.import.start_upload') }}",
-                    data: {id, id},
-                    success: function(res) {
-                        alert(res)
-                    },
-                });
-            }
-
-            function mapping()
-            {
-
-            }
 
             function setpwizard()
             {
@@ -512,6 +449,7 @@
                     index++;
                     $(".step").removeClass("active").eq(index).addClass("active");
                     $(".stepProgress").eq(index).addClass("active");
+                    $('#next').hide();
                 };
 
                 if (index == 2) {
