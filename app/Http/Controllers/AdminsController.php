@@ -131,6 +131,8 @@ class AdminsController extends Controller
 
     public function checkEmailId(Request $request)
     {
+        // dd($request->all());
+
         if($request->type == 'UPDATE')
         {
             $user = User::where('email', 'like', '%' . $request->email . '%')->where('id','!=',$request->id)->get()->count();
@@ -139,7 +141,6 @@ class AdminsController extends Controller
         {
             $user = User::where('email', 'like', '%' . $request->email . '%')->get()->count();
         }
-
         return response()->json($user);
 
     }
