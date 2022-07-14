@@ -276,6 +276,9 @@
                                     datatable.draw();
                                     });
                               selected = [];
+                              $('.deleteBtn').prop('disabled',true);
+                              $(".selected").prop("checked", false);
+                              $(".all-checkbox").prop("checked", false);
                             }
                         });
                     }
