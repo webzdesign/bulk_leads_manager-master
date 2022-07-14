@@ -31,17 +31,10 @@ class LeadsController extends Controller
         $leadDetail = LeadDetail::with('lead')->orderBy('id','DESC');
         if($request->leadType)
         {
-            $data = [];
-            $leads = $leadDetail;
-           foreach($leads as $us)
-           {
-                if($us->lead->lead_type->id == $request->leadType)
-                {
-                    $data[] = $us->id;
-                }
-           }
-
-           $leadDetail  = LeadDetail::whereIn('id',$data)->orderBy('id','DESC');
+            $leadt = $request->leadType;
+            $leadDetail = $leadDetail->whereHas('lead.lead_type', function($q) use($leadt){
+                $q->where('id',$leadt);
+            });
 
         }
         if($request->leadAge)
