@@ -83,7 +83,7 @@
                             <select id='stateDD' class="select2">
                                 <option value="">Select State</option>
                                 @foreach ($states as $state)
-                                <option value='{{$state}}'>{{$state}}</option>
+                                <option value='{{$state->state->id}}'>{{$state->state->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -200,6 +200,9 @@
                     $(this).prop("checked", false);
                     selected = [];
                 }
+                if($('.selected').is(':checked') == false  && $('.all-checkbox').is(':checked') == false){
+                    $('.deleteBtn').prop('disabled',true)
+                }
             });
 
             $('body').on('click', '.all-checkbox', function(e) {
@@ -219,8 +222,18 @@
                     $(".selected").prop("checked", false);
                     selected = [];
                 }
+                if($('.all-checkbox').is(':checked') == false && $('.selected').is(':checked') == false){
+                    $('.deleteBtn').prop('disabled',true)
+                }
             });
 
+            $('.form-check-input').change(function(){
+                if ($(this).is(":checked")) {
+                    $('.deleteBtn').removeAttr('disabled')
+                }else if ($(".form-check-input:checked").length == 0) {
+                    $('.deleteBtn').attr('disabled','true')
+                }
+            });
 
 
         $(document).on('click','#apply',function(){
