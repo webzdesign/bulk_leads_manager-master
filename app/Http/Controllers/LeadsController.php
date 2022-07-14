@@ -20,7 +20,7 @@ class LeadsController extends Controller
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::all();
         $genders = LeadDetail::all()->unique('gender')->pluck('gender');
-        $states = LeadDetail::with('state')->get();
+        $states = LeadDetail::with('state')->get()->unique('state_id');
         $leadAge = AgeGroup::with('leadType')->get();
         return view("$this->view/index", compact('moduleName','leadTypes','genders','leadAge','states'));
     }
