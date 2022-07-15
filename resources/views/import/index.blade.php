@@ -230,14 +230,15 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    @foreach ($leadFields as $leadField)
+                                    @foreach ($leadFields as $key => $leadField)
                                         <th>
-                                            <select>
-                                                <option value=""> -- Select --</option>
+                                            <select class="select2 select_field" name="select_field" id="select_field{{$key}}">
+                                                <option value="null"> -- Select --</option>
                                                 @foreach ($leadFields as $leadField)
                                                     <option value="{{ $leadField->id }}">{{ $leadField->name }}</option>
                                                 @endforeach
                                             </select>
+                                            <label class="text-danger f-400 f-14 d-none" id="select_heading{{$key}}">Select Heading</label>
                                         </th>
                                     @endforeach
                                 </tr>
@@ -394,13 +395,24 @@
                 }
 
                 if(index == 2) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('admin.import.start_upload') }}",
-                        success: function (res) {
+                    var selectfield = selectField();
 
-                        }
-                    });
+                    if(selectfield == true) {
+
+                        var list = [];
+                        $('.select_field > option:selected').each(function() {
+                            list.push($(this).val());
+                        })
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('admin.import.start_upload') }}",
+                            data: {id: list},
+                            success: function (res) {
+
+                            }
+                        });
+                    }
                 }
 
             });
@@ -431,6 +443,44 @@
 
                 return status;
             }
+
+            function selectField() {
+                var status = [];
+                $('.select_field > option:selected').each(function(key, value) {
+                    var value = $(this).val();
+                    if(value == 'null') {
+                        $('#select_heading'+key+'').removeClass('d-none');
+                        status.push(value);
+                    } else {
+                        $('#select_heading'+key+'').addClass('d-none');
+                        status.push(value);
+                    }
+                });
+
+                if($.inArray("null", status) !== -1) {
+                    return false;
+                } else {
+                    return true;
+                }
+
+            }
+
+            $('.select_field').on('change', function(e) {
+                var id = $(this).attr('id');
+                var value = $(this).val();
+
+                $('.select_field').each(function() {
+                    if(id != $(this).attr('id')) {
+
+                        var field_id = $(this).attr('id');
+                        $('#'+field_id+' option[value='+value+']').prop('disabled', true);
+
+                    } else {
+
+                    }
+                });
+
+            });
 
             function getSheetData(id) {
                 $.ajax({

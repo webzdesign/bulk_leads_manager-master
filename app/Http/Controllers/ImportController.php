@@ -90,6 +90,7 @@ class ImportController extends Controller
 
     public function start_upload(Request $request)
     {
+        dd($request->all());
         // ini_set('memory_limit', '-1');
         // set_time_limit(0);
 
