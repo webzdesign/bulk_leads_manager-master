@@ -38,9 +38,9 @@ class AgeGroupController extends Controller
 
     public function age_edit(Request $request)
     {
-        $ageGroup = AgeGroup::find($request->id);
-        return response()->json([true, $ageGroup]);
-
+        $ageGroup = AgeGroup::with('leadType')->where('id',$request->id)->first();
+        $leadType = $ageGroup->leadType;
+        return response()->json([true, $ageGroup,$leadType]);
     }
 
     public function age_delete(Request $request)
