@@ -74,7 +74,7 @@
                                     <div class="d-flex align-items-center d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Email:</label>
                                         <div class="col-order-2 position-relative">
-                                            <input type="text" placeholder="Enter email address" class="form-control" name="filter_client_email" autocomplete="off">
+                                            <input type="text" placeholder="Enter email address" class="form-control" name="filter_client_email"  id="filter_client_email" autocomplete="off">
 
                                             <div class="emailErrorDiv text-center position-absolute bg-white">
                                                 <div class="loadingClient c-7b f-14 f-400">
@@ -93,7 +93,7 @@
                                         <span class="text-danger" id="client_id_validate"></span>
                                     </div>
                                 </div>
-                                <div class="clientBlock emailBlock d-none">
+                                {{-- <div class="clientBlock emailBlock d-none">
                                     <div class="d-flex align-items-center d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Client:</label>
                                         <div class="col-order-2 position-relative">
@@ -105,7 +105,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="devider mt-4" style="background: #bfbfbf;"></div>
                                 <div>
                                     <h4 class="f-16 f-500 c-19 mt-4">Client Details</h4>
@@ -361,6 +361,16 @@
 
     <script>
         $(document).ready(function() {
+
+            $('.loadingClient').prop('hidden',true);
+            $('.email_list').click(function(){
+                $('.loadingClient').prop('hidden',true);
+            });
+
+            $(document).on('input','#filter_client_email',function(){
+                $('.loadingClient').removeAttr('hidden');
+            })
+
             $('.only_digits').keyup(function(e){
                 if (/\D/g.test(this.value))
                 {
