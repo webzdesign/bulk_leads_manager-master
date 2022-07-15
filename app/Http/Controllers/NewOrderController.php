@@ -160,7 +160,7 @@ class NewOrderController extends Controller
                 $leads_details->where('gender',$request->gender);
             }
             if(isset($request->state_id) && $request->state_id !=null){
-                $leads_details->where('state',$request->state_id);
+                $leads_details->where('state_id',$request->state_id);
             }
             $leads_details = $leads_details->count();
             $total_leads_available = $leads_details;

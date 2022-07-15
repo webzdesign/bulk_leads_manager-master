@@ -75,12 +75,12 @@ class LeadsController extends Controller
                         return 'F';
 
                 })
-                ->editColumn('state',function($row){
+                ->editColumn('state_id',function($row){
 
                         return $row->state->name;
 
                 })
-                ->rawColumns(['check','zip','gender'])
+                ->rawColumns(['check','zip','gender','state_id'])
                 ->make(true);
 
     }

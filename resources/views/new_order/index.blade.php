@@ -97,7 +97,7 @@
                                     <div class="d-flex align-items-center d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Client:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select>
+                                            <select class="select2">
                                                 <option value="hide">Select client details</option>
                                                 <option>John Doe</option>
                                                 <option>John Doe</option>
@@ -194,7 +194,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Gender:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="gender" class="form-control">
+                                            <select name="gender" class="form-control select2" >
                                                 <option value="">Select gender</option>
                                                 <option value="0">Male</option>
                                                 <option value="1">Female</option>
@@ -204,7 +204,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">State(s): </label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="state_id" class="form-control">
+                                            <select name="state_id" class="form-control select2">
                                                 <option value="">Select states</option>
                                                 @if ($States->isNotEmpty())
                                                     @foreach ($States as $value)
@@ -508,7 +508,6 @@
                 var lead_type_id = $('[name="lead_type_id"]').val();
                 var age_group_id = $('[name="age_group_id"]').val();
                 var qty = $('[name="qty"]').val();
-
                 if(lead_type_id == ''){
                     $("#lead_type_id_validate").text('Please select lead type.');
                     return false;

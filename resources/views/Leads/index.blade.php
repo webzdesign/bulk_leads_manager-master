@@ -162,7 +162,7 @@
                         data: 'zip',
                     },
                     {
-                        data:'state',
+                        data:'state_id',
                     },
                     {
                         data:'address',
