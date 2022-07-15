@@ -16,6 +16,16 @@
     aside.sidebarClose .displayNone{
         display: none;
     }
+    body{
+        overflow: hidden;
+    }
+    .rightSection{
+        height: 100vh;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
 }
 
 
