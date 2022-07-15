@@ -204,7 +204,7 @@
                         <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
-                                <select name="email_subject" class="select2">
+                                <select name="email_subject" >
                                     <option value="lead-send" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-send' ? 'selected' : '';?>>Leads Send</option>
                                     <option value="lead-delete" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-delete' ? 'selected' : '';?>>Leads Delete</option>
                                 </select>
