@@ -177,7 +177,7 @@
                             <label class="c-gr f-16 f-500">Lead Type Assigned to:</label>
                         </div>
                         <div class="col-md-8">
-                            <select name="lead_type_assign" id="lead_type_assign">
+                            <select name="lead_type_assign" id="lead_type_assign" class="select2">
                                 <option value="hide">Select lead type</option>
                                 @foreach ($LeadTypes as $LeadType)
                                     <option value="{{ $LeadType->id }}">{{ $LeadType->name }}</option>

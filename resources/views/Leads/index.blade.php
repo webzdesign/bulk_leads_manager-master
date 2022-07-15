@@ -51,7 +51,7 @@
                     <svg class="me-2" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.84408 12.1946C7.94068 12.1472 8.02209 12.0738 8.07909 11.9825C8.1361 11.8913 8.16644 11.7859 8.16667 11.6783V8.57501C8.16667 8.42218 8.22792 8.27518 8.33758 8.16668L11.9082 4.63518C12.0163 4.52842 12.1022 4.40126 12.1609 4.26108C12.2196 4.1209 12.2498 3.97048 12.25 3.81851V2.32751C12.2497 2.25127 12.2344 2.17583 12.2049 2.10552C12.1754 2.03522 12.1323 1.97142 12.0781 1.91777C12.0239 1.86413 11.9597 1.8217 11.8891 1.79292C11.8185 1.76413 11.7429 1.74955 11.6667 1.75001H2.33333C2.01075 1.75001 1.75 2.00784 1.75 2.32751V3.81851C1.75 4.12476 1.87308 4.41876 2.09183 4.63518L5.66242 8.16668C5.71652 8.22004 5.75948 8.28361 5.78882 8.3537C5.81816 8.4238 5.83329 8.49902 5.83333 8.57501V12.2558C5.83333 12.6846 6.2895 12.9634 6.67742 12.7715L7.84408 12.1946Z" fill="white"/></svg>Filter
                 </button>
                 <ul class="dropdown-menu settingWrpr cards filterDropdownBx p-0 m-0">
-                    <div class="cardsHeader">
+                    <div class="cardsHeader" id="filter">
                         <span class="f-18 f-600 f-16-500 c-gr f-700">Filter</span>
                     </div>
                     <div class="cardsBody settingWrpr">
@@ -83,7 +83,7 @@
                             <select id='stateDD' class="select2">
                                 <option value="">Select State</option>
                                 @foreach ($states as $state)
-                                <option value='{{$state}}'>{{$state}}</option>
+                                <option value='{{$state->state->id}}'>{{$state->state->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -162,7 +162,7 @@
                         data: 'zip',
                     },
                     {
-                        data:'state',
+                        data:'state_id',
                     },
                     {
                         data:'address',
@@ -200,6 +200,9 @@
                     $(this).prop("checked", false);
                     selected = [];
                 }
+                if($('.selected').is(':checked') == false  && $('.all-checkbox').is(':checked') == false){
+                    $('.deleteBtn').prop('disabled',true)
+                }
             });
 
             $('body').on('click', '.all-checkbox', function(e) {
@@ -219,8 +222,18 @@
                     $(".selected").prop("checked", false);
                     selected = [];
                 }
+                if($('.all-checkbox').is(':checked') == false && $('.selected').is(':checked') == false){
+                    $('.deleteBtn').prop('disabled',true)
+                }
             });
 
+            $('.form-check-input').change(function(){
+                if ($(this).is(":checked")) {
+                    $('.deleteBtn').removeAttr('disabled')
+                }else if ($(".form-check-input:checked").length == 0) {
+                    $('.deleteBtn').attr('disabled','true')
+                }
+            });
 
 
         $(document).on('click','#apply',function(){
@@ -263,6 +276,9 @@
                                     datatable.draw();
                                     });
                               selected = [];
+                              $('.deleteBtn').prop('disabled',true);
+                              $(".selected").prop("checked", false);
+                              $(".all-checkbox").prop("checked", false);
                             }
                         });
                     }
@@ -282,6 +298,7 @@
         });
 
         $('#leadTypeDD').on('change', function(){
+            $('body').find('#leadAgeDD').html('<option value=""> Select Lead Age </option>');
             var type = $(this).val();
             console.log(type);
             $.ajax({
@@ -291,7 +308,8 @@
                     type:type
                 },
                 success: function (response) {
-                     console.log(response[0].length);
+
+                    console.log(response[0].length);
                     if(response[0].length > 0)
                     {
                          response[0].forEach(function(el, index) {
