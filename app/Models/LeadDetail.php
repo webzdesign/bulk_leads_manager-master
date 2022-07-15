@@ -17,4 +17,12 @@ class LeadDetail extends Model
     {
         return $this->belongsTo(Lead::class,'lead_id','id');
     }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class,'state_id','id');
+    }
+
+
+
 }

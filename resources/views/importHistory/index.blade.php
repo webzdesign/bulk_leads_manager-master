@@ -60,7 +60,7 @@
                     <div class="cardsBody settingWrpr">
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Leads Type</label>
-                            <select>
+                            <select class="select2">
                                 <option value="hide">Select lead type</option>
                                 <option>12 months</option>
                                 <option>11 months</option>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Leads Age</label>
-                            <select>
+                            <select class="select2">
                                 <option value="hide">Select leads age</option>
                                 <option>12 months</option>
                                 <option>11 months</option>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Gender</label>
-                            <select>
+                            <select class="select2">
                                 <option value="hide">Select gender</option>
                                 <option>12 months</option>
                                 <option>11 months</option>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                            <select>
+                            <select class="select2">
                                 <option value="hide">Select state</option>
                                 <option>12 months</option>
                                 <option>11 months</option>

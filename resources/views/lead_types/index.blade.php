@@ -1,4 +1,9 @@
 @extends('layouts.master')
+<style>
+    .select2{
+        width: 100%;
+    }
+</style>
 @section('content')
     <div class="middleContent">
         <div class="cards tableCards">
@@ -177,7 +182,7 @@
                             <label class="c-gr f-16 f-500">Lead Type Assigned to:</label>
                         </div>
                         <div class="col-md-8">
-                            <select name="lead_type_assign" id="lead_type_assign">
+                            <select name="lead_type_assign" id="lead_type_assign" class="select2">
                                 <option value="hide">Select lead type</option>
                                 @foreach ($LeadTypes as $LeadType)
                                     <option value="{{ $LeadType->id }}">{{ $LeadType->name }}</option>
@@ -253,8 +258,7 @@
                 $('#age_from').val('');
                 $('#age_to').val('');
                 $('#age_group_id').val('');
-                var selected = $('#lead_type_assign option[value="hide"]').attr('selected','selected').text();
-                $('.select-styled').text(selected);
+                $('.select2-selection__rendered').val('hide');
             });
 
             $('#lead_type_submit').on('click', function(e) {
@@ -462,10 +466,10 @@
                     success: function(res) {
                         if(res[0] == true) {
                             $('#age_group_id').val(res[1].id);
-                            var selected = $('#lead_type_assign option[value='+res[1].lead_type_id+']').attr("selected", "selected").text();
-                            $('.select-styled').text(selected);
                             $('#age_from').val(res[1].age_from);
                             $('#age_to').val(res[1].age_to);
+                            $("#lead_type_assign").children('[value="'+res[2].id+'"]').attr('selected', "selected");
+                            $('.select2-selection__rendered').text(res[2].name);
                         }
                     }
                 });

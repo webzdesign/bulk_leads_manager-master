@@ -142,16 +142,7 @@ class ClientsController extends Controller
         {
             $client = Client::where('email', 'like', '%' . $request->email . '%')->get()->count();
         }
-
-       if($client > 0)
-       {
-        return response()->json(false);
-       }
-       else
-       {
-        return response()->json(true);
-       }
-
+        return response()->json($client);
     }
 
 }

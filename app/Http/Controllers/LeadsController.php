@@ -20,7 +20,7 @@ class LeadsController extends Controller
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::all();
         $genders = LeadDetail::all()->unique('gender')->pluck('gender');
-        $states = LeadDetail::all()->unique('state')->pluck('state');
+        $states = LeadDetail::with('state')->get()->unique('state_id');
         $leadAge = AgeGroup::with('leadType')->get();
         return view("$this->view/index", compact('moduleName','leadTypes','genders','leadAge','states'));
     }
@@ -31,16 +31,11 @@ class LeadsController extends Controller
         $leadDetail = LeadDetail::with('lead')->orderBy('id','DESC');
         if($request->leadType)
         {
-            $data = [];
-            $leads = $leadDetail;
-           foreach($leads as $us)
-           {
-                if($us->lead->lead_type->id == $request->leadType)
-                {
-                    $data[] = $us->id;
-                }
-           }
-           $user  = LeadDetail::whereIn('id',$data)->orderBy('id','DESC');
+            $leadt = $request->leadType;
+            $leadDetail = $leadDetail->whereHas('lead.lead_type', function($q) use($leadt){
+                $q->where('id',$leadt);
+            });
+
         }
         if($request->leadAge)
         {
@@ -56,7 +51,7 @@ class LeadsController extends Controller
         }
         if($request->state)
         {
-            $leadDetail->where('state',$request->state);
+            $leadDetail->where('state_id',$request->state);
         }
 
         $data =$leadDetail;
@@ -80,7 +75,12 @@ class LeadsController extends Controller
                         return 'F';
 
                 })
-                ->rawColumns(['check','zip','gender'])
+                ->editColumn('state_id',function($row){
+
+                        return $row->state->name;
+
+                })
+                ->rawColumns(['check','zip','gender','state_id'])
                 ->make(true);
 
     }

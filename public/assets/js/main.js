@@ -1,9 +1,30 @@
 $(document).ready(function() {
 
-    $('.menuicn').click(function() {
+    var tooltipCus = $('[data-bs-toggle="tooltip"]');
+    tooltipCus.tooltip('disable');
+    $('.menuicn').click(function () {
         $('aside').toggleClass('sidebarClose');
         $('.d-none-add').addClass('displayNone');
         $('.sidebarOverlay').removeClass('d-none');
+
+        
+        if( $('aside').hasClass('sidebarClose') ){
+            
+            tooltipCus.tooltip('enable')
+        }else{
+            tooltipCus.tooltip('disable')
+        }
+        
+
+    });
+
+    $(window).resize(function() {
+        if($(window).width() < 1024)
+        {
+            tooltipCus.tooltip('disable');
+        } else {
+            tooltipCus.tooltip('enable');
+        }
     });
 
     $('.sidebarOverlay').click(function() {

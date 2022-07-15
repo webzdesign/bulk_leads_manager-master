@@ -15,8 +15,7 @@ class CreateOrderDetailsTable extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->integer('lead_details_id');
             $table->timestamps();
         });

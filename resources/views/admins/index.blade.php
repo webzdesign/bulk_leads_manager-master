@@ -2,20 +2,20 @@
 @section('content')
     <div class="middleContent">
 
-            <div class="cards tableCards">
-                <table class="table datatable" id="example" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>FIRST NAME</th>
-                            <th>LAST NAME</th>
-                            <th>EMAIL</th>
-                            <th>DATE CREATED</th>
-                            <th>LAST LOGIN</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody id='tbody'>
-                        {{-- @foreach ($users as $user)
+        <div class="cards tableCards">
+            <table class="table datatable" id="example" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>FIRST NAME</th>
+                        <th>LAST NAME</th>
+                        <th>EMAIL</th>
+                        <th>DATE CREATED</th>
+                        <th>LAST LOGIN</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id='tbody'>
+                    {{-- @foreach ($users as $user)
                         <tr>
                             <td class="c-7b">{{$user->firstName}}</td>
                             <td class="c-7b">{{$user->lastName}}</td>
@@ -46,9 +46,9 @@
                             </td>
                         </tr>
                         @endforeach --}}
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="modal fade fieldsModal groupModal" id="addAdmin">
@@ -116,8 +116,8 @@
                                 <label class="c-gr f-16 f-500">Password:</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="password"  id="password" name="password"
-                                    class="form-control" placeholder="Enter Password" autocomplete="new-password">
+                                <input type="password" id="password" name="password" class="form-control"
+                                    placeholder="Enter Password" autocomplete="new-password">
                                 <span class="jserror"></span>
                                 @if ($errors->has('password'))
                                     <span
@@ -131,9 +131,9 @@
                                 <label class="c-gr f-16 f-500">Confirm password:</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="password" id="password_confirmation"
-                                    name="password_confirmation" class="form-control"
-                                    placeholder="re-type password to confirm" autocomplete="new-password">
+                                <input type="password" id="password_confirmation" name="password_confirmation"
+                                    class="form-control" placeholder="re-type password to confirm"
+                                    autocomplete="new-password">
                                 <span class="jserror"></span>
                                 @if ($errors->has('password_confirmation'))
                                     <span
@@ -180,8 +180,8 @@
                         d="M8.00008 13.3332V7.99984M8.00008 7.99984V2.6665M8.00008 7.99984H13.3334M8.00008 7.99984H2.66675"
                         stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
                     <defs>
-                        <linearGradient id="paint0_linear_1524_12120" x1="8.00008" y1="2.6665" x2="8.00008"
-                            y2="13.3332" gradientUnits="userSpaceOnUse">
+                        <linearGradient id="paint0_linear_1524_12120" x1="8.00008" y1="2.6665" x2="8.00008" y2="13.3332"
+                            gradientUnits="userSpaceOnUse">
                             <stop stop-color="#ffffff" />
                             <stop offset="1" stop-color="#ffffff" />
                         </linearGradient>
@@ -194,14 +194,19 @@
 
     <script type="text/html" id="searchPannel">
         <input class="form-control f-14" placeholder="Search here">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6932 14.2957L10.7036 9.31023C11.386 8.35146 11.791 7.1584 11.791 5.90142C11.791 2.64178 9.14704 0 5.8847 0C2.62254 0.00017572 0 2.64196 0 5.90142C0 9.16105 2.64397 11.8028 5.90631 11.8028C7.18564 11.8028 8.35839 11.3981 9.31795 10.7163L14.3076 15.7018C14.4994 15.8935 14.7553 16 15.0113 16C15.2672 16 15.523 15.8935 15.7149 15.7018C16.0985 15.2971 16.0985 14.6792 15.6935 14.2956L15.6932 14.2957ZM1.96118 5.90155C1.96118 3.72845 3.73104 1.98133 5.88465 1.98133C8.03826 1.9815 9.82938 3.72845 9.82938 5.90155C9.82938 8.07466 8.05952 9.82178 5.90591 9.82178C3.7523 9.82178 1.96118 8.05338 1.96118 5.90155Z" fill="#7B809A"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M15.6932 14.2957L10.7036 9.31023C11.386 8.35146 11.791 7.1584 11.791 5.90142C11.791 2.64178 9.14704 0 5.8847 0C2.62254 0.00017572 0 2.64196 0 5.90142C0 9.16105 2.64397 11.8028 5.90631 11.8028C7.18564 11.8028 8.35839 11.3981 9.31795 10.7163L14.3076 15.7018C14.4994 15.8935 14.7553 16 15.0113 16C15.2672 16 15.523 15.8935 15.7149 15.7018C16.0985 15.2971 16.0985 14.6792 15.6935 14.2956L15.6932 14.2957ZM1.96118 5.90155C1.96118 3.72845 3.73104 1.98133 5.88465 1.98133C8.03826 1.9815 9.82938 3.72845 9.82938 5.90155C9.82938 8.07466 8.05952 9.82178 5.90591 9.82178C3.7523 9.82178 1.96118 8.05338 1.96118 5.90155Z"
+                fill="#7B809A" />
+        </svg>
     </script>
 
     <script>
+        var duplicateEmail;
+
         $(document).ready(function() {
 
             // drawTable();
-
             @if (Session::has('message'))
                 Swal.fire(
                     '{{ $moduleName }}',
@@ -219,7 +224,9 @@
             @endif
 
             var datatable = $('.datatable').DataTable({
-                "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
+                "dom": "<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" +
+                    "<'row m-0'<'col-sm-12 p-0'tr>>" +
+                    "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
                 "ordering": false,
                 processing: true,
                 serverSide: true,
@@ -228,8 +235,7 @@
                     "dataType": "json",
                     "type": "GET",
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'firstName'
                     },
                     {
@@ -255,7 +261,7 @@
             $('#filterInput').html($('#searchPannel').html());
 
             $('#filterBtn').html($('#filterDropdown').html());
-            $('#filterInput > input').keyup(function(){
+            $('#filterInput > input').keyup(function() {
                 datatable.search($(this).val()).draw();
             });
 
@@ -278,6 +284,7 @@
             $('#addAdmin_submit').on('click', function(e) {
                 e.preventDefault();
                 var mainFlag = checkValidation();
+                var email = $('#email').val();
                 var subFlag = true;
                 var updateFlag = true;
                 id = $("#admin_id").val();
@@ -289,16 +296,17 @@
                     }
                     var type = "UPDATE";
                 }
-                if (mainFlag == true && subFlag == true && updateFlag == true) {
+
+                duplicateEmail = checkUniqueMail(email, type, id);
+                console.log(duplicateEmail);
+                if (mainFlag == true && subFlag == true && updateFlag == true && duplicateEmail == false) {
 
                     var firstName = $('#firstName').val();
                     var lastName = $('#lastName').val();
-                    var email = $('#email').val();
                     var password = $('#password').val();
                     var password_confirmation = $('#password_confirmation').val();
-                    var allow = 0 ;
-                    if($('#allow').is(':checked'))
-                    {
+                    var allow = 0;
+                    if ($('#allow').is(':checked')) {
                         allow = 1;
                     }
 
@@ -310,8 +318,8 @@
                             lastName: lastName,
                             email: email,
                             password: password,
-                            password_confirmation:password_confirmation,
-                            allow:allow,
+                            password_confirmation: password_confirmation,
+                            allow: allow,
                             id: id,
                             type: type
                         },
@@ -359,7 +367,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url: "{{route('admin.delete') }}",
+                            url: "{{ route('admin.delete') }}",
                             data: {
                                 id: id
                             },
@@ -404,50 +412,33 @@
                         $('#lastName').val(res['lastName']);
                         $('#email').val(res['email']);
                         $('#allow').val(res['allowCreateEditUser']);
-                       if(res['allowCreateEditUser'] == 1)
-                       {
+                        if (res['allowCreateEditUser'] == 1) {
                             $('#allow').prop('checked', true);;
-                       }
-                       else
-                       {
+                        } else {
                             $('#allow').prop('checked', false);;
-                       }
+                        }
                     }
                 });
 
             });
 
-            $("#email").on('keyup',function(){
+            $("#email").on('keyup', function() {
                 $(this).siblings('.jserror').html('');
-           var check = isEmail($(this).val())
-           if(check == false && $(this).val() != '')
-           {
-            $(this).siblings('.jserror').css('color','red').html('Invalid Email.');
-           }
-           else
-           {
-                    var type = '';
-                    id = $("#admin_id").val();
-                    if (id != '') {
-                        type = "UPDATE";
-                    }
-                    var isValid = checkUniqueMail($(this).val(),type,id);
-                    console.log(isValid);
-                    if(isValid)
-                    {
-                        $(this).siblings('.jserror').css('color','red').html('Email Already Exist.');
-                    }
-                    else
-                    {
-                         $(this).siblings('.jserror').html('');
-                    }
-           }
-        });
+                var check = isEmail($(this).val())
+                if (check == false && $(this).val() != '') {
+                    $(this).siblings('.jserror').css('color', 'red').html('Invalid Email.');
+                    $('#addAdmin_submit').prop('disabled');
+                } else {
+                    $(this).siblings('.jserror').html('');
+                    $('#addAdmin_submit').prop('disabled', false);
+                }
+            });
 
-        function isEmail(email) {
-            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-             return regex.test(email);
-        }
+
+            function isEmail(email) {
+                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                return regex.test(email);
+            }
 
             function checkValidation() {
                 var fnFlag, lnFlag, emailFlag = false;
@@ -526,31 +517,28 @@
             }
         });
 
-        function checkUniqueMail(email,type,id)
-        {
-            var emailFlag = false;
+        function checkUniqueMail(email, type, id) {
             $.ajax({
                 type: "post",
-                url: "{{route('admin.checkEmailId')}}",
-                data:{
-                    email:email,
-                    type:type,
-                    id:id
+                url: "{{ route('admin.checkEmailId') }}",
+                data: {
+                    email: email,
+                    type: type,
+                    id: id
                 },
-                success: function (response) {
+                success: function(response) {
                     console.log(response);
-                    if(response == 0)
-                    {
-                       emailFlag = false;
-                    }
-                    else
-                    {
-                        emailFlag = true;
+                    if (response > 0) {
+                        duplicateEmail = true;
+                        $("#email").siblings('.jserror').css('color', 'red').html('Email Already Exist.');
+                    } else if (response == 0) {
+                        duplicateEmail = false;
+                        $("email").siblings('.jserror').css('color', 'red').html();
                     }
                 }
             });
 
-            return emailFlag;
+            return duplicateEmail;
         }
     </script>
 @endsection

@@ -16,6 +16,16 @@
     aside.sidebarClose .displayNone{
         display: none;
     }
+    body{
+        overflow: hidden;
+    }
+    .rightSection{
+        height: 100vh;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
 }
 
 
@@ -27,6 +37,12 @@
     }
     .statsCard .cardTop div{
         font-size: 20px !important;
+    }
+    .settingWrpr .cardsBody .pl-40{
+        padding-left: 20px;
+    }
+    .settingWrpr .cardsBody .pr-40{
+        padding-right: 20px;
     }
 }
 @media (max-width:1200px) {
@@ -76,6 +92,9 @@
     }
     .newOrderWrpr .col-order-1 {
         min-width: 150px;
+    }
+    .settingWrpr .cardsBody .pl-40, .settingWrpr .cardsBody .pr-40{
+        padding:0 15px;
     }
 }
 @media (max-width:768px) {
@@ -204,7 +223,7 @@
     header .userMenu .dropdown-menu{
         min-width: 170px;
     }
-    footer, .dashWrpr .dashRow .cardTop, .notificationBody li a, .statsCard .cards, .settingWrpr .cardsFooter, .importWrpr .fileProgress, .importWrpr .uploadStatus, .middleContent, .tableCards .cardsHeader, .cardsHeader, .importWrpr .fileUploadBx {
+    .settingWrpr .cardsBody, footer, .dashWrpr .dashRow .cardTop, .notificationBody li a, .statsCard .cards, .settingWrpr .cardsFooter, .importWrpr .fileProgress, .importWrpr .uploadStatus, .middleContent, .tableCards .cardsHeader, .cardsHeader, .importWrpr .fileUploadBx {
         padding: 15px !important;
     }
     header ul li{
