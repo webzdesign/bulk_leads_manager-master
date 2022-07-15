@@ -42,7 +42,6 @@
     font-display: swap;
 }
 
-
 .main{
     display: flex;
     flex-direction: column;
@@ -266,13 +265,6 @@ button:disabled svg path{
     border-color: #4C26AA !important;
 }
 
-.rightSection{
-    height: 100vh;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-}
 .select2-dropdown{
     z-index: 9999 !important;
     margin: 0;
