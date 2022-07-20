@@ -201,21 +201,26 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="colOne c-gr f-16 f-500">Import Progress:</div>
-                                    <div class="colTwo c-19 f-16 f-500">0% (Step 1 - Scanning file...)</div>
+                                <div class="d-flex align-items-center mb-4" >
+                                    <div class="colOne c-gr f-16 f-500" >Import Progress:</div>
+                                    <div class="colTwo c-19 f-16 f-500" >0% (Step 1 - Scanning file...)</div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
-                                    <div class="colOne c-gr f-16 f-500">Rows:</div>
+                                    <div class="colOne c-gr f-16 f-500" >Rows:</div>
                                     <div class="colTwo c-43 f-16 f-500">0</div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
-                                    <div class="colOne c-gr f-16 f-500">Duplicate Records:</div>
-                                    <div class="colTwo c-19 f-16 f-500">0</div>
+                                    <div class="colOne c-gr f-16 f-500" >Duplicate Records:</div>
+                                    <div class="colTwo c-19 f-16 f-500" >0 <a href="javascript:;"
+                                        class="c-43">Download</a></div>
+                                </div>
+                                <div class="d-flex align-items-center mb-4" id='invalidRowsDiv' hidden>
+                                    <div class="colOne c-gr f-16 f-500" >Invalid Records:</div>
+                                    <div class="colTwo c-19 f-16 f-500" >0</div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Imported Records</div>
-                                    <div class="colTwo c-19 f-16 f-500">0 <a href="javascript:;"
+                                    <div class="colTwo c-19 f-16 f-500" >0 <a href="javascript:;"
                                             class="c-43">Download</a></div>
                                 </div>
                             </div>
@@ -227,12 +232,12 @@
                         <h3 class="c-gr f-18 f-500 mb-0 f-16-500">Select headings then click save</h3>
                     </div>
                     <div class="cardsBody p-0 tableCards ">
-                        <table class="table mb-0">
+                        <table class="table mb-0" id='mainTable'>
                             <thead>
                                 <tr>
                                     @foreach ($leadFields as $key => $leadField)
                                         <th>
-                                            <select class="select2 select_field" name="select_field" id="select_field{{$key}}">
+                                            <select class="select2 select_field leadSelect" name="select_field" id="select_field{{$key}}">
                                                 <option value="null"> -- Select --</option>
                                                 @foreach ($leadFields as $leadField)
                                                     <option value="{{ $leadField->id }}">{{ $leadField->name }}</option>
@@ -252,7 +257,7 @@
 
                 <div class="step">
                     <div class="cardsHeader">
-                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400">(uploaded 3 hours
+                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400" id='card3Header'>(uploaded 3 hours
                                 ago)</span></h3>
                     </div>
                     <div class="cardsBody p-0">
@@ -278,22 +283,24 @@
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Rows:</div>
-                                    <div class="colTwo c-43 f-16 f-500">2499</div>
+                                    <div class="colTwo c-43 f-16 f-500" id='totalRows'>2499</div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Duplicate Records:</div>
-                                    <div class="colTwo c-19 f-16 f-500">345 <a href="javascript:;"
-                                            class="c-43">Download</a></div>
+                                    <div class="colTwo c-19 f-16 f-500" > <span id='duplicateRows'></span> <a href="javascript:;"
+                                            class="c-43 download" data-text="duplicate" data-lead='{{isset($lead) ? $lead :''}}'>Download</a></div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Invalid Records:</div>
-                                    <div class="colTwo c-19 f-16 f-500">155 (155 of these are missing an email)</div>
+                                    <div class="colTwo c-19 f-16 f-500" id='invalidRows'> </div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Imported Records</div>
-                                    <div class="colTwo c-19 f-16 f-500">1999 <a href="javascript:;"
-                                            class="c-43">Download</a></div>
+                                    <div class="colTwo c-19 f-16 f-500" ><span id='importRows'></span> <a  href="javascript:;"
+                                            class="c-43 download" data-text="import" data-lead='{{isset($lead) ? $lead :''}}'>Download</a></div>
                                 </div>
+                                <div id='lead_id' hidden></div>
+                                <div hidden id='file_in_db'></div>
                             </div>
                         </div>
                     </div>
@@ -307,10 +314,16 @@
     </div>
 @endsection
 @section('script')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        var idArr = [];
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
         $(document).ready(function() {
+
+         !function(a){"use strict";a.fn.tableToJSON=function(b){var c={ignoreColumns:[],onlyColumns:null,ignoreHiddenRows:!0,ignoreEmptyRows:!1,headings:null,allowHTML:!1,includeRowId:!1,textDataOverride:"data-override",textExtractor:null};b=a.extend(c,b);var d=function(a){return void 0!==a&&null!==a},e=function(c){return d(b.onlyColumns)?-1===a.inArray(c,b.onlyColumns):-1!==a.inArray(c,b.ignoreColumns)},f=function(b,c){var e={},f=0;return a.each(c,function(a,c){f<b.length&&d(c)&&(e[b[f]]=c,f++)}),e},g=function(c,d,e){var f=a(d),g=b.textExtractor,h=f.attr(b.textDataOverride);return null===g||e?a.trim(h||(b.allowHTML?f.html():d.textContent||f.text())||""):a.isFunction(g)?a.trim(h||g(c,f)):"object"==typeof g&&a.isFunction(g[c])?a.trim(h||gc):a.trim(h||(b.allowHTML?f.html():d.textContent||f.text())||"")},h=function(c,d){var e=[],f=b.includeRowId,h="boolean"==typeof f?f:"string"==typeof f?!0:!1,i="string"==typeof f==!0?f:"rowId";return h&&"undefined"==typeof a(c).attr("id")&&e.push(i),a(c).children("td,th").each(function(a,b){e.push(g(a,b,d))}),e},i=function(a){var c=a.find("tr:first").first();return d(b.headings)?b.headings:h(c,!0)},j=function(c,h){var i,j,k,l,m,n,o,p=[],q=0,r=[];return c.children("tbody,*").children("tr").each(function(c,e){if(c>0||d(b.headings)){var f=b.includeRowId,h="boolean"==typeof f?f:"string"==typeof f?!0:!1;n=a(e);var r=n.find("td").length===n.find("td:empty").length?!0:!1;!n.is(":visible")&&b.ignoreHiddenRows||r&&b.ignoreEmptyRows||n.data("ignore")&&"false"!==n.data("ignore")||(q=0,p[c]||(p[c]=[]),h&&(q+=1,"undefined"!=typeof n.attr("id")?p[c].push(n.attr("id")):p[c].push("")),n.children().each(function(){for(o=a(this);p[c][q];)q++;if(o.filter("[rowspan]").length)for(k=parseInt(o.attr("rowspan"),10)-1,m=g(q,o),i=1;k>=i;i++)p[c+i]||(p[c+i]=[]),p[c+i][q]=m;if(o.filter("[colspan]").length)for(k=parseInt(o.attr("colspan"),10)-1,m=g(q,o),i=1;k>=i;i++)if(o.filter("[rowspan]").length)for(l=parseInt(o.attr("rowspan"),10),j=0;l>j;j++)p[c+j][q+i]=m;else p[c][q+i]=m;m=p[c][q]||g(q,o),d(m)&&(p[c][q]=m),q++}))}}),a.each(p,function(c,g){if(d(g)){var i=d(b.onlyColumns)||b.ignoreColumns.length?a.grep(g,function(a,b){return!e(b)}):g,j=d(b.headings)?h:a.grep(h,function(a,b){return!e(b)});m=f(j,i),r[r.length]=m}}),r},k=i(this);return j(this,k)}}(jQuery);
+
+
 
             $("input:checkbox").on('click', function() {
                 var $box = $(this);
@@ -327,7 +340,7 @@
             $('#next').on('click', function(e) {
                 e.preventDefault();
                 count = 0;
-                var index = $(".step.active").index(".step")
+                var index = $(".step.active").index(".step");
 
                 if(index == 0) {
                     var selectcheckbox = selectCheckbox();
@@ -378,7 +391,7 @@
 
                                     let stop = setInterval(function(){
                                         progress()
-                                    },[100])
+                                    },[20])
 
                                     getSheetData(res.lead_type_id);
 
@@ -387,6 +400,7 @@
                                     $('.uploaded_by').text(res.uploaded_by);
                                     $('.lead_type_name').text(res.lead_type);
                                     $('#invalidFile_error').addClass('d-none');
+                                    $('#file_in_db').text(res.file_in_db);
                                 }
                             }
                         })
@@ -396,7 +410,6 @@
 
                 if(index == 2) {
                     var selectfield = selectField();
-
                     if(selectfield == true) {
 
                         var list = [];
@@ -404,17 +417,77 @@
                             list.push($(this).val());
                         })
 
+                            var filename =  $('#file_in_db').text();
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.start_upload') }}",
-                            data: {id: list},
+                            data: {id: list , filename:filename , leadType:$('.lead_type_name').text()},
                             success: function (res) {
+                                console.log(res);
 
+                                    if(res['done'] == true)
+                                    {
+                                        Swal.fire({
+                                        icon: "success",
+                                        title: "File Import",
+                                        text: res['message'],
+                                        });
+                                        setpwizard();
+                                        $('#totalRows').text(res['rows']);
+                                        $('#duplicateRows').text(res['duplicate']);
+                                        $('#invalidRows').text(res['invalid'] + '('+res['invalid']+' of these are missing an email.)' );
+                                        $('#importRows').text(res['import']);
+                                        $('#lead_id').text(res['lead']);
+                                        $('.file_name').text(res['uploadTime']);
+                                    }
+                                    if(res['done'] == false)
+                                    {
+                                        Swal.fire({
+                                        icon: "info",
+                                        title: "File Import",
+                                        text: res['message'],
+                                        });
+                                    }
                             }
                         });
                     }
                 }
 
+
+            });
+
+            $(document).on('click','.download',function(){
+                var lead_id = $('#lead_id').text();
+                var type = $(this).attr('data-text');
+                console.log(lead_id);
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('admin.import.download')}}",
+                    data: {
+                        lead_id:lead_id,
+                        type:type
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        var downloadLink = document.createElement("a");
+                        var fileData = ['\ufeff'+data];
+
+                        var blobObject = new Blob(fileData,{
+                            type: "text/csv;charset=utf-8;"
+                         });
+
+                        var url = URL.createObjectURL(blobObject);
+                        downloadLink.href = url;
+                        downloadLink.download = "Sample.csv";
+
+              /*
+               * Actually download CSV
+               */
+                         document.body.appendChild(downloadLink);
+                         downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                    }
+                });
             });
 
             function selectCheckbox() {
@@ -465,20 +538,35 @@
 
             }
 
+
             $('.select_field').on('change', function(e) {
                 var id = $(this).attr('id');
                 var value = $(this).val();
+                var obj = {};
+                obj['key'] = id;
+                obj['val'] = value;
 
-                $('.select_field').each(function() {
-                    if(id != $(this).attr('id')) {
-
-                        var field_id = $(this).attr('id');
-                        $('#'+field_id+' option[value='+value+']').prop('disabled', true);
-
-                    } else {
-
-                    }
+                const checkValue = object => object.val === value;
+               if(idArr.some(checkValue))
+               {
+                $(this).val("null");
+                Swal.fire({
+                    icon: "info",
+                    title: "Please select other option.",
+                    text: "This value is already selected.",
                 });
+               }
+               else
+               {
+                        const index = idArr.findIndex((obj => obj.key == id));
+                        if (index !== -1) {
+                                idArr[index].val = value;
+                         }
+                         else
+                        {
+                            idArr.push(obj);
+                        }
+               }
 
             });
 
