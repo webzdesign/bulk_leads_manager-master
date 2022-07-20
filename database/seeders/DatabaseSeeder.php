@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
 
         User::updateOrCreate(['email' => 'admin@apacheleads.com'],
         [
-            'firstName' => 'Admin',
+            'firstName' => 'Admin apacheleads',
             'email' => 'admin@apacheleads.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
 
         User::updateOrCreate(['email' => 'admin@xsited.com'],
         [
-            'firstName' => 'Admin',
+            'firstName' => 'Admin xsited',
             'email' => 'admin@xsited.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
