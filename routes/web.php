@@ -30,6 +30,8 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::post('import/download', [ImportController::class, 'downloadCsv'])->name('admin.import.download');
+
 Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Auth::routes(['register' => false]);
@@ -70,6 +72,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/importCSV',[ImportController::class, 'importCSV'])->name('admin.import.importCSV');
             Route::post('/getData', [ImportController::class, 'getData'])->name('admin.import.getData');
             Route::post('/start_upload',[ImportController::class, 'start_upload'])->name('admin.import.start_upload');
+
         });
 
         Route::group(['prefix' => 'clients'], function(){
@@ -90,6 +93,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::get('/get-data', [LeadsController::class, 'getData'])->name('admin.leads.getData');
             Route::post('/bulkRemove', [LeadsController::class, 'bulkRemove'])->name('admin.leads.bulkRemove');
             Route::post('/getAge', [LeadsController::class, 'getAge'])->name('admin.leads.getAge');
+
         });
 
         Route::group(['prefix' => 'orders'], function(){
