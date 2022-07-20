@@ -32,9 +32,16 @@ class SiteSettingSeeder extends Seeder
 
         $records = array(
             'email_subject' => 'lead-delete',
-            'content' => 'Delete user',
+            'content' => 'Delete Lead',
             'added_by' => 1,
         );
         EmailTemplate::updateOrCreate(['id' => 1],$records);
+
+        $records = array(
+            'email_subject' => 'lead-send',
+            'content' => 'Send Lead',
+            'added_by' => 1,
+        );
+        EmailTemplate::updateOrCreate(['id' => 2],$records);
     }
 }
