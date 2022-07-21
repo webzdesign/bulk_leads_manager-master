@@ -307,7 +307,9 @@
                 </div>
 
                 <div class="cardsFooter d-flex justify-content-end">
-                    <button class="btn-primary f-500 f-14" id="next">Save & continue import</button>
+                    <form id="fileUploadForm" enctype="multipart/form-data">
+                    <button class="btn-primary f-500 f-14" type="submit" id="next">Save & continue import</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -315,6 +317,7 @@
 @endsection
 @section('script')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
     <script>
         var idArr = [];
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
@@ -359,7 +362,9 @@
                         var formData = new FormData();
                         formData.append('lead_type_id',leadTypeId)
                         formData.append('file', document.querySelector('#file').files[0]);
-                        formData.append('title', $("#title").val())
+                        formData.append('title', $("#title").val());
+
+                        var filesize = document.querySelector('#file').files[0].size;
 
                         $.ajax({
                             type: "POST",
@@ -391,7 +396,7 @@
 
                                     let stop = setInterval(function(){
                                         progress()
-                                    },[20])
+                                    },[100])
 
                                     getSheetData(res.lead_type_id);
 
@@ -401,6 +406,7 @@
                                     $('.lead_type_name').text(res.lead_type);
                                     $('#invalidFile_error').addClass('d-none');
                                     $('#file_in_db').text(res.file_in_db);
+
                                 }
                             }
                         })
@@ -435,7 +441,7 @@
                                         setpwizard();
                                         $('#totalRows').text(res['rows']);
                                         $('#duplicateRows').text(res['duplicate']);
-                                        $('#invalidRows').text(res['invalid'] + '('+res['invalid']+' of these are missing an email.)' );
+                                        $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an email.)' );
                                         $('#importRows').text(res['import']);
                                         $('#lead_id').text(res['lead']);
                                         $('.file_name').text(res['uploadTime']);
