@@ -56,6 +56,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
         Route::post('email_setup_create', [SettingController::class, 'email_setup_create'])->name('email_setup_create');
         Route::post('email_template_create', [SettingController::class, 'email_template_create'])->name('email_template_create');
+        Route::post('get_email_template', [SettingController::class, 'get_email_template'])->name('get-email-template');
 
         Route::group(['prefix' => 'admins'], function(){
             Route::get('/index', [AdminsController::class, 'index'])->name('menu.admin.index');

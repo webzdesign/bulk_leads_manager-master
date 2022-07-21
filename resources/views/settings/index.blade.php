@@ -198,7 +198,6 @@
 
             <form method="POST" action="{{ url('email_template_create') }}" id="form3">
                 @csrf
-                <input type="hidden" name="id" value="{{ isset($email_template) && $email_template !=null ? $email_template['id'] : ''; }}">
                 <div class="cardsBody">
                     <div class="row">
                         <div class="col-lg-8">
@@ -218,7 +217,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Description</label>
-                                <textarea class="form-control c-gr f-14 f-500" name="content">{{ isset($email_template) && $email_template !=null ? $email_template['content'] : '' }}</textarea>
+                                <textarea class="form-control c-gr f-14 f-500 content" name="content">{{ isset($email_template) && $email_template !=null ? $email_template['content'] : '' }}</textarea>
                                 @error('content ')
                                     <span class="text-danger f-400 f-14">
                                         {{ $message }}
@@ -317,6 +316,28 @@
                 $(':input[type="submit"]').prop('disabled', true);
                 form.submit();
             }
+        });
+
+        for (instance in CKEDITOR.instances)
+        {
+            CKEDITOR.instances[instance].updateElement();
+        }
+
+        $(document).on('change','[name="email_subject"]',function(){
+            var email_subject = $('[name="email_subject"]').val();
+
+            $.ajax({
+                type:'POST',
+                url: "{{ route('get-email-template') }}",
+                dataType: 'Json',
+                data: {"email_subject": email_subject},
+                success: function(response) {
+                    CKEDITOR.instances['content'].destroy();
+
+                    $('[name="content"]').val(response.content);
+                    CKEDITOR.replace('content');
+                }
+            });
         });
     });
 </script>

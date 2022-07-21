@@ -129,8 +129,19 @@ class SettingController extends Controller
             'updated_by' => Auth::user()->id,
         );
 
-        EmailTemplate::updateOrCreate(['id' => $request['id']],$records);
+        EmailTemplate::updateOrCreate(['email_subject' => $request['email_subject']],$records);
 
         return back()->with('success', 'Setting updated successfuly!');
+    }
+
+    function get_email_template(Request $request){
+        $response_array = ['status' => false,'content' => null];
+
+        $email_template = EmailTemplate::where('email_subject',$request->email_subject)->first();
+        if(isset($email_template) && $email_template !=null){
+            $response_array = ['status' => true,'content' => $email_template->content];
+        }
+
+        return response()->json($response_array);
     }
 }
