@@ -233,9 +233,12 @@
                     </div>
                     <div class="cardsBody p-0 tableCards ">
                         <table class="table mb-0" id='mainTable'>
-                            <thead>
+                            @php
+                                $leadFieldsMain = $leadFields;
+                            @endphp
+                            <thead id='thead'>
                                 <tr>
-                                    @foreach ($leadFields as $key => $leadField)
+                                    @foreach ($leadFieldsMain as $key => $leadField)
                                         <th>
                                             <select class="select2 select_field leadSelect" name="select_field" id="select_field{{$key}}">
                                                 <option value="null"> -- Select --</option>
@@ -312,6 +315,27 @@
                     </form>
                 </div>
             </div>
+
+            <div id='theadDiv' hidden>
+                <input type="text" id='iteration'>
+                <thead id='thead'>
+                    <tr>
+                        @foreach ($leadFields as $key => $leadField)
+                            <th>
+                                <select class="select2 select_field leadSelect" name="select_field" id="select_field{{$key}}">
+                                    <option value="null"> -- Select --</option>
+                                    @foreach ($leadFields as $leadField)
+                                        <option value="{{ $leadField->id }}">{{ $leadField->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label class="text-danger f-400 f-14 d-none" id="select_heading{{$key}}">Select Heading</label>
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+
+            </div>
+
         </div>
     </div>
 @endsection
@@ -319,7 +343,7 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
     <script>
-        var idArr = [];
+        let idArr = [];
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
         $(document).ready(function() {
@@ -366,6 +390,7 @@
 
                         var filesize = document.querySelector('#file').files[0].size;
 
+                        // console.log(filesize);
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.importCSV') }}",
@@ -374,6 +399,7 @@
                             dataType: 'json',
                             data: formData,
                             success: function(res) {
+                                console.log(res);
                                 if(res[0] == 'error') {
                                     $('#invalidFile_error').text(res[1]);
                                     $('#invalidFile_error').removeClass('d-none');
@@ -546,34 +572,37 @@
 
 
             $('.select_field').on('change', function(e) {
+
                 var id = $(this).attr('id');
                 var value = $(this).val();
-                var obj = {};
-                obj['key'] = id;
-                obj['val'] = value;
+                const valArr = {};
 
-                const checkValue = object => object.val === value;
-               if(idArr.some(checkValue))
-               {
-                $(this).val("null");
-                Swal.fire({
-                    icon: "info",
-                    title: "Please select other option.",
-                    text: "This value is already selected.",
-                });
-               }
-               else
-               {
-                        const index = idArr.findIndex((obj => obj.key == id));
-                        if (index !== -1) {
-                                idArr[index].val = value;
-                         }
-                         else
-                        {
-                            idArr.push(obj);
-                        }
-               }
+                valArr['key'] = id;
+                valArr['val'] = value;
 
+                // idArr.push(valArr);
+
+                console.log(idArr);
+
+                const checkValue =  idArr.findIndex((obj => obj.val == value));
+
+                const index = idArr.findIndex((obj => obj.key == id));
+               if(checkValue !== -1)
+               {
+                    $(this).val("null");
+                      Swal.fire({
+                        icon: "info",
+                        title: "Please select other option.",
+                         text: "This value is already selected.",
+                    });
+                    idArr[index].val = null;
+               }
+               else if(index !== -1) {
+                        idArr[index].val = value;
+                }
+                else{
+                            idArr.push(valArr);
+                }
             });
 
             function getSheetData(id) {
@@ -583,6 +612,7 @@
                     dataType: "json",
                     data:{ id: id},
                     success: function(res) {
+                        console.log(res);
                         var tbody = '';
 
                         $.each(res, function (key, value) {
@@ -594,9 +624,8 @@
                             });
                             tbody += "</tr>";
                         });
-
+                        $("#iteration").val(res[0].length);
                         $('#tbody').append(tbody);
-
                     }
                 })
             }

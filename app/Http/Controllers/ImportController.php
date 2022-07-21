@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\LazyCollection;
 use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 use Maatwebsite\Excel\Fakes\ExcelFake;
@@ -87,7 +88,32 @@ class ImportController extends Controller
         $lead = Lead::find($request->id);
         $fileName = $lead->file_name . "_" . strtotime($lead->uploaded_datetime). ".csv";
 
+        // $lazy = LazyCollection::make(function ($fileName) {
+        //     $handle = fopen(storage_path('app/import/'.$fileName), 'r');
+
+        //     while ($line = fgetcsv($handle)) {
+        //         yield $line;
+        //     }
+        //   })
+        //   ->chunk(15)
+        //   ->each(function ($lines) {
+        //     $list = [];
+        //     foreach ($lines as $line) {
+        //         if (isset($line[1])) {
+        //             $list[] = [
+        //                 'name' => $line[1],
+        //                 'lastname' => $line[2],
+        //                 'email' => $line[3]
+        //             ];
+        //         }
+        //     }
+        //   });
+
+
+        // dd($lazy);
+
         $getData = Excel::toArray(new GetData,storage_path('app/import/'.$fileName));
+
         $values = array();
         foreach($getData[0] as $key => $row) {
             if($key == 0) {
@@ -98,7 +124,7 @@ class ImportController extends Controller
             }
             $values[] = $row;
         }
-
+        // $col = (count($values[0]));
         return json_encode($values);
     }
 
