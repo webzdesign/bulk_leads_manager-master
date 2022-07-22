@@ -237,7 +237,7 @@
                                 $leadFieldsMain = $leadFields;
                             @endphp
                             <thead id='thead'>
-                                <tr>
+                                {{-- <tr>
                                     @foreach ($leadFieldsMain as $key => $leadField)
                                         <th>
                                             <select class="select2 select_field leadSelect" name="select_field" id="select_field{{$key}}">
@@ -249,7 +249,7 @@
                                             <label class="text-danger f-400 f-14 d-none" id="select_heading{{$key}}">Select Heading</label>
                                         </th>
                                     @endforeach
-                                </tr>
+                                </tr> --}}
                             </thead>
                             <tbody id="tbody">
 
@@ -315,27 +315,6 @@
                     </form>
                 </div>
             </div>
-
-            <div id='theadDiv' hidden>
-                <input type="text" id='iteration'>
-                <thead id='thead'>
-                    <tr>
-                        @foreach ($leadFields as $key => $leadField)
-                            <th>
-                                <select class="select2 select_field leadSelect" name="select_field" id="select_field{{$key}}">
-                                    <option value="null"> -- Select --</option>
-                                    @foreach ($leadFields as $leadField)
-                                        <option value="{{ $leadField->id }}">{{ $leadField->name }}</option>
-                                    @endforeach
-                                </select>
-                                <label class="text-danger f-400 f-14 d-none" id="select_heading{{$key}}">Select Heading</label>
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-
-            </div>
-
         </div>
     </div>
 @endsection
@@ -554,7 +533,7 @@
                 $('.select_field > option:selected').each(function(key, value) {
                     var value = $(this).val();
                     if(value == 'null') {
-                        $('#select_heading'+key+'').removeClass('d-none');
+                        $('#select_heading'+key+'').addClass('d-block').removeClass('d-none');
                         status.push(value);
                     } else {
                         $('#select_heading'+key+'').addClass('d-none');
@@ -562,17 +541,21 @@
                     }
                 });
 
-                if($.inArray("null", status) !== -1) {
-                    return false;
-                } else {
+                if($.inArray('1', status) !== -1 && $.inArray('2', status) !== -1 && $.inArray('3', status) !== -1) {
+                    $('.select_heading').addClass('d-none');
                     return true;
+                } else {
+                    if($.inArray("null", status) !== -1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
 
             }
 
 
-            $('.select_field').on('change', function(e) {
-
+            $('body').on('change', '.select_field',function(e) {
                 var id = $(this).attr('id');
                 var value = $(this).val();
                 const valArr = {};
@@ -587,21 +570,21 @@
                 const checkValue =  idArr.findIndex((obj => obj.val == value));
 
                 const index = idArr.findIndex((obj => obj.key == id));
-               if(checkValue !== -1)
-               {
+                if(checkValue !== -1)
+                {
                     $(this).val("null");
-                      Swal.fire({
+                        Swal.fire({
                         icon: "info",
                         title: "Please select other option.",
-                         text: "This value is already selected.",
+                            text: "This value is already selected.",
                     });
                     idArr[index].val = null;
-               }
-               else if(index !== -1) {
-                        idArr[index].val = value;
+                }
+                else if(index !== -1) {
+                    idArr[index].val = value;
                 }
                 else{
-                            idArr.push(valArr);
+                    idArr.push(valArr);
                 }
             });
 
@@ -613,25 +596,39 @@
                     data:{ id: id},
                     success: function(res) {
                         console.log(res);
+                        var thead = '';
                         var tbody = '';
                         if (res) {
                             $.each(res, function (key, value) {
-                            tbody += "<tr>";
-                            $.each(value, function(subkey, subvalue){
-                                tbody += "<td>"
-                                tbody += subvalue
-                                tbody += "</td>"
+                                tbody += "<tr>";
+                                $.each(value, function(subkey, subvalue){
+                                    tbody += "<td>"
+                                    tbody += subvalue
+                                    tbody += "</td>"
+                                });
+                                tbody += "</tr>";
                             });
-                            tbody += "</tr>";
-                        });
-                        console.log(res[0].length);
-                        var length = res[0].length;
+                            // addDropdown(length);
 
-                        // addDropdown(length);
-
-                        $('#tbody').append(tbody);
+                            $('#tbody').append(tbody);
+                            var rows = $('#tbody tr:first td').length;
+                            thead += "<tr>";
+                            for (let i = 0; i < rows; i++) {
+                                thead += '<th>';
+                                thead += '<select class="select2 select_field" name="select_field" id="select_field'+i+'"><option value="null"> -- Select --</option>'
+                                thead += '@foreach ($leadFields as $key => $leadField)';
+                                thead += '<option value="{{ $leadField->id }}">{{ $leadField->name }}</option>';
+                                thead += '@endforeach';
+                                thead += '</select><label class="text-danger f-400 f-12 d-none select_heading" id="select_heading'+i+'">Select Heading</label>';
+                                thead += '</th>';
+                            }
+                            thead += "</tr>";
+                            $("#thead").append(thead);
+                            $('.select2').select2({
+                                width:"100%",
+                                minimumResultsForSearch: -1
+                            });
                         }
-
                     }
                 })
             }
