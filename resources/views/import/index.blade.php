@@ -422,7 +422,7 @@
 
                                     let stop = setInterval(function(){
                                         progress()
-                                    },[100])
+                                    },[0])
 
                                     getSheetData(res.lead_type_id);
 
@@ -614,8 +614,8 @@
                     success: function(res) {
                         console.log(res);
                         var tbody = '';
-
-                        $.each(res, function (key, value) {
+                        if (res) {
+                            $.each(res, function (key, value) {
                             tbody += "<tr>";
                             $.each(value, function(subkey, subvalue){
                                 tbody += "<td>"
@@ -624,8 +624,14 @@
                             });
                             tbody += "</tr>";
                         });
-                        $("#iteration").val(res[0].length);
+                        console.log(res[0].length);
+                        var length = res[0].length;
+
+                        // addDropdown(length);
+
                         $('#tbody').append(tbody);
+                        }
+
                     }
                 })
             }
@@ -655,6 +661,27 @@
                     $(".stepProgress").parent().parent().parent().find(".cards .cardsFooter").removeClass("d-flex").addClass('d-none');
                 }
             }
+
+            // function addDropdown(length)
+            // {
+            //     $("#thead").empty().append("<tr></tr>");
+            //     var leadFields = '{{$leadFields}}';
+            //     var select = [];
+            //     // var tr = $('<tr/>');
+            //     // $('#thead').append(tr);
+            //     // option.attr('value', this.value).text(this.label);
+            //     var td ='';
+            //      for(var i=0; i<=5 ;  i++);
+            //      {
+
+            //           td += "<td>Hello</td>";
+            //        //  select.attr('id',"select_field"+`${i}`).text("select");
+            //      }
+            //      alert(td);
+            //      $('thead tr:first').append(td);
+
+            //     console.log(leadFields);
+            // }
 
         });
     </script>

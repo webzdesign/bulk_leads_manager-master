@@ -39,6 +39,7 @@ class ImportController extends Controller
 
     public function importCSV(Request $request)
     {
+        ini_set('upload_max_filesize','200M');
         $validate = $request->validate([
             'lead_type_id' => 'required',
             'file' => 'required'
@@ -87,30 +88,6 @@ class ImportController extends Controller
 
         $lead = Lead::find($request->id);
         $fileName = $lead->file_name . "_" . strtotime($lead->uploaded_datetime). ".csv";
-
-        // $lazy = LazyCollection::make(function ($fileName) {
-        //     $handle = fopen(storage_path('app/import/'.$fileName), 'r');
-
-        //     while ($line = fgetcsv($handle)) {
-        //         yield $line;
-        //     }
-        //   })
-        //   ->chunk(15)
-        //   ->each(function ($lines) {
-        //     $list = [];
-        //     foreach ($lines as $line) {
-        //         if (isset($line[1])) {
-        //             $list[] = [
-        //                 'name' => $line[1],
-        //                 'lastname' => $line[2],
-        //                 'email' => $line[3]
-        //             ];
-        //         }
-        //     }
-        //   });
-
-
-        // dd($lazy);
 
         $getData = Excel::toArray(new GetData,storage_path('app/import/'.$fileName));
 
