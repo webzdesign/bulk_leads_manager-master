@@ -65,6 +65,12 @@ class AdminsController extends Controller
         $moduleName = $this->moduleName;
         if(isset($request->type) && $request->type == "UPDATE")
         {
+            $checkemail = User::where('email', $request->email)->where('id','!=',$request->id)->count();
+            if($checkemail > 0)
+            {
+                return false;
+            }
+
             $validate =  $request->validate([
                 'firstName' => 'required',
                 'lastName' => 'required',
@@ -88,6 +94,11 @@ class AdminsController extends Controller
         }
         else
         {
+            $checkemail = User::where('email', $request->email)->count();
+            if($checkemail > 0)
+            {
+                return (false);
+            }
            $validate = $request->validate([
                 'firstName' => 'required',
                 'lastName' => 'required',
@@ -112,6 +123,7 @@ class AdminsController extends Controller
     public function edit(Request $request)
     {
         $user = User::where('id',$request->id)->first();
+        // dd($user);
         if($user) {
             return response()->json($user);
         }
@@ -129,20 +141,6 @@ class AdminsController extends Controller
         return response()->json([true,$message]);
     }
 
-    public function checkEmailId(Request $request)
-    {
-        // dd($request->all());
 
-        if($request->type == 'UPDATE')
-        {
-            $user = User::where('email', 'like', '%' . $request->email . '%')->where('id','!=',$request->id)->get()->count();
-        }
-        else
-        {
-            $user = User::where('email', 'like', '%' . $request->email . '%')->get()->count();
-        }
-        return response()->json($user);
-
-    }
 
 }
