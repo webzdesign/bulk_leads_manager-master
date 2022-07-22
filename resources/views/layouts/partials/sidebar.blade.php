@@ -110,7 +110,7 @@
                 <span class="d-none-add">Stats</span>
             </a>
         </li> --}}
-        <li>
+        {{-- <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Admins" href="{{route('menu.admin.index')}}" class="d-flex align-items-center text-white f-400 f-14 @if(Route::current()->getName() == 'menu.admin.index') active  @endif">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6.52006 6.35579C7.99282 6.35579 9.18673 5.16189 9.18673 3.68913C9.18673 2.21637 7.99282 1.02246 6.52006 1.02246C5.0473 1.02246 3.85339 2.21637 3.85339 3.68913C3.85339 5.16189 5.0473 6.35579 6.52006 6.35579Z" fill="white"/>
@@ -119,7 +119,7 @@
                 </svg>
                 <span class="d-none-add">Admins</span>
             </a>
-        </li>
+        </li> --}}
         <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Settings" href="{{ route('settings') }}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('settings') ? 'active' : '' }}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
