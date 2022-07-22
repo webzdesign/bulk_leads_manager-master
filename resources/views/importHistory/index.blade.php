@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        {{-- <tr>
                             <td>10K US Bulk Leads</td>
                             <td class="c-7b">30-60 Days Old </td>
                             <td><a href="javascript:;" class="c-16 text-underline">10KUS.csv</a></td>
@@ -33,7 +33,7 @@
                             <td class="c-7b">06/06/2022 At 05:23pm</td>
                             <td class="c-7b">10,000 leads</td>
                             <td class="c-4b">Successfully imported - Download</td>
-                        </tr>
+                        </tr> --}}
                     </tbody>
                 </table>
             </div>
@@ -60,34 +60,11 @@
                     <div class="cardsBody settingWrpr">
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Leads Type</label>
-                            <select class="select2">
-                                <option value="hide">Select lead type</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Leads Age</label>
-                            <select class="select2">
-                                <option value="hide">Select leads age</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">Gender</label>
-                            <select class="select2">
-                                <option value="hide">Select gender</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                            <select class="select2">
-                                <option value="hide">Select state</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
+                            <select id='leadTypeDD' class="select2">
+                                <option value="">Select lead type</option>
+                                @foreach ($leadTypes as $leadType)
+                                <option value="{{$leadType->id}}">{{$leadType->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -109,16 +86,61 @@
     </script>
 
     <script>
+         var selected = [];
         $(document).ready(function() {
             var tbl = $('#example').DataTable({
                 "dom": "<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" +
                     "<'row m-0'<'col-sm-12 p-0'tr>>" +
                     "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
                 "ordering": false,
+                processing: true,
+                serverSide: true,
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Search here"
-                }
+                },
+                ajax: {
+                    "url": "{{ route('admin.import-history.getData') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data":{
+                        state: function() {
+						    return $("#stateDD").val();
+					    },
+                        leadType: function() {
+						    return $("#leadTypeDD").val();
+					    },
+                        leadAge: function() {
+						    return $("#leadAgeDD").val();
+					    },
+                        gender: function() {
+						    return $("#genderDD").val();
+					    },
+                    }
+                },
+                columns: [
+                    {
+                        data: 'lead_type_id'
+                    },
+                    {
+                        data: 'ageGroup'
+                    },
+                    {
+                        data: 'file_name'
+                    },
+                    {
+                        data: 'duplicate_row'
+                    },
+                    {
+                        data: 'uploaded_datetime'
+                    },
+                    {
+                        data: 'quentity'
+                    },
+                    {
+                        data: 'status',
+                    },
+                ],
             });
 
             $('#filterInput').html($('#searchPannel').html());
@@ -130,8 +152,32 @@
 
             $('#apply').bind("click", function(t) {
                 t.preventDefault();
+                tbl.draw();
                 $(".button-dropdown .dropdown-menu").hide();
             });
+
+            $('#leadTypeDD').on('change', function(){
+            $('body').find('#leadAgeDD').html('<option value=""> Select Lead Age </option>');
+            var type = $(this).val();
+            console.log(type);
+            $.ajax({
+                type: "POST",
+                url: "{{route('admin.import-history.getAge')}}",
+                data: {
+                    type:type
+                },
+                success: function (response) {
+
+                    console.log(response[0].length);
+                    if(response[0].length > 0)
+                    {
+                        response[0].forEach(function(el, index) {
+                            $('body').find('#leadAgeDD').append('<option value='+el.id+'> '+ response[1] + '|'+ el.age_from + '-' + el.age_to +' </option>');
+                        });
+                    }
+                }
+            });
+        });
 
         });
     </script>

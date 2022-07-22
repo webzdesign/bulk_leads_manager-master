@@ -85,6 +85,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::group(['prefix' => 'import-history'], function(){
             Route::get('/', [ImportHistoryController::class, 'index'])->name('admin.import-history');
+            Route::post('/get-data',[ImportHistoryController::class,'getData'])->name('admin.import-history.getData');
+            Route::post('/getAge', [ImportHistoryController::class, 'getAge'])->name('admin.import-history.getAge');
         });
 
         Route::group(['prefix' => 'leads'], function(){
