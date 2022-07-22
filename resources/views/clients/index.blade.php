@@ -283,14 +283,20 @@
             $('#addClient_submit').on('click', function(e) {
                 e.preventDefault();
                 var email = $('#email').val();
-                var mainFlag = checkValidation();
+
                 var type = '';
-                id = $("#client_id").val();
+               var id = $("#client_id").val();
                 if (id != '') {
                     type = "UPDATE";
                 }
-                duplicateEmail = checkUniqueMail(email,type,id);
-                if(mainFlag == true && duplicateEmail == false)
+
+                var mainFlag = checkValidation(email,type,id);
+
+                // if(mainFlag == true)
+                // {
+                //     duplicateEmail = checkUniqueMail(email,type,id);
+                // }
+                if(mainFlag == true )
                 {
                     var firstName = $('#firstName').val();
                     var lastName = $('#lastName').val();
@@ -314,6 +320,15 @@
                             type:type
                         },
                         success: function (res) {
+                            console.log(res);
+                            if(res == false)
+                            {
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Duplicate email adress.",
+                                    text: "Client with same email address alredy exist.",
+                                })
+                            }
                             if (res[0] == true) {
                                 $('#addClient').modal('hide');
                                 $('.jserror').html('');
@@ -434,7 +449,7 @@
              return regex.test(email);
         }
 
-        function checkValidation()
+        function checkValidation(email,type,id)
         {
             var fnFlag, lnFlag, emailFlag = false;
             if ($('#firstName').val() == '' || $('#firstName').val() == null) {
@@ -456,8 +471,9 @@
                     emailFlag = true;
                 }
                 if (fnFlag == true && lnFlag == true && emailFlag == true) {
-                    return true;
-                } else {
+                        return true;
+                }else
+                {
                     return false;
                 }
         }
@@ -472,33 +488,6 @@
                 $('#ipAdrs').val('');
         }
 
-        function checkUniqueMail(email,type)
-        {
-            $.ajax({
-                type: "post",
-                url: "{{route('admin.client.checkEmailId')}}",
-                data:{
-                    email:email,
-                    type:type,
-                    id:id
-                },
-                success: function (response) {
-                    console.log(response);
-                    if(response > 0)
-                    {
-                        duplicateEmail = true;
-                        $("#email").siblings('.jserror').css('color','red').html('Email Already Exist.');
-                    }
-                    else if(response == 0)
-                    {
-                        duplicateEmail = false;
-                        $("email").siblings('.jserror').css('color','red').html();
-                    }
-                }
-            });
-
-            return duplicateEmail;
-        }
 
     </script>
 @endsection
