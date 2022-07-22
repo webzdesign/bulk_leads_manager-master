@@ -65,7 +65,7 @@ class LeadsController extends Controller
                     <input name="selected[]" class="form-check-input mt-0 selected" type="checkbox" value="'.$row->id.'">&nbsp;<span></span></label></span>';
                 })
                 ->addColumn('zip',function($row){
-                    $zip = '';
+                    $zip = $row->zip;
                     return $zip;
                 })
                 ->addColumn('gender',function($row){

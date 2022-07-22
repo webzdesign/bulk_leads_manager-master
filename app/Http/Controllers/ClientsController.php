@@ -81,32 +81,51 @@ class ClientsController extends Controller
         if(isset($request->type) && $request->type == "UPDATE")
         {
 
-         Client::find($request->id)->update([
-            'firstName' => $request->firstName,
-            'lastName' => $request->lastName,
-            'email' => $request->email,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'ip_address' => $request->ipAdrs,
-            'updated_by' => auth()->user()->id,
-        ]);
-        $message = $moduleName." Updated Successfully.";
+            $checkemail = Client::where('email', $request->email)->where('id','!=',$request->id)->count();
+            if($checkemail > 0)
+            {
+                return false;
+            }
+            else
+            {
+                Client::find($request->id)->update([
+                    'firstName' => $request->firstName,
+                    'lastName' => $request->lastName,
+                    'email' => $request->email,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    'country' => $request->country,
+                    'ip_address' => $request->ipAdrs,
+                    'updated_by' => auth()->user()->id,
+                ]);
+                $message = "Client Updated Successfully.";
+
+            }
+
 
         }
         else
         {
-            Client::create([
-                'firstName' => $request->firstName,
-                'lastName' => $request->lastName,
-                'email' => $request->email,
-                'city' => $request->city,
-                'state'=> $request->state,
-                'country' => $request->country,
-                'ip_address' => $request->ipAdrs,
-                'added_by' => auth()->user()->id,
-            ]);
-            $message = $moduleName." Added Successfully.";
+            $checkemail = Client::where('email', $request->email)->count();
+            if($checkemail > 0)
+            {
+                return (false);
+            }
+            else
+            {
+                Client::create([
+                    'firstName' => $request->firstName,
+                    'lastName' => $request->lastName,
+                    'email' => $request->email,
+                    'city' => $request->city,
+                    'state'=> $request->state,
+                    'country' => $request->country,
+                    'ip_address' => $request->ipAdrs,
+                    'added_by' => auth()->user()->id,
+                ]);
+                $message = "Client Added Successfully.";
+            }
+
         }
         return response()->json([true,$moduleName,$message]);
     }
@@ -127,22 +146,10 @@ class ClientsController extends Controller
     {
         $client = Client::find($request->id);
         $client->delete();
-        $message = $this->moduleName." Deleted Successfully.";
+        $message = "Client deleted Successfully.";
         $clients = Client::all();
         return response()->json([true,$message]);
     }
 
-    public function checkEmailId(Request $request)
-    {
-        if($request->type == 'UPDATE')
-        {
-            $client = Client::where('email',$request->email)->where('id','!=',$request->id)->get()->count();
-        }
-        else
-        {
-            $client = Client::where('email', 'like', '%' . $request->email . '%')->get()->count();
-        }
-        return response()->json($client);
-    }
 
 }
