@@ -20,7 +20,7 @@ class AdminsController extends Controller
         return view($this->view.'/index',compact('moduleName','users'));
     }
 
-     public function getData()
+    public function getData()
     {
         $user = User::where('id','!=',1)->select('*');
         $data =$user;
