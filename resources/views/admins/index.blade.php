@@ -296,10 +296,7 @@
                     }
                     var type = "UPDATE";
                 }
-
-                duplicateEmail = checkUniqueMail(email, type, id);
-                console.log(duplicateEmail);
-                if (mainFlag == true && subFlag == true && updateFlag == true && duplicateEmail == false) {
+                if (mainFlag == true && subFlag == true && updateFlag == true ) {
 
                     var firstName = $('#firstName').val();
                     var lastName = $('#lastName').val();
@@ -324,6 +321,14 @@
                             type: type
                         },
                         success: function(res) {
+                            if(res == false)
+                            {
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Duplicate email adress.",
+                                    text: "Admin with same email address alredy exist.",
+                                })
+                            }
                             if (res[0] == true) {
                                 $('#addAdmin').modal('hide');
                                 $('.jserror').html('');
@@ -355,7 +360,7 @@
                 let linkUrl = $(this).attr('href');
                 Swal.fire({
                     title: '{{ __('Are you sure?') }}',
-                    text: "{{ __('You wont delete this Admin!') }}",
+                    text: "{{ __('You want delete this Admin!') }}",
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -413,9 +418,9 @@
                         $('#email').val(res['email']);
                         $('#allow').val(res['allowCreateEditUser']);
                         if (res['allowCreateEditUser'] == 1) {
-                            $('#allow').prop('checked', true);;
+                            $('#allow').prop('checked', true);
                         } else {
-                            $('#allow').prop('checked', false);;
+                            $('#allow').prop('checked', false);
                         }
                     }
                 });
@@ -517,28 +522,6 @@
             }
         });
 
-        function checkUniqueMail(email, type, id) {
-            $.ajax({
-                type: "post",
-                url: "{{ route('admin.checkEmailId') }}",
-                data: {
-                    email: email,
-                    type: type,
-                    id: id
-                },
-                success: function(response) {
-                    console.log(response);
-                    if (response > 0) {
-                        duplicateEmail = true;
-                        $("#email").siblings('.jserror').css('color', 'red').html('Email Already Exist.');
-                    } else if (response == 0) {
-                        duplicateEmail = false;
-                        $("email").siblings('.jserror').css('color', 'red').html();
-                    }
-                }
-            });
 
-            return duplicateEmail;
-        }
     </script>
 @endsection

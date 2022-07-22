@@ -98,7 +98,7 @@ class ClientsController extends Controller
                     'ip_address' => $request->ipAdrs,
                     'updated_by' => auth()->user()->id,
                 ]);
-                $message = $moduleName." Updated Successfully.";
+                $message = "Client Updated Successfully.";
 
             }
 
@@ -123,7 +123,7 @@ class ClientsController extends Controller
                     'ip_address' => $request->ipAdrs,
                     'added_by' => auth()->user()->id,
                 ]);
-                $message = $moduleName." Added Successfully.";
+                $message = "Client Added Successfully.";
             }
 
         }
@@ -146,21 +146,10 @@ class ClientsController extends Controller
     {
         $client = Client::find($request->id);
         $client->delete();
-        $message = $this->moduleName." Deleted Successfully.";
+        $message = "Client deleted Successfully.";
         $clients = Client::all();
         return response()->json([true,$message]);
     }
 
-    public function checkEmailId(Request $request)
-    {
-        if($request->type == "UPDATE") {
-            $checkemail = Client::where('email', $request->email)->where('id','!=',$request->id)->count();
-        } else {
-            $checkemail = Client::where('email', $request->email)->count();
-        }
-
-        echo json_encode($checkemail);
-
-    }
 
 }

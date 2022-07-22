@@ -237,10 +237,10 @@
 
 
         $(document).on('click','#apply',function(){
-                state = $('#stateDD').val();
-                leadType = $('#leadTypeDD').val();
-                leadAge = $('#leadAgeDD').val();
-                gender = $('#genderDD').val();
+                // state = $('#stateDD').val();
+                // leadType = $('#leadTypeDD').val();
+                // leadAge = $('#leadAgeDD').val();
+                // gender = $('#genderDD').val();
                 datatable.draw();
             });
 
@@ -312,7 +312,7 @@
                     console.log(response[0].length);
                     if(response[0].length > 0)
                     {
-                         response[0].forEach(function(el, index) {
+                        response[0].forEach(function(el, index) {
                             $('body').find('#leadAgeDD').append('<option value='+el.id+'> '+ response[1] + '|'+ el.age_from + '-' + el.age_to +' </option>');
                         });
                     }

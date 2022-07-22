@@ -65,7 +65,6 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/edit',[AdminsController::class,'edit'])->name('admin.edit');
             Route::post('/delete',[AdminsController::class,'delete'])->name('admin.delete');
             Route::post('/update',[AdminsController::class,'update'])->name('admin.update');
-            Route::post('/checkEmailId',[AdminsController::class,'checkEmailId'])->name('admin.checkEmailId');
         });
 
         Route::group(['prefix' => 'import'], function() {
@@ -82,11 +81,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/store',[ClientsController::class,'store'])->name('admin.client.store');
             Route::post('/edit',[ClientsController::class,'edit'])->name('admin.client.edit');
             Route::post('/delete',[ClientsController::class,'delete'])->name('admin.client.delete');
-            Route::post('/checkEmailId',[ClientsController::class,'checkEmailId'])->name('admin.client.checkEmailId');
         });
 
         Route::group(['prefix' => 'import-history'], function(){
             Route::get('/', [ImportHistoryController::class, 'index'])->name('admin.import-history');
+            Route::post('/get-data',[ImportHistoryController::class,'getData'])->name('admin.import-history.getData');
+            Route::post('/getAge', [ImportHistoryController::class, 'getAge'])->name('admin.import-history.getAge');
         });
 
         Route::group(['prefix' => 'leads'], function(){
