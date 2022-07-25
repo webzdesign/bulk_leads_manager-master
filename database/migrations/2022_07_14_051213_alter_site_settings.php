@@ -35,12 +35,6 @@ class AlterSiteSettings extends Migration
      */
     public function down()
     {
-        //
-        Schema::table('site_settings', function (Blueprint $table) {
-            $table->integer('added_by');
-            $table->integer('updated_by');
-        });
-
         Schema::table('site_settings', function (Blueprint $table) {
             $table->dropColumn('added_by');
             $table->dropColumn('updated_by');

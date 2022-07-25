@@ -26,7 +26,7 @@ class AlterTableEmailTemplatesChangeUpdatedBy extends Migration
     public function down()
     {
         Schema::table('email_templates', function (Blueprint $table) {
-            $table->integer('updated_by');
+            $table->dropColumn('updated_by');
         });
     }
 }
