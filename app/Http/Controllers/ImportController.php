@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ImportDownload;
 use App\Imports\GetData;
 use App\Imports\LeadImport;
+use App\Models\AgeGroup;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Lead;
@@ -68,7 +69,7 @@ class ImportController extends Controller
 
             $leadData = Lead::create([
                 'lead_type_id' => $request->lead_type_id,
-                'file_name' => $title,
+                'file_name' => $fileName,
                 'uploaded_datetime' => date(now()),
                 'status' => 0,
                 'added_by' => auth()->user()->id,
@@ -87,7 +88,7 @@ class ImportController extends Controller
         set_time_limit(0);
 
         $lead = Lead::find($request->id);
-        $fileName = $lead->file_name . "_" . strtotime($lead->uploaded_datetime). ".csv";
+        $fileName = $lead->file_name;
 
         $getData = Excel::toArray(new GetData,storage_path('app/import/'.$fileName));
 
@@ -132,6 +133,9 @@ class ImportController extends Controller
 
         $dob_id = LeadFields::where('columnName','birth_date')->pluck('id');
         $dob_index = array_search($dob_id[0],$request->id) ? array_search($dob_id[0],$request->id) : null;
+
+        $date_generated_id = LeadFields::where('columnName','date_generated')->pluck('id');
+        $date_generated_index = array_search($date_generated_id[0],$request->id) ? array_search($date_generated_id[0],$request->id) : null;
 
         $invalid = 0;
         $repeatMail = [];
@@ -244,6 +248,23 @@ class ImportController extends Controller
             }
 
             $arr['lead_id'] = $lead;
+
+            if($date_generated_index) {
+                $generated_date = date('Y-m-d',strtotime($row[$date_generated_index]));
+                $today = date('Y-m-d');
+                $date1 = date_create($generated_date);
+                $date2 = date_create($today);
+                $diff  = date_diff($date1,$date2);
+                $diffDays = $diff->format("%a");
+
+                $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead)->where('age_from','<=',$diffDays)->where('age_to','>=',$diffDays)->first();
+                if($ageGroup) {
+                    $arr['age_group_id'] = $ageGroup->id;
+                }
+
+                $arr['date_generated'] = $row[$date_generated_index];
+            }
+
 
             foreach($columnName as $key => $column) {
                 $arr[$column] = $row[$key];
