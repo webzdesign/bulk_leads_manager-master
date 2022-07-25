@@ -22,6 +22,9 @@ class Lead extends Model
         return $this->belongsTo(LeadType::class, 'lead_type_id', 'id');
     }
 
+    public function age_group(){
+        return $this->belongsTo(AgeGroup::class,'age_group_id','id');
+    }
     public function lead_details()
     {
         return $this->hasMany(LeadDetail::class,'lead_id','id');
