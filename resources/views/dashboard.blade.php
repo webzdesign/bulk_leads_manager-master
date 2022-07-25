@@ -73,62 +73,12 @@
                                             </li>
                                             @endforeach
 
-                                            {{-- <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">30 - 59 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(1234 records)</div>
-                                            </li>
-                                            <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">60 - 89 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(39201 records)</div>
-                                            </li>
-                                            <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">90 - 360 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(12234 records)</div>
-                                            </li> --}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                             @endif
-
-                            {{-- <div class="col-md-6 mb-4">
-                                <div class="statsCard">
-                                    <div class="cards pt-0 mb-0 position-relative">
-                                        <div class="cardTop w-auto d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <svg class="me-3" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M17 1.0625V6.375H6.375V17H1.0625C1.0625 25.8188 8.18125 32.9375 17 32.9375C25.8188 32.9375 32.9375 25.8188 32.9375 17C32.9375 8.18125 25.8188 1.0625 17 1.0625Z" fill="#2A5F9E"/>
-                                                    <path d="M17 1.0625C14.5031 1.0625 12.1656 1.64688 10.0406 2.65625V5.84375H5.84375V10.0406H2.65625C1.64688 12.1656 1.0625 14.5031 1.0625 17H7.4375V9.03125L13.8125 17H17V13.0156L12.5375 7.4375H17V1.0625Z" fill="white"/>
-                                                    <path d="M8.18115 7.4375L15.9374 17H16.9999V14.3969L11.3687 7.4375H8.18115Z" fill="#ED4C5C"/>
-                                                    <path d="M17 2.65625H10.0406C6.85312 4.19688 4.19688 6.85312 2.65625 10.0406V17H5.84375V5.84375H17V2.65625Z" fill="#ED4C5C"/>
-                                                    <path d="M4.25 18.9656L5.41875 17.5312L5.04688 19.3906L6.90625 19.4437L5.25937 20.2938L6.375 21.7812L4.72812 21.0375L4.25 22.8438L3.77187 21.0375L2.125 21.7812L3.24062 20.2938L1.59375 19.4437L3.45312 19.3906L3.08125 17.5312L4.25 18.9656ZM27.625 10.7313L28.5812 9.5625L28.2625 11.05L29.75 11.1031L28.4219 11.7938L29.325 12.9625L27.9969 12.325L27.625 13.8125L27.2531 12.325L25.925 12.9625L26.8281 11.7938L25.5 11.1031L26.9875 11.05L26.6688 9.5625L27.625 10.7313ZM27.625 21.3563L28.5812 20.1875L28.2625 21.675L29.75 21.7281L28.4219 22.4188L29.325 23.5875L27.9969 22.95L27.625 24.4375L27.2531 22.95L25.925 23.5875L26.8281 22.4188L25.5 21.7281L26.9875 21.675L26.6688 20.1875L27.625 21.3563ZM22.3125 13.9188L23.2687 12.75L22.95 14.2375L24.4375 14.2906L23.1094 14.9813L24.0125 16.15L22.6844 15.5125L22.3125 17L21.9406 15.5125L20.6125 16.15L21.5156 14.9813L20.1875 14.2906L21.675 14.2375L21.3563 12.75L22.3125 13.9188Z" fill="white"/>
-                                                </svg>
-                                                <div class="f-18 f-700 text-white">AUSTRALIAN BULK LEADS&nbsp;&nbsp;(123, 456)</div>
-                                            </div>
-                                        </div>
-                                        <div class="cardYearList">
-                                            <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">0 - 29 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(231 records)</div>
-                                            </li>
-                                            <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">30 - 59 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(1234 records)</div>
-                                            </li>
-                                            <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">60 - 89 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(39201 records)</div>
-                                            </li>
-                                            <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">90 - 360 days old</div>
-                                                <div class="f-16 f-14-500 f-700 c-gr">(12234 records)</div>
-                                            </li>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="row dashRow mb-4">
                             <div class="col-12">
                                 <div class="statsCard">
@@ -152,7 +102,7 @@
                                                             <th>PRODUCT</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody id='orderBody'>
                                                         @foreach ($orders as $order )
                                                         <tr>
                                                             <td class="c-7b f-16 whiteSpace">
@@ -165,17 +115,6 @@
                                                             <td class="c-7b f-16">{{$order->qty}} {{$order->lead_type->name}} | {{$order->age_group->age_from}}-{{$order->age_group->age_to}} Days Old </td>
                                                         </tr>
                                                         @endforeach
-
-                                                        {{-- <tr>
-                                                            <td class="c-7b f-16 whiteSpace">
-                                                                John Doe
-                                                                <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M8.25 2.75H2.75V13.25H13.25V7.75M13.25 2.75L7.75 8.25M10.75 1.75H14.25V5.25" stroke="#4F4F52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                                </svg></td>
-                                                            <td class="c-7b f-16">johndoe@gmail.com</td>
-                                                            <td class="c-7b f-16">06 26 2022 09:37AM</td>
-                                                            <td class="c-7b f-16">1000 US Bulk Leads | 30-60 Days Old </td>
-                                                        </tr> --}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -217,37 +156,28 @@
                                                             <th>Uploaded</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="c-7b f-16 whiteSpace">
-                                                                06 25 2022 09:30AM
-                                                                <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M8.25 2.75H2.75V13.25H13.25V7.75M13.25 2.75L7.75 8.25M10.75 1.75H14.25V5.25" stroke="#4F4F52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                                </svg></td>
-                                                            <td class="c-7b f-16">US Bulk Leads</td>
-                                                            <td class="c-7b f-16">30-60 Days Old</td>
-                                                            <td class="c-7b f-16">Joe Admin</td>
-                                                            <td class="c-7b f-16">100</td>
-                                                            <td class="c-7b f-16">50</td>
-                                                            <td class="c-7b f-16">9850</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="c-7b f-16 whiteSpace">
-                                                                06 25 2022 09:30AM
-                                                                <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M8.25 2.75H2.75V13.25H13.25V7.75M13.25 2.75L7.75 8.25M10.75 1.75H14.25V5.25" stroke="#4F4F52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                                </svg></td>
-                                                            <td class="c-7b f-16">US Bulk Leads</td>
-                                                            <td class="c-7b f-16">30-60 Days Old</td>
-                                                            <td class="c-7b f-16">Joe Admin</td>
-                                                            <td class="c-7b f-16">100</td>
-                                                            <td class="c-7b f-16">50</td>
-                                                            <td class="c-7b f-16">9850</td>
-                                                        </tr>
+                                                    <tbody id = 'leadBody'>
+                                                        @if($leads)
+                                                            @foreach ($leads as $lead )
+                                                            <tr>
+                                                                <td class="c-7b f-16 whiteSpace">
+                                                                    {{date('d m Y H:i A',strtotime($lead->uploaded_datetime))}}
+                                                                    <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M8.25 2.75H2.75V13.25H13.25V7.75M13.25 2.75L7.75 8.25M10.75 1.75H14.25V5.25" stroke="#4F4F52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                    </svg></td>
+                                                                <td class="c-7b f-16">{{$lead->lead_type->name}}</td>
+                                                                <td class="c-7b f-16">{{$lead->age_group->age_from}}-{{$lead->age_group->age_to}} Days Old</td>
+                                                                <td class="c-7b f-16">{{$lead->user->firstName}}</td>
+                                                                <td class="c-7b f-16">{{$lead->duplicate_row}}</td>
+                                                                <td class="c-7b f-16">{{$lead->invalid_row}}</td>
+                                                                <td class="c-7b f-16">{{$lead->total_row}}</td>
+                                                            </tr>
+                                                            @endforeach
+                                                        @endif
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="mt-2 cursor-pointer d-flex align-items-center justify-content-center c-46 f-16 f-700">
+                                            <div class="mt-2 cursor-pointer d-flex align-items-center justify-content-center c-46 f-16 f-700" id='moreLeads'>
                                                 LOAD MORE
                                                 <svg class="ms-2" width="17" height="10" viewBox="0 0 17 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M1.16675 1.25L8.50008 8.58333L15.8334 1.25" stroke="#46679D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -266,10 +196,37 @@
     <script>
         $(document).ready(function () {
 
-            $(document).on('click','#moreOrder',function(e){
-                var more = 5;
-                window.location.href= "{{route('home',5)}}";
+            var more = 5;
+
+            $("#moreOrder").on("click",function(){
+                $.ajax({
+                    type: "post",
+                    url: "{{route('home.getData')}}",
+                    data: {
+                        type:'order',
+                        limit:more,
+                    },
+                    success: function (response) {
+                        $('#orderBody').html(response);
+                    }
+                });
             });
+
+            $("#moreLeads").on("click",function(){
+                $.ajax({
+                    type: "post",
+                    url: "{{route('home.getData')}}",
+                    data: {
+                        type:'lead',
+                        limit:more,
+                    },
+                    success: function (response) {
+                        $('#leadBody').html(response);
+                    }
+                });
+            });
+
+
         });
     </script>
 @endsection

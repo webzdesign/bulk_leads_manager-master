@@ -38,8 +38,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Auth::routes(['register' => false]);
     Route::group(['middleware' => ['auth']], function() {
-        Route::get('/dashboard/{more?}', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::post('/dashboard-detail', [App\Http\Controllers\HomeController::class, 'getData'])->name('home.getData');
         /* LeadTypes Route */
         Route::group(['prefix' => 'lead_type'], function(){
             Route::get('/', [LeadTypes::class, 'index'])->name('admin.lead_type.index');

@@ -50,5 +50,8 @@ class LeadFieldSeeder extends Seeder
         LeadFields::firstOrCreate(
         ['id' => 11, 'name' => 'Gender' ,'columnName' => 'gender' ]);
 
+        LeadFields::firstOrCreate(
+        ['id' => 12, 'name' => 'Date Generated' ,'columnName' => 'date_generated' ]);
+
     }
 }
