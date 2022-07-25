@@ -148,8 +148,6 @@ class ImportController extends Controller
             $columnName[$key] = LeadFields::where('id',$column)->first()->columnName;
         }
 
-        $mainArr = [];
-
         foreach($rows[0] as $row) {
             $arr = [];
 
@@ -269,16 +267,17 @@ class ImportController extends Controller
             foreach($columnName as $key => $column) {
                 $arr[$column] = $row[$key];
             }
-            array_push($mainArr, $arr);
+
+            LeadDetail::query()->insert($arr);
         }
 
         $imported = $totalRows - ($duplicateRecords+$invalid);
 
-        if(!empty($mainArr)) {
-            foreach(array_chunk($mainArr, 1000) as $details) {
-                LeadDetail::query()->insert($details); //good, just be careful of the size limit of $arr, you may need to chunk it
-            }
-        }
+        // if(!empty($mainArr)) {
+        //     foreach(array_chunk($mainArr, 1000) as $details) {
+        //          //good, just be careful of the size limit of $arr, you may need to chunk it
+        //     }
+        // }
 
 
         if($rows) {
@@ -348,18 +347,35 @@ class ImportController extends Controller
 
         //adding the data from the array
         foreach ($users as $each_user) {
-            $gender = $each_user->gender;
-            if($each_user->gender == 1)
-            {
-                $gender = 'Male';
+            if($each_user->gender != '') {
+                $gender = $each_user->gender;
+                if($each_user->gender == 1)
+                {
+                    $gender = 'Male';
+                }
+                if($each_user->gender == 0)
+                {
+                    $gender = 'Female';
+                }
+            } else {
+                $gender = null;
             }
-            if($each_user->gender == 0)
-            {
-                $gender = 'Female';
+
+            if($each_user->city_id != '') {
+                $city = City::where('id',$each_user->city_id)->first()->name;
+            } else {
+                $city = null;
             }
-            $city = City::where('id',$each_user->city_id)->first()->name;
-            $state = State::where('id',$each_user->state_id)->first()->name;
-            $country = Country::where('id',$each_user->country_id)->first()->name;
+            if($each_user->state_id != '') {
+                $state = State::where('id',$each_user->state_id)->first()->name;
+            } else {
+                $state = null;
+            }
+            if($each_user->country_id) {
+                $country = Country::where('id',$each_user->country_id)->first()->name;
+            } else {
+                $country = null;
+            }
 
             // $date = new DateTime($each_user->birth_date);
             // $dob = $date->format('Y-m-d');
@@ -369,11 +385,11 @@ class ImportController extends Controller
                 $each_user->last_name,
                 $each_user->email,
                 $each_user->phone_number,
-                 $gender,
-                 $each_user->address,
-                 $city,
-                 $state,
-                 $country,
+                $gender,
+                $each_user->address,
+                $city,
+                $state,
+                $country,
                 $each_user->birth_date,
                 $each_user->age,
                 $each_user->zip
