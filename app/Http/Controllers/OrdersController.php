@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\Lead;
+use App\Models\LeadDetail;
 use App\Models\LeadType;
 use App\Models\AgeGroup;
 use App\Models\State;
+use App\Models\OrderDetail;
+use App\Exports\LeadDetailsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use DB,DataTables;
 
 class OrdersController extends Controller
@@ -83,18 +87,29 @@ class OrdersController extends Controller
 
     public function sendLead(Request $request){
 
+        $lead_details_data = [];
         // DB::enableQueryLog();
-        $order_details = Order::with(['client'])->where('status','0')->get();
-        $tmp = [];
-        if(!empty($order_details)){
-            foreach($order_details as $key => $value){
-                $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id])->pluck('id')->toArray();
+        $order_data = Order::with(['client'])->where('status','0')->get();
+        if(!empty($order_data)){
+            // foreach($order_data as $key => $value){
+            //     $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id,'age_group_id' => $value->age_group_id])->pluck('id')->toArray();
 
-                if(isset($lead_ids) && $lead_ids !=null){
-                    $tmp[$value->client->email][] = $lead_ids;
-                }
-            }
-            dd($tmp);
+            //     if(isset($lead_ids) && $lead_ids !=null){
+            //         $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
+            //         $lead_details = LeadDetail::whereIn('lead_id',$lead_ids)->take($value->qty);
+
+            //         if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
+            //             $lead_details->whereNotIn('id',$skip_lead_details_ids);
+            //         }
+            //         $lead_details = $lead_details->get();
+
+            //         $lead_details_data[$value->client->email][] = $lead_details;
+            //     }
+            // }
+
+
+            // Store on a different disk with a defined writer type.
+            return Excel::download(new LeadDetailsExport($order_data), 'LeadReport.xlsx');
         }
     }
 }
