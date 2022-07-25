@@ -6,7 +6,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-5">
                                 <div class="statsCard">
-                                    <a href="javascript:;" class="cardTop w-auto d-flex align-items-center justify-content-center">
+                                    <a href="{{route('admin.new-order')}}" class="cardTop w-auto d-flex align-items-center justify-content-center">
                                         <svg class="me-2" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 12C11.1675 12 10.5 12.6675 10.5 13.5C10.5 13.8978 10.658 14.2794 10.9393 14.5607C11.2206 14.842 11.6022 15 12 15C12.3978 15 12.7794 14.842 13.0607 14.5607C13.342 14.2794 13.5 13.8978 13.5 13.5C13.5 12.6675 12.825 12 12 12ZM0 0V1.5H1.5L4.2 7.1925L3.18 9.03C3.0675 9.24 3 9.4875 3 9.75C3 10.1478 3.15804 10.5294 3.43934 10.8107C3.72064 11.092 4.10218 11.25 4.5 11.25H13.5V9.75H4.815C4.76527 9.75 4.71758 9.73025 4.68242 9.69508C4.64725 9.65992 4.6275 9.61223 4.6275 9.5625C4.6275 9.525 4.635 9.495 4.65 9.4725L5.325 8.25H10.9125C11.475 8.25 11.97 7.935 12.225 7.4775L14.91 2.625C14.9625 2.505 15 2.3775 15 2.25C15 2.05109 14.921 1.86032 14.7803 1.71967C14.6397 1.57902 14.4489 1.5 14.25 1.5H3.1575L2.4525 0H0ZM4.5 12C3.6675 12 3 12.6675 3 13.5C3 13.8978 3.15804 14.2794 3.43934 14.5607C3.72064 14.842 4.10218 15 4.5 15C4.89782 15 5.27936 14.842 5.56066 14.5607C5.84196 14.2794 6 13.8978 6 13.5C6 12.6675 5.325 12 4.5 12Z" fill="#F8F9FA"/>
                                         </svg>
@@ -16,7 +16,7 @@
                             </div>
                             <div class="col-md-6 mb-5">
                                 <div class="statsCard">
-                                    <a href="javascript:;" class="cardTop w-auto d-flex align-items-center justify-content-center" style="background: linear-gradient(180deg, #63B967 0%, #4BA64F 100%);">
+                                    <a href="{{route('admin.import.index')}}" class="cardTop w-auto d-flex align-items-center justify-content-center" style="background: linear-gradient(180deg, #63B967 0%, #4BA64F 100%);">
                                         <svg class="me-2" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <g clip-path="url(#clip0_1701_5415)">
                                             <path d="M17.125 12.875H12.4316L10.8408 14.4658C10.4172 14.8895 9.85117 15.125 9.25 15.125C8.64883 15.125 8.08422 14.891 7.65918 14.4658L6.06836 12.875H1.375C0.753789 12.875 0.25 13.3788 0.25 14V17.375C0.25 17.9962 0.753789 18.5 1.375 18.5H17.125C17.7462 18.5 18.25 17.9962 18.25 17.375V14C18.25 13.3777 17.7473 12.875 17.125 12.875ZM15.4375 16.5312C14.9734 16.5312 14.5938 16.1516 14.5938 15.6875C14.5938 15.2234 14.9734 14.8438 15.4375 14.8438C15.9016 14.8438 16.2812 15.2234 16.2812 15.6875C16.2812 16.1516 15.9016 16.5312 15.4375 16.5312ZM8.45547 13.6695C8.67344 13.891 8.96172 14 9.25 14C9.53828 14 9.82586 13.8901 10.0452 13.6704L14.5452 9.17041C14.9843 8.73096 14.9843 8.01904 14.5452 7.57959C14.1058 7.14014 13.3935 7.14014 12.9544 7.57959L10.375 10.1609V1.625C10.375 1.00379 9.87121 0.5 9.25 0.5C8.62773 0.5 8.125 1.00379 8.125 1.625V10.1609L5.54453 7.58047C5.10543 7.14102 4.39316 7.14102 3.95371 7.58047C3.51461 8.01992 3.51461 8.73184 3.95371 9.17129L8.45547 13.6695Z" fill="white"/>
@@ -33,6 +33,8 @@
                             </div>
                         </div>
                         <div class="row dashRow">
+                            @if($leadTypes)
+                            @foreach ($leadTypes as $leadtype)
                             <div class="col-md-6 mb-4">
                                 <div class="statsCard">
                                     <div class="cards pt-0 mb-0 position-relative">
@@ -55,15 +57,23 @@
                                                     <path d="M8.5 3.50625C7.38438 4.19687 6.375 5.04687 5.47188 5.95C4.72813 6.69375 4.09062 7.54375 3.55937 8.39375C3.08125 9.19063 2.60313 9.9875 2.28438 10.8375C1.96563 11.6344 1.7 12.4312 1.4875 13.2812C1.275 14.0781 1.16875 14.875 1.11562 15.725C1.0625 16.15 1.0625 16.575 1.0625 17H17V1.0625C13.8656 1.0625 10.9969 1.96562 8.5 3.50625Z" fill="#428BC1"/>
                                                     <path d="M13.2813 1.59375L13.5469 2.39062H14.3438L13.7063 2.92188L13.9188 3.71875L13.2813 3.24062L12.6438 3.71875L12.8563 2.92188L12.2188 2.39062H13.0156L13.2813 1.59375ZM15.4063 4.78125L15.6719 5.57812H16.4688L15.8313 6.10938L16.0438 6.90625L15.4063 6.42813L14.7688 6.90625L14.9813 6.10938L14.3438 5.57812H15.1406L15.4063 4.78125ZM11.1563 4.78125L11.4219 5.57812H12.2188L11.5813 6.10938L11.7938 6.90625L11.1563 6.42813L10.5188 6.90625L10.7313 6.10938L10.0938 5.57812H10.8906L11.1563 4.78125ZM13.2813 7.96875L13.5469 8.76562H14.3438L13.7063 9.29688L13.9188 10.0938L13.2813 9.61563L12.6438 10.0938L12.8563 9.29688L12.2188 8.76562H13.0156L13.2813 7.96875ZM9.03127 7.96875L9.2969 8.76562H10.0938L9.45627 9.29688L9.66878 10.0938L9.03127 9.61563L8.39377 10.0938L8.60628 9.29688L7.96877 8.76562H8.76565L9.03127 7.96875ZM4.78127 7.96875L5.0469 8.76562H5.84377L5.20627 9.29688L5.41877 10.0938L4.78127 9.61563L4.14377 10.0938L4.35627 9.29688L3.71877 8.76562H4.51565L4.78127 7.96875ZM15.4063 11.1562L15.6719 11.9531H16.4688L15.8313 12.4844L16.0438 13.2812L15.4063 12.8031L14.7688 13.2812L14.9813 12.4844L14.3438 11.9531H15.1406L15.4063 11.1562ZM11.1563 11.1562L11.4219 11.9531H12.2188L11.5813 12.4844L11.7938 13.2812L11.1563 12.8031L10.5188 13.2812L10.7313 12.4844L10.0938 11.9531H10.8906L11.1563 11.1562ZM6.90627 11.1562L7.1719 11.9531H7.96877L7.33127 12.4844L7.54377 13.2812L6.90627 12.8031L6.26877 13.2812L6.48127 12.4844L5.84377 11.9531H6.64065L6.90627 11.1562ZM13.2813 14.3438L13.5469 15.1406H14.3438L13.7063 15.6719L13.9188 16.4688L13.2813 15.9906L12.6438 16.4688L12.8563 15.6719L12.2188 15.1406H13.0156L13.2813 14.3438ZM9.03127 14.3438L9.2969 15.1406H10.0938L9.45627 15.6719L9.66878 16.4688L9.03127 15.9906L8.39377 16.4688L8.60628 15.6719L7.96877 15.1406H8.76565L9.03127 14.3438ZM4.78127 14.3438L5.0469 15.1406H5.84377L5.20627 15.6719L5.41877 16.4688L4.78127 15.9906L4.14377 16.4688L4.35627 15.6719L3.71877 15.1406H4.51565L4.78127 14.3438ZM6.26877 6.90625L6.90627 6.42813L7.54377 6.90625L7.27815 6.10938L7.91565 5.57812H7.11877L6.90627 4.78125L6.64065 5.57812H5.8969L6.5344 6.05625L6.26877 6.90625ZM2.01877 13.2812L2.65627 12.8031L3.29377 13.2812L3.02815 12.4844L3.66565 11.9531H2.9219L2.65627 11.1562L2.39065 11.9531H1.8594C1.8594 12.0063 1.80627 12.0594 1.80627 12.1125L2.23127 12.4312L2.01877 13.2812Z" fill="white"/>
                                                 </svg>
-                                                <div class="f-18 f-700 text-white">US BULK LEADS&nbsp;&nbsp;(767,194)</div>
+                                                <div class="f-18 f-700 text-white">{{$leadtype->name}}&nbsp;&nbsp;(767,194)</div>
                                             </div>
                                         </div>
+                                        @php
+                                            $ageGroups =  \App\Models\AgeGroup::where('lead_type_id',$leadtype->id)->get();
+                                        @endphp
+
                                         <div class="cardYearList">
+                                            @foreach ($ageGroups as $ageGroup)
                                             <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">0 - 29 days old</div>
+                                                <div class="f-16 f-14-500 f-700 c-gr">{{$ageGroup->age_from}} - {{$ageGroup->age_to}} days old</div>
+
                                                 <div class="f-16 f-14-500 f-700 c-gr">(231 records)</div>
                                             </li>
-                                            <li class="d-flex align-items-center justify-content-between">
+                                            @endforeach
+
+                                            {{-- <li class="d-flex align-items-center justify-content-between">
                                                 <div class="f-16 f-14-500 f-700 c-gr">30 - 59 days old</div>
                                                 <div class="f-16 f-14-500 f-700 c-gr">(1234 records)</div>
                                             </li>
@@ -74,12 +84,15 @@
                                             <li class="d-flex align-items-center justify-content-between">
                                                 <div class="f-16 f-14-500 f-700 c-gr">90 - 360 days old</div>
                                                 <div class="f-16 f-14-500 f-700 c-gr">(12234 records)</div>
-                                            </li>
+                                            </li> --}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-4">
+                            @endforeach
+                            @endif
+
+                            {{-- <div class="col-md-6 mb-4">
                                 <div class="statsCard">
                                     <div class="cards pt-0 mb-0 position-relative">
                                         <div class="cardTop w-auto d-flex align-items-center justify-content-between">
@@ -115,7 +128,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row dashRow mb-4">
                             <div class="col-12">
                                 <div class="statsCard">
@@ -140,7 +153,20 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @foreach ($orders as $order )
                                                         <tr>
+                                                            <td class="c-7b f-16 whiteSpace">
+                                                                {{$order->client->firstName}}
+                                                                <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M8.25 2.75H2.75V13.25H13.25V7.75M13.25 2.75L7.75 8.25M10.75 1.75H14.25V5.25" stroke="#4F4F52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                </svg></td>
+                                                            <td class="c-7b f-16">{{$order->client->email}}</td>
+                                                            <td class="c-7b f-16">{{date('d m Y H:i A',strtotime($order->order_date))}}</td>
+                                                            <td class="c-7b f-16">{{$order->qty}} {{$order->lead_type->name}} | {{$order->age_group->age_from}}-{{$order->age_group->age_to}} Days Old </td>
+                                                        </tr>
+                                                        @endforeach
+
+                                                        {{-- <tr>
                                                             <td class="c-7b f-16 whiteSpace">
                                                                 John Doe
                                                                 <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,21 +175,11 @@
                                                             <td class="c-7b f-16">johndoe@gmail.com</td>
                                                             <td class="c-7b f-16">06 26 2022 09:37AM</td>
                                                             <td class="c-7b f-16">1000 US Bulk Leads | 30-60 Days Old </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="c-7b f-16 whiteSpace">
-                                                                John Doe
-                                                                <svg class="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M8.25 2.75H2.75V13.25H13.25V7.75M13.25 2.75L7.75 8.25M10.75 1.75H14.25V5.25" stroke="#4F4F52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                                </svg></td>
-                                                            <td class="c-7b f-16">johndoe@gmail.com</td>
-                                                            <td class="c-7b f-16">06 26 2022 09:37AM</td>
-                                                            <td class="c-7b f-16">1000 US Bulk Leads | 30-60 Days Old </td>
-                                                        </tr>
+                                                        </tr> --}}
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="mt-2 cursor-pointer d-flex align-items-center justify-content-center c-46 f-16 f-700">
+                                            <div class="mt-2 cursor-pointer d-flex align-items-center justify-content-center c-46 f-16 f-700" id='moreOrder'>
                                                 LOAD MORE
                                                 <svg class="ms-2" width="17" height="10" viewBox="0 0 17 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M1.16675 1.25L8.50008 8.58333L15.8334 1.25" stroke="#46679D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -245,4 +261,15 @@
                     </div>
                 </div>
 
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click','#moreOrder',function(e){
+                var more = 5;
+                window.location.href= "{{route('home',5)}}";
+            });
+        });
+    </script>
 @endsection
