@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lead;
+use App\Models\LeadType;
 use Illuminate\Http\Request;
 
 class StatsController extends Controller
@@ -13,6 +15,8 @@ class StatsController extends Controller
     public function index()
     {
         $moduleName = $this->moduleName;
+        $leadTypes = LeadType::all();
+        $leads = Lead::all();
         return view("$this->view/index", compact('moduleName'));
     }
 }
