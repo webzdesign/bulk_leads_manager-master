@@ -30,8 +30,4 @@ class Order extends Model
     public function state(){
         return $this->belongsTo(State::class,'state_id','id');
     }
-
-    // public function lead_details(){
-    //     return $this->belongsTo(State::class,'state_id','id');
-    // }
 }
