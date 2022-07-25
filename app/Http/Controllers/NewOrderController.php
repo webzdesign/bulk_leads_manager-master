@@ -154,7 +154,7 @@ class NewOrderController extends Controller
         $lead_id = Lead::where('lead_type_id',$request->lead_type_id)->pluck('id')->toArray();
 
         if(count($lead_id) > 0){
-            $leads_details = LeadDetail::whereIn('lead_id',$lead_id);
+            $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['is_duplicate' => 0,'is_invalid' => 0]);
 
             if(isset($request->gender) && $request->gender !=null){
                 $leads_details->where('gender',$request->gender);

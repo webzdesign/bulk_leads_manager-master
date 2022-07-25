@@ -31,12 +31,13 @@ Route::get('/', function () {
 });
 
 Route::post('import/download', [ImportController::class, 'downloadCsv'])->name('admin.import.download');
+Route::any('import-history/downloadOriginal/{id}', [ImportHistoryController::class, 'downloadOriginal'])->name('admin.import-history.downloadOriginal');
 
 Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Auth::routes(['register' => false]);
     Route::group(['middleware' => ['auth']], function() {
-        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/dashboard/{more?}', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
         /* LeadTypes Route */
         Route::group(['prefix' => 'lead_type'], function(){
