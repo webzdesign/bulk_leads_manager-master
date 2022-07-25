@@ -156,7 +156,7 @@
                                                             <th>Uploaded</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id = 'leadBody'>
+                                                    {{-- <tbody id = 'leadBody'>
                                                         @if($leads)
                                                             @foreach ($leads as $lead )
                                                             <tr>
@@ -174,7 +174,7 @@
                                                             </tr>
                                                             @endforeach
                                                         @endif
-                                                    </tbody>
+                                                    </tbody> --}}
                                                 </table>
                                             </div>
                                             <div class="mt-2 cursor-pointer d-flex align-items-center justify-content-center c-46 f-16 f-700" id='moreLeads'>
