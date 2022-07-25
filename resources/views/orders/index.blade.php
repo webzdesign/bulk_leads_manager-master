@@ -3,56 +3,19 @@
                 <div class="middleContent">
                     <div class="importWrpr">
                         <div class="cards">
-                            <table id="example" class="table" style="width:100%">
+                            <table id="example" class="table datatable" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
+                                        <th>First name</th>
+                                        <th>Last name</th>
                                         <th>Email</th>
-                                        <th>Last Order date</th>
-                                        <th>Last Product ordered</th>
+                                        <th>Last order date</th>
+                                        <th>Last product ordered</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="c-7b">John</td>
-                                        <td class="c-7b">Doe</td>
-                                        <td class="c-7b">johndoe@gmail.com</td>
-                                        <td class="c-7b">20/05/22</td>
-                                        <td class="c-7b">4,000 US Leads | 30-60 Days Old</td>
-                                        <td class="c-7b tableCards">
-                                            <div class="editDlbtn d-flex">
-                                                <a href="javascript:;">
-                                                    <button class="cartBtn w-auto px-3 text-white f-500 whiteSpace">
-                                                        <svg class="me-2" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M11.8334 11.9999C11.0934 11.9999 10.5001 12.5933 10.5001 13.3333C10.5001 13.6869 10.6406 14.026 10.8906 14.2761C11.1407 14.5261 11.4798 14.6666 11.8334 14.6666C12.187 14.6666 12.5262 14.5261 12.7762 14.2761C13.0263 14.026 13.1667 13.6869 13.1667 13.3333C13.1667 12.5933 12.5667 11.9999 11.8334 11.9999ZM1.16675 1.33325V2.66659H2.50008L4.90008 7.72659L3.99341 9.35992C3.89341 9.54659 3.83341 9.76659 3.83341 9.99992C3.83341 10.3535 3.97389 10.6927 4.22394 10.9427C4.47399 11.1928 4.81313 11.3333 5.16675 11.3333H13.1667V9.99992H5.44675C5.40254 9.99992 5.36015 9.98236 5.3289 9.9511C5.29764 9.91985 5.28008 9.87745 5.28008 9.83325C5.28008 9.79992 5.28675 9.77325 5.30008 9.75325L5.90008 8.66659H10.8667C11.3667 8.66659 11.8067 8.38659 12.0334 7.97992L14.4201 3.66659C14.4667 3.55992 14.5001 3.44659 14.5001 3.33325C14.5001 3.15644 14.4298 2.98687 14.3048 2.86185C14.1798 2.73682 14.0102 2.66659 13.8334 2.66659H3.97341L3.34675 1.33325H1.16675ZM5.16675 11.9999C4.42675 11.9999 3.83341 12.5933 3.83341 13.3333C3.83341 13.6869 3.97389 14.026 4.22394 14.2761C4.47399 14.5261 4.81313 14.6666 5.16675 14.6666C5.52037 14.6666 5.85951 14.5261 6.10956 14.2761C6.3596 14.026 6.50008 13.6869 6.50008 13.3333C6.50008 12.5933 5.90008 11.9999 5.16675 11.9999Z" fill="white"/>
-                                                        </svg>
-                                                        Resend Order
-                                                    </button>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="c-7b">John</td>
-                                        <td class="c-7b">Doe</td>
-                                        <td class="c-7b">johndoe@gmail.com</td>
-                                        <td class="c-7b">20/05/22</td>
-                                        <td class="c-7b">4,000 US Leads | 30-60 Days Old</td>
-                                        <td class="c-7b tableCards">
-                                            <div class="editDlbtn d-flex">
-                                                <a href="javascript:;">
-                                                    <button class="cartBtn w-auto px-3 text-white f-500">
-                                                        <svg class="me-2" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M11.8334 11.9999C11.0934 11.9999 10.5001 12.5933 10.5001 13.3333C10.5001 13.6869 10.6406 14.026 10.8906 14.2761C11.1407 14.5261 11.4798 14.6666 11.8334 14.6666C12.187 14.6666 12.5262 14.5261 12.7762 14.2761C13.0263 14.026 13.1667 13.6869 13.1667 13.3333C13.1667 12.5933 12.5667 11.9999 11.8334 11.9999ZM1.16675 1.33325V2.66659H2.50008L4.90008 7.72659L3.99341 9.35992C3.89341 9.54659 3.83341 9.76659 3.83341 9.99992C3.83341 10.3535 3.97389 10.6927 4.22394 10.9427C4.47399 11.1928 4.81313 11.3333 5.16675 11.3333H13.1667V9.99992H5.44675C5.40254 9.99992 5.36015 9.98236 5.3289 9.9511C5.29764 9.91985 5.28008 9.87745 5.28008 9.83325C5.28008 9.79992 5.28675 9.77325 5.30008 9.75325L5.90008 8.66659H10.8667C11.3667 8.66659 11.8067 8.38659 12.0334 7.97992L14.4201 3.66659C14.4667 3.55992 14.5001 3.44659 14.5001 3.33325C14.5001 3.15644 14.4298 2.98687 14.3048 2.86185C14.1798 2.73682 14.0102 2.66659 13.8334 2.66659H3.97341L3.34675 1.33325H1.16675ZM5.16675 11.9999C4.42675 11.9999 3.83341 12.5933 3.83341 13.3333C3.83341 13.6869 3.97389 14.026 4.22394 14.2761C4.47399 14.5261 4.81313 14.6666 5.16675 14.6666C5.52037 14.6666 5.85951 14.5261 6.10956 14.2761C6.3596 14.026 6.50008 13.6869 6.50008 13.3333C6.50008 12.5933 5.90008 11.9999 5.16675 11.9999Z" fill="white"/>
-                                                        </svg>
-                                                        Resend Order
-                                                    </button>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -75,39 +38,48 @@
                     <div class="cardsBody settingWrpr">
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Leads Type</label>
-                            <select class="select2">
-                                <option value="hide">Select lead type</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
+                            <select class="select2" name="lead_type_id">
+                                <option value="">Select lead type</option>
+                                @if (!empty($lead_type))
+                                    @foreach ($lead_type as $key => $value)
+                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Leads Age</label>
-                            <select class="select2">
-                                <option value="hide">Select leads age</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
+                            <select class="select2" name="age_group_id">
+                                <option value="">Select leads age</option>
+                                @if (!empty($age_group))
+                                    @foreach ($age_group as $key => $value)
+                                        <option value="{{ $value->id }}">{{ $value->age_from .'-' .$value->age_to }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">Gender</label>
-                            <select class="select2">
-                                <option value="hide">Select gender</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
+                            <select class="select2" name="gender">
+                                <option value="">Select gender</option>
+                                <option value="0">Male</option>
+                                <option value="1">Female</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
-                            <select class="select2">
-                                <option value="hide">Select state</option>
-                                <option>12 months</option>
-                                <option>11 months</option>
+                            <select class="select2" name="state_id">
+                                <option value="">Select state</option>
+                                @if (!empty($state))
+                                    @foreach ($state as $key => $value)
+                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                     </div>
                     <div class="py-3 cardsFooter d-flex justify-content-end">
-                        <button class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
+                        <button type="button" class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
                     </div>
                 </ul>
             <div>
@@ -115,33 +87,70 @@
     </script>
 
     <script type="text/html" id="searchPannel">
-        <input class="form-control f-14" placeholder="Search here">
+        <input class="form-control f-14" placeholder="Search here" id="filterInput">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6932 14.2957L10.7036 9.31023C11.386 8.35146 11.791 7.1584 11.791 5.90142C11.791 2.64178 9.14704 0 5.8847 0C2.62254 0.00017572 0 2.64196 0 5.90142C0 9.16105 2.64397 11.8028 5.90631 11.8028C7.18564 11.8028 8.35839 11.3981 9.31795 10.7163L14.3076 15.7018C14.4994 15.8935 14.7553 16 15.0113 16C15.2672 16 15.523 15.8935 15.7149 15.7018C16.0985 15.2971 16.0985 14.6792 15.6935 14.2956L15.6932 14.2957ZM1.96118 5.90155C1.96118 3.72845 3.73104 1.98133 5.88465 1.98133C8.03826 1.9815 9.82938 3.72845 9.82938 5.90155C9.82938 8.07466 8.05952 9.82178 5.90591 9.82178C3.7523 9.82178 1.96118 8.05338 1.96118 5.90155Z" fill="#7B809A"/></svg>
     </script>
 
     <script>
         $(document).ready(function () {
-           var tbl = $('#example').DataTable({
+            var datatable = $('.datatable').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
-                "ordering": false,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search here"
-                }
+                ordering: false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ route('admin.get-data') }}",
+                    "type": "GET",
+                    "dataType": "json",
+                    "data": {
+                        lead_type_id: function() {
+                            return $('[name="lead_type_id"]').val();
+                        },
+                        age_group_id: function() {
+                            return $('[name="age_group_id"]').val();
+                        },
+                        gender: function() {
+                            return $('[name="gender"]').val();
+                        },
+                        state_id: function() {
+                            return $('[name="state_id"]').val();
+                        },
+                    },
+                },
+                columns: [
+                    {
+                        data: 'first_name'
+                    },
+                    {
+                        data: 'last_name'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'order_date'
+                    },
+                    {
+                        data: 'last_product_ordered'
+                    },
+                    {
+                        data: 'action',
+                        className: "c-7b tableCards"
+                    },
+                ],
             });
 
             $('#filterInput').html($('#searchPannel').html());
 
             $('#filterBtn').html($('#filterDropdown').html());
             $('#filterInput > input').keyup(function(){
-                tbl.search($(this).val()).draw();
+                datatable.search($(this).val()).draw();
             });
 
-            $('#apply').bind("click",  function (t) {
-                t.preventDefault();
-                $(".button-dropdown .dropdown-menu").hide();
+            $(document).on("click","#apply", function (t) {
+                $('.dropdown-menu').hide();
+                datatable.draw();
             });
-
         });
     </script>
 @endsection
