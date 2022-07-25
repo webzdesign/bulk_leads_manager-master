@@ -15,7 +15,7 @@ class CreateStatesTable extends Migration
     {
         Schema::create('states', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('country_id')->nullable()->change();
+            $table->bigInteger('country_id')->nullable();
             $table->string('name');
             $table->timestamps();
         });
