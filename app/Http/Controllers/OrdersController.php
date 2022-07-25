@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\Lead;
 use App\Models\LeadType;
 use App\Models\AgeGroup;
 use App\Models\State;
@@ -82,8 +83,18 @@ class OrdersController extends Controller
 
     public function sendLead(Request $request){
 
-        $order_details = Order::with(['client','lead_type','age_group'])->where('status','0')->get();
+        // DB::enableQueryLog();
+        $order_details = Order::with(['client'])->where('status','0')->get();
+        $tmp = [];
+        if(!empty($order_details)){
+            foreach($order_details as $key => $value){
+                $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id])->pluck('id')->toArray();
 
-        dd($order_details);
+                if(isset($lead_ids) && $lead_ids !=null){
+                    $tmp[$value->client->email][] = $lead_ids;
+                }
+            }
+            dd($tmp);
+        }
     }
 }

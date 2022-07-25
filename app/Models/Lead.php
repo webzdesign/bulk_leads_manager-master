@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\LeadDetail;
 
 class Lead extends Model
 {
@@ -24,4 +25,9 @@ class Lead extends Model
     public function age_group(){
         return $this->belongsTo(AgeGroup::class,'age_group_id','id');
     }
+    public function lead_details()
+    {
+        return $this->hasMany(LeadDetail::class,'lead_id','id');
+    }
+
 }
