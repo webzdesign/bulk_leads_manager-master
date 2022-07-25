@@ -20,4 +20,8 @@ class Lead extends Model
     public function lead_type() {
         return $this->belongsTo(LeadType::class, 'lead_type_id', 'id');
     }
+
+    public function age_group(){
+        return $this->belongsTo(AgeGroup::class,'age_group_id','id');
+    }
 }
