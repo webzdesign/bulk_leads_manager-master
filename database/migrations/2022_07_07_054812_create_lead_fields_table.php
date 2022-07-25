@@ -16,6 +16,7 @@ class CreateLeadFieldsTable extends Migration
         Schema::create('lead_fields', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('columnName');
             $table->boolean('status')->comment('1 = active , 0 = inactive')->default(1);
             $table->timestamps();
         });

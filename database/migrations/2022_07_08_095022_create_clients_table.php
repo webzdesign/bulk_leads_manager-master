@@ -28,6 +28,9 @@ class CreateClientsTable extends Migration
             $table->bigInteger('updated_by')->unsigned()->index()->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('added_by')->references('id')->on('users');
+            $table->foreign('updated_by')->references('id')->on('users');
         });
     }
 

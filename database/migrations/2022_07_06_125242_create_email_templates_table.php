@@ -18,7 +18,7 @@ class CreateEmailTemplatesTable extends Migration
             $table->string('email_subject');
             $table->text('content')->nullable();
             $table->integer('added_by');
-            $table->integer('updated_by')->default(0);
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }
