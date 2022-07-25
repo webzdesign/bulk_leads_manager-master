@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LeadStatusDownload;
 use App\Models\AgeGroup;
 use App\Models\Lead;
 use App\Models\LeadDetail;
@@ -9,6 +10,7 @@ use App\Models\LeadType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ImportHistoryController extends Controller
@@ -48,10 +50,21 @@ class ImportHistoryController extends Controller
         return "-";
        })
        ->editColumn('quentity',function($row){
-        return $row->total_row;
+        return $row->total_row . ' Leads';
+       })
+       ->editColumn('duplicate_row',function($row){
+        return $row->duplicate_row.' download';
        })
        ->editColumn('status',function($row){
-         return '<a href="" class="c-4b">Successfully imported - Download</a>';
+        $downloadUrl =route('admin.import-history.downloadOriginal', encrypt($row->id));
+        if($row->status == 3)
+         return '<a href="'.$downloadUrl.'" class="c-4b">Successfully imported - Download</a>';
+        elseif($row->status == 0)
+            return 'Pending';
+        elseif($row->status == 1)
+            return 'Processing';
+        elseif($row->status == 2)
+            return 'error';
        })
        ->editColumn('uploaded_datetime',function($row){
          return date('d/m/Y', strtotime($row->uploaded_datetime))." At ".date('H:i A', strtotime($row->uploaded_datetime));
@@ -71,5 +84,9 @@ class ImportHistoryController extends Controller
         return response()->json([$age,$lead]);
     }
 
+    public function downloadOriginal($id)
+    {
+        return Excel::download(new LeadStatusDownload($id), Lead::where('id',decrypt($id))->first()->file_name.".csv");
+    }
 
 }
