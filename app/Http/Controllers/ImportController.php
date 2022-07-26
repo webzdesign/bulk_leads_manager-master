@@ -141,6 +141,16 @@ class ImportController extends Controller
 
         $mainArr = array();
         foreach ($rows as $row) {
+            $allEmpty = 0;
+            $totalRow = 0;
+            foreach ($row as $checkRow) {
+                if ($checkRow == '' || $checkRow == null) {
+                    $allEmpty++;
+                }
+                $totalRow++;
+            }
+            if ($totalRow == $allEmpty) { continue; }
+
             $row = array_map("utf8_encode", $row);
             $arr = [];
 
