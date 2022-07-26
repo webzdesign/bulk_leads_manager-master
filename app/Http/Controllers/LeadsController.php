@@ -71,8 +71,10 @@ class LeadsController extends Controller
                 ->addColumn('gender',function($row){
                     if($row->gender == 0)
                         return 'M';
+                    elseif($row->gender == 1)
+                            return 'F';
                     else
-                        return 'F';
+                        return '--';
 
                 })
                 ->editColumn('state_id',function($row){
