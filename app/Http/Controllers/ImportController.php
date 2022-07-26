@@ -144,7 +144,7 @@ class ImportController extends Controller
             $allEmpty = 0;
             $totalRow = 0;
             foreach ($row as $checkRow) {
-                if ($checkRow == '' || $checkRow == null) {
+                if (trim($checkRow) == '' || trim($checkRow) == null) {
                     $allEmpty++;
                 }
                 $totalRow++;
