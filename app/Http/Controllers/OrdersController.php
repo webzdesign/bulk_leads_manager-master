@@ -143,7 +143,7 @@ class OrdersController extends Controller
                             $to_email = $value->client->email;
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            Mail::send('mail/leadreport', [], function($message) use ($to_email,$upload_path){
+                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$upload_path){
                                 $message->to($to_email)->subject('Lead reports');
                                 $message->attach(public_path($upload_path));
                             });
