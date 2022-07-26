@@ -222,7 +222,8 @@
                     $(".selected").prop("checked", false);
                     selected = [];
                 }
-                if($('.all-checkbox').is(':checked') == false && $('.selected').is(':checked') == false){
+                if($('.all-checkbox').is(':checked') == false ){
+                     $(".selected").prop("checked", false);
                     $('.deleteBtn').prop('disabled',true)
                 }
             });
