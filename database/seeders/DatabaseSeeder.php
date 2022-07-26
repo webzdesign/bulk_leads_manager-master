@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
+            'allowCreateEditUser' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@apacheleads.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
+            'allowCreateEditUser' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -46,6 +48,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@xsited.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
+            'allowCreateEditUser' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -57,6 +60,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'shivendrasinhj.ap@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('123456'),
+            'allowCreateEditUser' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);
