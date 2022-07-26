@@ -50,7 +50,6 @@
                             $ageGroups = \App\Models\AgeGroup::where('lead_type_id', $leadtype->id)->get();
                             $leads = \App\Models\Lead::where('lead_type_id', $leadtype->id)->pluck('id');
                             $totalLeads = \App\Models\LeadDetail::whereIn('lead_id', $leads)
-                                ->whereIn('age_group_id', $ageGroupsId)
                                 ->count();
                         @endphp
                         <div class="col-md-6 mb-4">
@@ -107,7 +106,7 @@
                                                     fill="white" />
                                             </svg>
                                             <div class="f-18 f-700 text-white">
-                                                {{ $leadtype->name }}&nbsp;&nbsp;{{ $totalLeads }}</div>
+                                                {{ $leadtype->name }}&nbsp;&nbsp;({{ $totalLeads }})</div>
                                         </div>
                                     </div>
 
