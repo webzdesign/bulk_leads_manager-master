@@ -62,14 +62,14 @@
                 <span class="d-none-add">Import</span>
             </a>
         </li>
-        <li>
+        {{-- <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Orders" href="{{route('admin.orders')}}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('orders') ? 'active' : '' }}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.66663 14.0002C3.14663 14.0002 2.69329 13.7002 2.47329 13.2668L0.733293 6.96016L0.666626 6.66683C0.666626 6.49002 0.736864 6.32045 0.861888 6.19543C0.986912 6.0704 1.15648 6.00016 1.33329 6.00016H4.38663L7.45329 1.62016C7.57329 1.44683 7.77329 1.3335 7.99996 1.3335C8.22663 1.3335 8.43329 1.44683 8.55329 1.62683L11.6133 6.00016H14.6666C14.8434 6.00016 15.013 6.0704 15.138 6.19543C15.2631 6.32045 15.3333 6.49002 15.3333 6.66683L15.3066 6.86016L13.5266 13.2668C13.3066 13.7002 12.8533 14.0002 12.3333 14.0002H3.66663ZM7.99996 3.16016L5.99996 6.00016H9.99996L7.99996 3.16016ZM7.99996 8.66683C7.64634 8.66683 7.3072 8.80731 7.05715 9.05735C6.8071 9.3074 6.66663 9.64654 6.66663 10.0002C6.66663 10.3538 6.8071 10.6929 7.05715 10.943C7.3072 11.193 7.64634 11.3335 7.99996 11.3335C8.35358 11.3335 8.69272 11.193 8.94277 10.943C9.19282 10.6929 9.33329 10.3538 9.33329 10.0002C9.33329 9.64654 9.19282 9.3074 8.94277 9.05735C8.69272 8.80731 8.35358 8.66683 7.99996 8.66683Z" fill="white"/>
                 </svg>
                 <span class="d-none-add">Orders</span>
             </a>
-        </li>
+        </li> --}}
         {{-- <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Clients" href="{{route('admin.clients.index')}}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('clients') ? 'active' : '' }}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
