@@ -69,12 +69,12 @@ class LeadsController extends Controller
                     return $zip;
                 })
                 ->addColumn('gender',function($row){
-                    if($row->gender == 0)
-                        return 'M';
-                    elseif($row->gender == 1)
-                            return 'F';
-                    else
+                    if($row->gender === null)
                         return '--';
+                    elseif($row->gender == 1)
+                        return 'F';
+                    else
+                        return 'M';
 
                 })
                 ->editColumn('state_id',function($row){
