@@ -29,12 +29,10 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        // dd(LeadDetail::whereIn('lead_id',[1,2])->whereIn('age_group_id',[5])->count());
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::all();
         $orders = Order::with(['client','lead_type','age_group'])->orderBy('created_at', 'desc')->limit(2)->get();
         $Allleads = Lead::orderBy('created_at', 'desc')->limit(2)->get();
-        // dd($leads);
         return view('dashboard',compact('moduleName','leadTypes','orders','Allleads'));
     }
 

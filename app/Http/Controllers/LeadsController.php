@@ -39,8 +39,8 @@ class LeadsController extends Controller
         }
         if($request->leadAge)
         {
-            $ageGroup = AgeGroup::where('id',$request->leadAge)->first();
-            $leadDetail->where('age','>=',$ageGroup->age_from)->where('age','<=',$ageGroup->age_to)->select('*');
+            // $ageGroup = AgeGroup::where('id',$request->leadAge)->first();
+            $leadDetail->where('age_group_id',$request->leadAge)->select('*');
         }
         if($request->gender)
         {
@@ -76,11 +76,25 @@ class LeadsController extends Controller
 
                 })
                 ->editColumn('state_id',function($row){
-
+                        if($row->state)
                         return $row->state->name;
+                        else
+                        return '--';
 
                 })
-                ->rawColumns(['check','zip','gender','state_id'])
+                ->editColumn('email',function($row){
+                    if($row->email)
+                    return $row->email;
+                    else
+                    return '--';
+                })
+                ->editColumn('age',function($row){
+                    if($row->age)
+                    return $row->age;
+                    else
+                    return '--';
+                 })
+                ->rawColumns(['check','zip','gender','state_id','email'])
                 ->make(true);
 
     }

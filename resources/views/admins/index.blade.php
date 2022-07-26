@@ -360,7 +360,7 @@
                 let linkUrl = $(this).attr('href');
                 Swal.fire({
                     title: '{{ __('Are you sure?') }}',
-                    text: "{{ __('You want delete this Admin!') }}",
+                    text: "{{ __('You want to delete this Admin!') }}",
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
