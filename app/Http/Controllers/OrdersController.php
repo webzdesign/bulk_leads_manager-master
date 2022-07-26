@@ -110,7 +110,7 @@ class OrdersController extends Controller
                         foreach ($lead_details as $key => $row) {
 
                             // Update order status
-                            // Order::where('id', $value->id)->update(['status' => '1']);
+                            Order::where('id', $value->id)->update(['status' => '1']);
 
                             $lead_collection[] = array(
                                 'age_group' => $row->lead->age_group->age_from.' - '.$row->lead->age_group->age_to,
@@ -130,7 +130,7 @@ class OrdersController extends Controller
 
                             //Add records
                             $where_array = ['order_id' => $value->id, 'lead_details_id' => $row->id];
-                            // OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
+                            OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
                         }
 
                         if(isset($lead_collection) && $lead_collection !=null){
