@@ -14,10 +14,12 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
 {
     private $i = 1;
     private $id;
+    private $type;
 
-    public function __construct($id)
+    public function __construct($id,$type)
     {
           $this->id = $id;
+          $this->type = $type;
     }
 
     /**
@@ -26,7 +28,15 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
     public function collection()
     {
         //
-        $temp = LeadDetail::where('lead_id',decrypt($this->id))->get();
+        if($this->type == 'duplicate')
+        {
+            $temp = LeadDetail::where('lead_id',decrypt($this->id))->where('is_duplicate',1)->get();
+        }
+        else
+        {
+            $temp = LeadDetail::where('lead_id',decrypt($this->id))->get();
+        }
+
         return $temp;
     }
 
@@ -46,9 +56,9 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
             $temp->gender == 1 ? 'Male' : 'Female',
             $temp->email,
             $temp->address,
-            $temp->city->name,
-            $temp->state->name,
-            $temp->country->name,
+            isset($temp->city_id)?$temp->city->name : '',
+            isset($temp->state_id)?$temp->state->name : '',
+            isset($temp->country_id) ? $temp->country->name : '',
             $temp->phone_number,
             $temp->birth_date,
             $temp->age,

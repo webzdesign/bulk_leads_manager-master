@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
+use function PHPUnit\Framework\returnSelf;
+
 class ImportHistoryController extends Controller
 {
     //
@@ -47,16 +49,38 @@ class ImportHistoryController extends Controller
         return '<a href="'.$path.'" class="c-16 text-underline" download>'.$row->file_name.'</a>';
        })
        ->editColumn('ageGroup',function($row){
-            if($row->age_group)
-                    return  $row->age_group->age_from.'-'.$row->age_group->age_to.' Days Old';
-            else
-                return '-';
+            $data = '';
+                $agegroups = LeadDetail::where('lead_id',$row->id)->pluck('age_group_id')->unique('age_group_id');
+                if($agegroups)
+                {
+                    foreach($agegroups as $ag)
+                    {
+                        $age = AgeGroup::where('id',$ag)->first();
+                        if($age)
+                        {
+                            $data .= $age->age_from.'-'.$age->age_to.' Days Old <br/>';
+                        }
+
+                    }
+                }
+                else
+                {
+                    $data = 'Not specified';
+                }
+                return $data;
        })
        ->editColumn('quentity',function($row){
         return $row->total_row . ' Leads';
        })
        ->editColumn('duplicate_row',function($row){
-        return $row->duplicate_row.' download';
+
+         $downloadUrl =route('admin.import-history.downloadDuplicate', encrypt($row->id));
+         if( $row->duplicate_row == 0)
+            return  $row->duplicate_row;
+        else
+         return $row->duplicate_row .'<a href="'.$downloadUrl.'" class="c-4b"> Download</a>';
+
+        // return $row->duplicate_row.' download';
        })
        ->editColumn('status',function($row){
         $downloadUrl =route('admin.import-history.downloadOriginal', encrypt($row->id));
@@ -72,7 +96,7 @@ class ImportHistoryController extends Controller
        ->editColumn('uploaded_datetime',function($row){
          return date('d/m/Y', strtotime($row->uploaded_datetime))." At ".date('H:i A', strtotime($row->uploaded_datetime));
       })
-       ->rawColumns(['lead_type_id','ageGroup','file_name','status','uploaded_datetime'])
+       ->rawColumns(['lead_type_id','ageGroup','file_name','status','uploaded_datetime','duplicate_row'])
         ->make(true);
 
     }
@@ -89,7 +113,14 @@ class ImportHistoryController extends Controller
 
     public function downloadOriginal($id)
     {
-        return Excel::download(new LeadStatusDownload($id), Lead::where('id',decrypt($id))->first()->file_name.".csv");
+        $type = 'original';
+        return Excel::download(new LeadStatusDownload($id,$type), Lead::where('id',decrypt($id))->first()->file_name."-importedRecords.csv");
+    }
+
+    public function downloadDuplicate($id)
+    {
+        $type = 'duplicate';
+        return Excel::download(new LeadStatusDownload($id,$type), Lead::where('id',decrypt($id))->first()->file_name."-duplicateRecords.csv");
     }
 
 }
