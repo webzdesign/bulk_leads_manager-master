@@ -22,9 +22,9 @@ class CreateLeadDetailsTable extends Migration
             $table->integer('gender')->comment('0-male, 1-female')->nullable();
             $table->string('email')->nullable();
             $table->text('address')->nullable();
-            $table->bigInteger('country_id')->unsigned()->index()->nullable();
-            $table->bigInteger('state_id')->unsigned()->index()->nullable();
-            $table->bigInteger('city_id')->unsigned()->index()->nullable();
+            $table->bigInteger('country_id')->unsigned()->nullable();
+            $table->bigInteger('state_id')->unsigned()->nullable();
+            $table->bigInteger('city_id')->unsigned()->nullable();
             $table->string('phone_number')->nullable();
             $table->string('birth_date')->nullable();
             $table->string('age')->nullable();
@@ -35,9 +35,6 @@ class CreateLeadDetailsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('lead_id')->references('id')->on('leads');
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->foreign('state_id')->references('id')->on('states');
-            $table->foreign('country_id')->references('id')->on('countries');
             $table->foreign('age_group_id')->references('id')->on('age_groups');
             $table->timestamps();
         });
