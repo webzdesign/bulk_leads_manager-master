@@ -116,7 +116,12 @@ class NewOrderController extends Controller
 
         if($records->isNotEmpty() && $request->email !=''){
             foreach ($records as $key => $value) {
-                $html .= '<div class="col-md-12"><a href="javascript:void(0)" class="client_details" data-id='.$value->id.' data-first_name='.$value->firstName.' data-last_name='.$value->lastName.' data-email='.$value->email.' data-city='.$value->city.' data-state='.$value->state.' data-country='.$value->country.' data-ip_address='.$value->ip_address.'>'.$value->email.'</a></div>';
+                $country = isset($value->country) && $value->country !=null ? $value->country : '--';
+                $state = isset($value->state) && $value->state !=null ? $value->state : '--';
+                $city = isset($value->city) && $value->city !=null ? $value->city : '--';
+                $ip_address = isset($value->ip_address) && $value->ip_address !=null ? $value->ip_address : '--';
+
+                $html .= '<div class="col-md-12"><a href="javascript:void(0)" class="client_details" data-id='.$value->id.' data-first_name='.$value->firstName.' data-last_name='.$value->lastName.' data-email='.$value->email.' data-city='.$city.' data-state='.$state.' data-country='.$country.' data-ip_address='.$ip_address.'>'.$value->email.'</a></div>';
             }
             return response()->json([true, ['html' => $html]]);
         }else{
