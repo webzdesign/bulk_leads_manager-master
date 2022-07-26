@@ -257,6 +257,9 @@ class ImportController extends Controller
                 $diff  = date_diff($date1,$date2);
                 $diffDays = $diff->format("%a");
 
+                // print_r($diffDays);
+                // exit;
+
                 $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead)->where('age_from','<=',$diffDays)->where('age_to','>=',$diffDays)->first();
                 if($ageGroup) {
                     $arr['age_group_id'] = $ageGroup->id;
