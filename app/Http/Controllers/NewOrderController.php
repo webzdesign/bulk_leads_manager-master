@@ -55,8 +55,7 @@ class NewOrderController extends Controller
                 'state' => $request['state'],
                 'country' => $request['country'],
                 'ip_address' => $request['ip_address'],
-                'added_by' => Auth::user()->id,
-                'updated_by' => 0,
+                'added_by' => Auth::user()->id
             );
             Client::create($records);
 
