@@ -342,7 +342,7 @@
                                 <label class="c-gr f-16 f-500">IP Address</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control f-14 c-19" name="ip_address" placeholder="Enter IP address" value="{{ Request::ip(); }}">
+                                <input type="text" class="form-control f-14 c-19" name="ip_address" placeholder="Enter IP address">
                             </div>
                         </div>
                     </div>
@@ -383,19 +383,11 @@
                     first_name: {required: true},
                     last_name: {required: true},
                     email: {required: true, email:true},
-                    city: {required: true},
-                    state: {required: true},
-                    country: {required: true},
-                    ip_address: {required: true},
                 },
                 messages:{
                     first_name:{required: "This fields is required."},
                     last_name:{required: "This fields is required."},
                     email:{required: "This fields is required.", email:"Please enter valid email formate"},
-                    city:{required: "This fields is required."},
-                    state:{required: "This fields is required."},
-                    country:{required: "This fields is required."},
-                    ip_address:{required: "This fields is required."},
                 },
                 errorPlacement: function(error, element) {
                     error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
@@ -529,6 +521,10 @@
                 else if(qty == ''){
                     $("#qty_validate").text('Please enter quantity.');
                     return false;
+                }
+                else if(qty == 0){
+                    $("#qty_validate").text('Quantity must be enter greater than of 0.');
+                    return false;
                 }else{
                     $(".btn_next2").addClass("next");
                     $(".step2").removeClass("active");
@@ -566,6 +562,9 @@
 
                 if(lead_quantity == ''){
                     $("#lead_quantity_validate").text('Please enter lead quantity.');
+                    return false;
+                }else if(lead_quantity == 0){
+                    $("#lead_quantity_validate").text('Quantity must be enter greater than of 0.');
                     return false;
                 }else if(lead_quantity > total_leads_available){
                     $("#lead_quantity_validate").text('Quantity can\'t be add greater than of total leads.');
