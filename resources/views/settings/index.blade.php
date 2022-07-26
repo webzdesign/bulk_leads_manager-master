@@ -213,7 +213,7 @@
                                     </span>
                                 @enderror
 
-                                <p class="c-7b f-14 f-400 mt-2 mb-4">[username] [email] [userid] are placed with the correct values.</p>
+                                <p class="c-7b f-14 f-400 mt-2 mb-4">[username] [email] are placed with the correct values.</p>
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Description</label>

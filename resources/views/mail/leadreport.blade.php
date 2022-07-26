@@ -8,14 +8,18 @@
     </head>
     <body class="antialiased">
         @php
-            $description = \App\Models\EmailTemplate::where('email_subject','lead-send')->get()->toArray()
+            $description = \App\Models\EmailTemplate::where('email_subject','lead-send')->get()->toArray();
+            $client = \App\Models\Client::where('id',$order_data['client_id'])->get()->toArray();
+
+            $client_name = isset($client) && $client !=null ? $client[0]['firstName'] : '';
+            $client_email = isset($client) && $client !=null ? $client[0]['email'] : '';
         @endphp
         <center>
             <h4>Please download attachment and show lead reports.</h4>
 
             <?php
                 if(isset($description) && $description !=null){
-                    echo '<div style="text-align:justify">'.$description[0]['content'].'</div>';
+                    echo '<div style="text-align:justify">'.str_replace('[username]',$client_name,str_replace('[email]',$client_email,$description[0]['content'])).'</div>';
                 }
             ?>
         </center>

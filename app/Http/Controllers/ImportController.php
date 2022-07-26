@@ -106,7 +106,7 @@ class ImportController extends Controller
         ini_set('memory_limit', -1);
         ini_set('MAX_EXECUTION_TIME', 0);
 
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
         $getData = (new FastExcel)->import(storage_path('app/import/'.$request->filename));
         $getData = $getData->toArray();
@@ -261,7 +261,7 @@ class ImportController extends Controller
         if ($rows) {
             Lead::find($lead->id)->update(['rows' => $totalRows, 'duplicate_row' => $duplicateRecords, 'invalid_row' => $invalid, 'total_row' => $imported, 'status' => 3]);
 
-            DB::commit();
+            // DB::commit();
 
             $file = Lead::where('id',$lead->id)->first()->file_name;
             $uploadedTime = \Carbon\Carbon::createFromDate(Lead::where('id',$lead->id)->first()->uploaded_datetime);
