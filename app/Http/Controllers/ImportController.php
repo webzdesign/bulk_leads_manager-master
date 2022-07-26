@@ -229,7 +229,7 @@ class ImportController extends Controller
                 $date1 = date_create($generated_date);
                 $date2 = date_create($today);
                 $diff  = date_diff($date1,$date2);
-                $diffDays = $diff->format("%a");
+                $diffDays = intval($diff->format("%a"));
 
                 $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead->lead_type_id)->where('age_from', '<=', $diffDays)->where('age_to', '>=', $diffDays)->first();
                 if ($ageGroup) {
