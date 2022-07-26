@@ -110,6 +110,7 @@ class ImportController extends Controller
     {
         ini_set('memory_limit', -1);
         ini_set('MAX_EXECUTION_TIME', 0);
+        $ageGroupId = 0;
 
         $rows = FacadesExcel::toArray(new LeadImport,storage_path('app/import/' . $request->filename));
         $totalRows = count($rows[0]);
@@ -255,9 +256,13 @@ class ImportController extends Controller
                 $diff  = date_diff($date1,$date2);
                 $diffDays = $diff->format("%a");
 
+                // dd($diffDays);
+
                 $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead->lead_type_id)->where('age_from','<=',$diffDays)->where('age_to','>=',$diffDays)->first();
+                // print_r($ageGroup);
                 if($ageGroup) {
                     $arr['age_group_id'] = $ageGroup->id;
+                    $ageGroupId = $ageGroup->id;
                 }
 
                 $arr['date_generated'] = $row[$date_generated_index];
@@ -273,19 +278,13 @@ class ImportController extends Controller
 
         $imported = $totalRows - ($duplicateRecords+$invalid);
 
-        // if(!empty($mainArr)) {
-        //     foreach(array_chunk($mainArr, 1000) as $details) {
-        //          //good, just be careful of the size limit of $arr, you may need to chunk it
-        //     }
-        // }
-
-
         if($rows) {
             Lead::find($lead->id)->update([
                 'rows'=>$totalRows,
                 'duplicate_row'=>$duplicateRecords,
                 'invalid_row'=>$invalid,
                 'total_row'=>$imported,
+                'age_group_id'=>$ageGroupId,
                 'updated_by'=> auth()->user()->id
             ]);
 

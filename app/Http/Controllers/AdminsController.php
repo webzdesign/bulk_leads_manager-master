@@ -137,7 +137,7 @@ class AdminsController extends Controller
     {
         $user = User::find($request->id);
         $user->delete();
-        $message = $this->moduleName." Deleted Successfully.";
+        $message = "Admin Deleted Successfully.";
         return response()->json([true,$message]);
     }
 
