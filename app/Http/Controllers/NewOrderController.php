@@ -33,20 +33,12 @@ class NewOrderController extends Controller
             'first_name' => ['required'],
             'last_name' => ['required'],
             'email' => ['required','email','unique:clients,email'],
-            'city' => ['required'],
-            'state' => ['required'],
-            'country' => ['required'],
-            'ip_address' => ['required'],
         ], [
             'first_name.required' => "Please enter first name.",
             'last_name.required' => "Please enter last name.",
             'email.required' => "Please enter email address.",
             'email.email' => "Please enter valid email formate.",
             'email.unique' => "Email already exist.",
-            'city.required' => "Please enter city.",
-            'state.required' => "Please enter state.",
-            'country.required' => "Please enter country.",
-            'ip_address.required' => "Please enter IP address.",
         ]);
 
         if ($validation->errors()->all()) {
@@ -63,13 +55,12 @@ class NewOrderController extends Controller
                 'state' => $request['state'],
                 'country' => $request['country'],
                 'ip_address' => $request['ip_address'],
-                'added_by' => Auth::user()->id,
-                'updated_by' => 0,
+                'added_by' => Auth::user()->id
             );
             Client::create($records);
 
             $response_arrray['message'] = "Client Added Successfully.";
-            return response()->json([false, $response_arrray]);
+            return response()->json([true, $response_arrray]);
         }
     }
 
