@@ -73,8 +73,7 @@
             </ul>
             <div class="cards addStep3 d-none">
                 <div class="cardsHeader" style="background: linear-gradient(0deg, #FB8E03 0.08%, #FEA321 100.08%);">
-                    <h3 class="text-white f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400">(upload started 6 minutes
-                            ago)</span></h3>
+                    <h3 class="text-white f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400"></span></h3>
                 </div>
                 <div class="cardsBody p-0">
                     <div class="row uploadStatus">
@@ -99,7 +98,7 @@
                         <div class="col-md-6">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="colOne c-gr f-16 f-500">Import Progress:</div>
-                                <div class="colTwo c-19 f-16 f-500">0% (Step 1 - Scanning file...)</div>
+                                <div class="colTwo c-19 f-16 f-500" id="import_progress">0% (Step 1 - Scanning file...)</div>
                             </div>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="colOne c-gr f-16 f-500">Rows:</div>
@@ -176,9 +175,9 @@
                             <h3 class="f-16 f-500 c-gr">Scanning the uploaded file, please wait...</h3>
                             <div class="progressBar d-flex align-items-center">
                                 <div class="progress w-100">
-                                    <div class="progress-bar" style="width:0%" data-parcent="100"></div>
+                                    <div class="progress-bar" style="width:1%" data-parcent="100"></div>
                                 </div>
-                                <span class="ms-3 c-19 f-16 f-500 f-14-500" id="progress-bar">0%</span>
+                                <span class="ms-3 c-19 f-16 f-500 f-14-500" id="progress-bar">1%</span>
                             </div>
                         </div>
                         <div class="row uploadStatus">
@@ -260,8 +259,7 @@
 
                 <div class="step">
                     <div class="cardsHeader">
-                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400" id='card3Header'>(uploaded 3 hours
-                                ago)</span></h3>
+                        <h3 class="c-gr f-18 f-500 mb-0 f-16-500 file_name"> <span class="f-400" id='card3Header'>(uploaded 3 hours ago)</span></h3>
                     </div>
                     <div class="cardsBody p-0">
                         <div class="row uploadStatus">
@@ -323,13 +321,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
     <script>
         let idArr = [];
+        var width = 0;
+        var import_progress = 0;
+        var startDate = 0;
+        var days = 0; var hours = 0; var minutes = 0; secs = 0;
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
         $(document).ready(function() {
 
          !function(a){"use strict";a.fn.tableToJSON=function(b){var c={ignoreColumns:[],onlyColumns:null,ignoreHiddenRows:!0,ignoreEmptyRows:!1,headings:null,allowHTML:!1,includeRowId:!1,textDataOverride:"data-override",textExtractor:null};b=a.extend(c,b);var d=function(a){return void 0!==a&&null!==a},e=function(c){return d(b.onlyColumns)?-1===a.inArray(c,b.onlyColumns):-1!==a.inArray(c,b.ignoreColumns)},f=function(b,c){var e={},f=0;return a.each(c,function(a,c){f<b.length&&d(c)&&(e[b[f]]=c,f++)}),e},g=function(c,d,e){var f=a(d),g=b.textExtractor,h=f.attr(b.textDataOverride);return null===g||e?a.trim(h||(b.allowHTML?f.html():d.textContent||f.text())||""):a.isFunction(g)?a.trim(h||g(c,f)):"object"==typeof g&&a.isFunction(g[c])?a.trim(h||gc):a.trim(h||(b.allowHTML?f.html():d.textContent||f.text())||"")},h=function(c,d){var e=[],f=b.includeRowId,h="boolean"==typeof f?f:"string"==typeof f?!0:!1,i="string"==typeof f==!0?f:"rowId";return h&&"undefined"==typeof a(c).attr("id")&&e.push(i),a(c).children("td,th").each(function(a,b){e.push(g(a,b,d))}),e},i=function(a){var c=a.find("tr:first").first();return d(b.headings)?b.headings:h(c,!0)},j=function(c,h){var i,j,k,l,m,n,o,p=[],q=0,r=[];return c.children("tbody,*").children("tr").each(function(c,e){if(c>0||d(b.headings)){var f=b.includeRowId,h="boolean"==typeof f?f:"string"==typeof f?!0:!1;n=a(e);var r=n.find("td").length===n.find("td:empty").length?!0:!1;!n.is(":visible")&&b.ignoreHiddenRows||r&&b.ignoreEmptyRows||n.data("ignore")&&"false"!==n.data("ignore")||(q=0,p[c]||(p[c]=[]),h&&(q+=1,"undefined"!=typeof n.attr("id")?p[c].push(n.attr("id")):p[c].push("")),n.children().each(function(){for(o=a(this);p[c][q];)q++;if(o.filter("[rowspan]").length)for(k=parseInt(o.attr("rowspan"),10)-1,m=g(q,o),i=1;k>=i;i++)p[c+i]||(p[c+i]=[]),p[c+i][q]=m;if(o.filter("[colspan]").length)for(k=parseInt(o.attr("colspan"),10)-1,m=g(q,o),i=1;k>=i;i++)if(o.filter("[rowspan]").length)for(l=parseInt(o.attr("rowspan"),10),j=0;l>j;j++)p[c+j][q+i]=m;else p[c][q+i]=m;m=p[c][q]||g(q,o),d(m)&&(p[c][q]=m),q++}))}}),a.each(p,function(c,g){if(d(g)){var i=d(b.onlyColumns)||b.ignoreColumns.length?a.grep(g,function(a,b){return!e(b)}):g,j=d(b.headings)?h:a.grep(h,function(a,b){return!e(b)});m=f(j,i),r[r.length]=m}}),r},k=i(this);return j(this,k)}}(jQuery);
-
-
 
             $("input:checkbox").on('click', function() {
                 var $box = $(this);
@@ -352,6 +352,8 @@
                     var selectcheckbox = selectCheckbox();
                     var filecheck = fileCheck();
                     if (selectcheckbox == true && filecheck == true) {
+                        var date = new Date().getTime();
+                        startDate = date;
                         var leadTypeId = '';
 
                         $('.checkbox').each(function(i) {
@@ -368,8 +370,6 @@
                         formData.append('title', $("#title").val());
 
                         var filesize = document.querySelector('#file').files[0].size;
-
-                        // console.log(filesize);
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.importCSV') }}",
@@ -378,34 +378,43 @@
                             dataType: 'json',
                             data: formData,
                             success: function(res) {
-                                console.log(res);
                                 if(res[0] == 'error') {
                                     $('#invalidFile_error').text(res[1]);
                                     $('#invalidFile_error').removeClass('d-none');
                                 } else {
+                                    uploadTime(res.file_name);
                                     setpwizard();
 
                                     let count = 0
-                                    let innerbar = document.querySelector('.progress-bar')
+                                    // let innerbar = document.querySelector('.progress-bar')
 
-                                    function progress(){
-                                        count++
-                                        innerbar.style.width =`${count}%`
-                                        $("#progress-bar").text(innerbar.style.width);
-                                        if(count==100){
-                                            setpwizard();
-                                            $('#next').show();
-                                            clearInterval(stop)
-                                        }
-                                    }
+                                    // function progress(){
+                                    //     count++
+                                    //     innerbar.style.width =`${count}%`
+                                    //     $("#progress-bar").text(innerbar.style.width);
+                                    //     if(count==100){
+                                    //         setpwizard();
+                                    //         $('#next').show();
+                                    //         clearInterval(stop)
+                                    //     }
+                                    // }
 
                                     let stop = setInterval(function(){
-                                        progress()
-                                    },[0])
+                                        width += 1;
+                                        $(".progress-bar").css('width', width + '%');
+                                        $("#progress-bar").text(width + '%');
+
+                                        if (width >= 100) {
+                                            clearInterval(stop);
+                                            uploadTime(res.file_name);
+                                            setpwizard();
+                                            $('#next').show();
+                                        }
+                                    },[5000])
 
                                     getSheetData(res.lead_type_id);
 
-                                    $('.file_name').text(res.file_name);
+                                    $('.file_name').text(res.file_name + " (upload started "+ hours +" hours "+ minutes +" minutes "+ secs +" seconds ago)");
                                     $('.uploaded_date').text(res.uploaded_date);
                                     $('.uploaded_by').text(res.uploaded_by);
                                     $('.lead_type_name').text(res.lead_type);
@@ -419,23 +428,48 @@
                     }
                 }
 
+                function uploadTime(res) {
+                    const diff = new Date().getTime() - startDate;
+                    days = diff / (24*60*60*1000);
+                    hours = (days % 1) * 24;
+                    minutes = (hours % 1) * 60;
+                    secs = (minutes % 1) * 60;
+                    [days, hours, minutes, secs] = [Math.floor(days), Math.floor(hours), Math.floor(minutes), Math.floor(secs)];
+
+                    if(index == 2) {
+                        $('.file_name').text(res + " (uploaded "+ hours +" hours "+ minutes +" minutes "+ secs +" seconds ago)");
+                    } else {
+                        $('.file_name').text(res + " (upload started "+ hours +" hours "+ minutes +" minutes "+ secs +" seconds ago)");
+                    }
+                }
+
                 if(index == 2) {
                     var selectfield = selectField();
                     if(selectfield == true) {
+                        $('#next').prop('disabled', true);
 
                         var list = [];
                         $('.select_field > option:selected').each(function() {
                             list.push($(this).val());
                         })
 
-                            var filename =  $('#file_in_db').text();
+                        var filename =  $('#file_in_db').text();
+                        let stop = setInterval(function(){
+                            import_progress += 1;
+                            $("#import_progress").text(import_progress + '% (Step 1 - Uploading file...)');
+
+                            if (import_progress >= 100) {
+                                clearInterval(stop);
+                            }
+                        },[5000])
+
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.start_upload') }}",
                             data: {id: list , filename:filename , leadType:$('.lead_type_name').text()},
                             success: function (res) {
-                                console.log(res);
-
+                                import_progress = 98;
+                                uploadTime(filename);
                                     if(res['done'] == true)
                                     {
                                         Swal.fire({
@@ -449,7 +483,7 @@
                                         $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an email.)' );
                                         $('#importRows').text(res['import']);
                                         $('#lead_id').text(res['lead']);
-                                        $('.file_name').text(res['uploadTime']);
+                                        // $('.file_name').text(res['uploadTime']);
                                     }
                                     if(res['done'] == false)
                                     {
@@ -595,7 +629,7 @@
                     dataType: "json",
                     data:{ id: id},
                     success: function(res) {
-                        console.log(res);
+                        width = 98;
                         var thead = '';
                         var tbody = '';
                         if (res) {

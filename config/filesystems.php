@@ -53,6 +53,12 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
+        'leadreport' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/leadreport'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
     ],
 
     /*
