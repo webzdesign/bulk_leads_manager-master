@@ -318,7 +318,6 @@
 @endsection
 @section('script')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
     <script>
         let idArr = [];
         var width = 0;
@@ -326,10 +325,8 @@
         var startDate = 0;
         var days = 0; var hours = 0; var minutes = 0; secs = 0;
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
+        var leadId = '';
         $(document).ready(function() {
-
-         !function(a){"use strict";a.fn.tableToJSON=function(b){var c={ignoreColumns:[],onlyColumns:null,ignoreHiddenRows:!0,ignoreEmptyRows:!1,headings:null,allowHTML:!1,includeRowId:!1,textDataOverride:"data-override",textExtractor:null};b=a.extend(c,b);var d=function(a){return void 0!==a&&null!==a},e=function(c){return d(b.onlyColumns)?-1===a.inArray(c,b.onlyColumns):-1!==a.inArray(c,b.ignoreColumns)},f=function(b,c){var e={},f=0;return a.each(c,function(a,c){f<b.length&&d(c)&&(e[b[f]]=c,f++)}),e},g=function(c,d,e){var f=a(d),g=b.textExtractor,h=f.attr(b.textDataOverride);return null===g||e?a.trim(h||(b.allowHTML?f.html():d.textContent||f.text())||""):a.isFunction(g)?a.trim(h||g(c,f)):"object"==typeof g&&a.isFunction(g[c])?a.trim(h||gc):a.trim(h||(b.allowHTML?f.html():d.textContent||f.text())||"")},h=function(c,d){var e=[],f=b.includeRowId,h="boolean"==typeof f?f:"string"==typeof f?!0:!1,i="string"==typeof f==!0?f:"rowId";return h&&"undefined"==typeof a(c).attr("id")&&e.push(i),a(c).children("td,th").each(function(a,b){e.push(g(a,b,d))}),e},i=function(a){var c=a.find("tr:first").first();return d(b.headings)?b.headings:h(c,!0)},j=function(c,h){var i,j,k,l,m,n,o,p=[],q=0,r=[];return c.children("tbody,*").children("tr").each(function(c,e){if(c>0||d(b.headings)){var f=b.includeRowId,h="boolean"==typeof f?f:"string"==typeof f?!0:!1;n=a(e);var r=n.find("td").length===n.find("td:empty").length?!0:!1;!n.is(":visible")&&b.ignoreHiddenRows||r&&b.ignoreEmptyRows||n.data("ignore")&&"false"!==n.data("ignore")||(q=0,p[c]||(p[c]=[]),h&&(q+=1,"undefined"!=typeof n.attr("id")?p[c].push(n.attr("id")):p[c].push("")),n.children().each(function(){for(o=a(this);p[c][q];)q++;if(o.filter("[rowspan]").length)for(k=parseInt(o.attr("rowspan"),10)-1,m=g(q,o),i=1;k>=i;i++)p[c+i]||(p[c+i]=[]),p[c+i][q]=m;if(o.filter("[colspan]").length)for(k=parseInt(o.attr("colspan"),10)-1,m=g(q,o),i=1;k>=i;i++)if(o.filter("[rowspan]").length)for(l=parseInt(o.attr("rowspan"),10),j=0;l>j;j++)p[c+j][q+i]=m;else p[c][q+i]=m;m=p[c][q]||g(q,o),d(m)&&(p[c][q]=m),q++}))}}),a.each(p,function(c,g){if(d(g)){var i=d(b.onlyColumns)||b.ignoreColumns.length?a.grep(g,function(a,b){return!e(b)}):g,j=d(b.headings)?h:a.grep(h,function(a,b){return!e(b)});m=f(j,i),r[r.length]=m}}),r},k=i(this);return j(this,k)}}(jQuery);
 
             $("input:checkbox").on('click', function() {
                 var $box = $(this);
@@ -386,18 +383,6 @@
                                     setpwizard();
 
                                     let count = 0
-                                    // let innerbar = document.querySelector('.progress-bar')
-
-                                    // function progress(){
-                                    //     count++
-                                    //     innerbar.style.width =`${count}%`
-                                    //     $("#progress-bar").text(innerbar.style.width);
-                                    //     if(count==100){
-                                    //         setpwizard();
-                                    //         $('#next').show();
-                                    //         clearInterval(stop)
-                                    //     }
-                                    // }
 
                                     let stop = setInterval(function(){
                                         width += 1;
@@ -412,7 +397,9 @@
                                         }
                                     },[5000])
 
-                                    getSheetData(res.lead_type_id);
+                                    getSheetData(res.leadId);
+                                    leadId = res.leadId;
+
 
                                     $('.file_name').text(res.file_name + " (upload started "+ hours +" hours "+ minutes +" minutes "+ secs +" seconds ago)");
                                     $('.uploaded_date').text(res.uploaded_date);
@@ -466,7 +453,7 @@
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.start_upload') }}",
-                            data: {id: list , filename:filename , leadType:$('.lead_type_name').text()},
+                            data: {id: list , filename:filename , leadType:$('.lead_type_name').text(), leadId:leadId},
                             success: function (res) {
                                 import_progress = 98;
                                 uploadTime(filename);
@@ -504,7 +491,7 @@
             $(document).on('click','.download',function(){
                 var lead_id = $('#lead_id').text();
                 var type = $(this).attr('data-text');
-                console.log(lead_id);
+
                 $.ajax({
                     type: "POST",
                     url: "{{route('admin.import.download')}}",
@@ -513,7 +500,6 @@
                         type:type
                     },
                     success: function (data) {
-                        console.log(data);
                         var downloadLink = document.createElement("a");
                         var fileData = ['\ufeff'+data];
 
@@ -596,10 +582,6 @@
 
                 valArr['key'] = id;
                 valArr['val'] = value;
-
-                // idArr.push(valArr);
-
-                console.log(idArr);
 
                 const checkValue =  idArr.findIndex((obj => obj.val == value));
 
@@ -692,27 +674,6 @@
                     $(".stepProgress").parent().parent().parent().find(".cards .cardsFooter").removeClass("d-flex").addClass('d-none');
                 }
             }
-
-            // function addDropdown(length)
-            // {
-            //     $("#thead").empty().append("<tr></tr>");
-            //     var leadFields = '{{$leadFields}}';
-            //     var select = [];
-            //     // var tr = $('<tr/>');
-            //     // $('#thead').append(tr);
-            //     // option.attr('value', this.value).text(this.label);
-            //     var td ='';
-            //      for(var i=0; i<=5 ;  i++);
-            //      {
-
-            //           td += "<td>Hello</td>";
-            //        //  select.attr('id',"select_field"+`${i}`).text("select");
-            //      }
-            //      alert(td);
-            //      $('thead tr:first').append(td);
-
-            //     console.log(leadFields);
-            // }
 
         });
     </script>
