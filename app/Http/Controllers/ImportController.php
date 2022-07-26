@@ -73,7 +73,7 @@ class ImportController extends Controller
             $lead = Lead::with(['user','lead_type'])->find($leadData->id);
             $date = explode(" ",$lead->uploaded_datetime);
 
-            return [true, 'uploaded_date' => $date[0], 'uploaded_by' => $lead->user->firstName, 'file_name' => $lead->file_name ,'lead_type' => $lead->lead_type->name, 'lead_type_id' => $leadData->id ,'file_in_db'=>$fileName];
+            return [true, 'uploaded_date' => $date[0], 'uploaded_by' => $lead->user->firstName, 'file_name' => $lead->file_name ,'lead_type' => $lead->lead_type->name, 'leadId' => $leadData->id ,'file_in_db'=>$fileName];
         }
     }
 
@@ -132,7 +132,7 @@ class ImportController extends Controller
         $countries = Country::pluck('id', 'name')->toArray();
         $states = State::pluck('id', 'name')->toArray();
         $cities = City::pluck('id', 'name')->toArray();
-        $lead = Lead::latest()->first();
+        $lead = Lead::find($request->leadId);
 
         $columns = array_filter($request->id, fn($value) => !is_null($value) && $value !== 'null');
         foreach($columns as $key => $column) {
