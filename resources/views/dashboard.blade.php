@@ -115,7 +115,7 @@
                                         @foreach ($ageGroups as $ageGroup)
                                             <li class="d-flex align-items-center justify-content-between">
                                                 <div class="f-16 f-14-500 f-700 c-gr">{{ $ageGroup->age_from }} -
-                                                    {{ $ageGroup->age_to }} days old</div>
+                                                    {{ $ageGroup->age_to }} DAYS OLD</div>
 
                                                 <div class="f-16 f-14-500 f-700 c-gr">
                                                     {{ \App\Models\LeadDetail::whereIn('lead_id', $leads)->where('age_group_id', $ageGroup->id)->count() }}
