@@ -326,6 +326,7 @@
         var days = 0; var hours = 0; var minutes = 0; secs = 0;
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
         var leadId = '';
+        var FileName = '';
         $(document).ready(function() {
 
             $("input:checkbox").on('click', function() {
@@ -379,6 +380,7 @@
                                     $('#invalidFile_error').text(res[1]);
                                     $('#invalidFile_error').removeClass('d-none');
                                 } else {
+                                    FileName = res.file_name;
                                     uploadTime(res.file_name);
                                     setpwizard();
 
@@ -509,7 +511,8 @@
 
                         var url = URL.createObjectURL(blobObject);
                         downloadLink.href = url;
-                        downloadLink.download = "Sample.csv";
+                        var file = FileName.split(".csv");
+                        downloadLink.download = file[0]+"_"+type+".csv";
 
               /*
                * Actually download CSV

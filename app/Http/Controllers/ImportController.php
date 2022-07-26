@@ -259,7 +259,7 @@ class ImportController extends Controller
         $imported = $totalRows - ($duplicateRecords+$invalid);
 
         if ($rows) {
-            Lead::find($lead->id)->update(['rows' => $totalRows, 'duplicate_row' => $duplicateRecords, 'invalid_row' => $invalid, 'total_row' => $imported]);
+            Lead::find($lead->id)->update(['rows' => $totalRows, 'duplicate_row' => $duplicateRecords, 'invalid_row' => $invalid, 'total_row' => $imported, 'status' => 3]);
 
             DB::commit();
 
