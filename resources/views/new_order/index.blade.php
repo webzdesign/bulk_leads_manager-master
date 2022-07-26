@@ -409,11 +409,9 @@
                                     icon: "success",
                                     title: 'Success',
                                     text: response[1].message,
-                                });
-
-                                setTimeout(() => {
+                                }).then(function() {
                                     location.reload();
-                                }, 1000);
+                                });
                             }else {
                                 Swal.fire({
                                     icon: "error",

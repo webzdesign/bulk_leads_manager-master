@@ -325,7 +325,7 @@
                             {
                                 Swal.fire({
                                     icon: "info",
-                                    title: "Duplicate email adress.",
+                                    title: "Duplicate email address.",
                                     text: "Admin with same email address alredy exist.",
                                 })
                             }
