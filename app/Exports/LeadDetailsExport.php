@@ -7,45 +7,33 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\FromArray;
+
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Lead;
 use App\Models\LeadDetail;
-use App\Models\OrderDetail;
+use App\Models\AgeGroup;
+use App\Models\State;
 
-class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,ShouldAutoSize
+class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,ShouldAutoSize,WithHeadingRow
 {
 
-    protected $order_data;
+    protected $lead_collection;
 
-    function __construct($order_data) {
-        $this->order_data = $order_data;
+    function __construct($lead_collection) {
+        $this->lead_collection = $lead_collection;
     }
 
     public function headings(): array
     {
-        return ["Name", "Email", "Address", "Mobile number"];
+        return ["Age group", "First name", "Last name", "Gender", "Email", "Address", "Country", "State", "City", "Phone number", "Birth date", "Age", "Zip code"];
     }
 
     public function collection()
     {
-        $lead_details_data = [];
-        $order_data = $this->order_data;
-
-        foreach($order_data as $key => $value){
-            $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id,'age_group_id' => $value->age_group_id])->pluck('id')->toArray();
-
-            if(isset($lead_ids) && $lead_ids !=null){
-                $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
-                $lead_details = LeadDetail::whereIn('lead_id',$lead_ids)->take($value->qty);
-
-                if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-                    $lead_details->whereNotIn('id',$skip_lead_details_ids);
-                }
-                $lead_details = $lead_details->get();
-                // $lead_details_data[$value->client->email][] = $lead_details;
-                $lead_details_data[] = $lead_details;
-            }
-        }
-        return collect($lead_details_data);
+        return collect($this->lead_collection);
     }
 
     public function registerEvents(): array
@@ -62,8 +50,12 @@ class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,Shoul
                 $lead_details_data->sheet->getDelegate()->getColumnDimension('G')->setWidth(30);
                 $lead_details_data->sheet->getDelegate()->getColumnDimension('H')->setWidth(30);
                 $lead_details_data->sheet->getDelegate()->getColumnDimension('I')->setWidth(30);
+                $lead_details_data->sheet->getDelegate()->getColumnDimension('J')->setWidth(30);
+                $lead_details_data->sheet->getDelegate()->getColumnDimension('K')->setWidth(30);
+                $lead_details_data->sheet->getDelegate()->getColumnDimension('L')->setWidth(30);
+                $lead_details_data->sheet->getDelegate()->getColumnDimension('M')->setWidth(30);
 
-                $lead_details_data->sheet->getDelegate()->getStyle('A1:I1')
+                $lead_details_data->sheet->getDelegate()->getStyle('A1:M1')
                     ->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()
