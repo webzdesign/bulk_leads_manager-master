@@ -9,7 +9,7 @@
                                         <th>First name</th>
                                         <th>Last name</th>
                                         <th>Email</th>
-                                        <th>Last order date</th>
+                                        <th>Order date</th>
                                         <th>Last product ordered</th>
                                         <th>Actions</th>
                                     </tr>
