@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\LeadDetail;
 use App\Models\LeadType;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -31,8 +32,8 @@ class HomeController extends Controller
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::all();
         $orders = Order::with(['client','lead_type','age_group'])->orderBy('created_at', 'desc')->limit(2)->get();
-        $leads = Lead::orderBy('created_at', 'desc')->limit(2)->get();
-        return view('dashboard',compact('moduleName','leadTypes','orders','leads'));
+        $Allleads = Lead::orderBy('created_at', 'desc')->limit(2)->get();
+        return view('dashboard',compact('moduleName','leadTypes','orders','Allleads'));
     }
 
     public function getData(Request $request)

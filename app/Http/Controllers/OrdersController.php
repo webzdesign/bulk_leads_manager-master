@@ -13,7 +13,7 @@ use App\Models\State;
 use App\Models\OrderDetail;
 use App\Exports\LeadDetailsExport;
 use Maatwebsite\Excel\Facades\Excel;
-use DB,DataTables;
+use DB,DataTables,Mail,Storage;
 
 class OrdersController extends Controller
 {
@@ -85,31 +85,76 @@ class OrdersController extends Controller
         return $datatable;
     }
 
-    public function sendLead(Request $request){
+    public function sendLead(){
 
-        $lead_details_data = [];
-        // DB::enableQueryLog();
         $order_data = Order::with(['client'])->where('status','0')->get();
-        if(!empty($order_data)){
-            // foreach($order_data as $key => $value){
-            //     $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id,'age_group_id' => $value->age_group_id])->pluck('id')->toArray();
+        $lead_response = [];
 
-            //     if(isset($lead_ids) && $lead_ids !=null){
-            //         $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
-            //         $lead_details = LeadDetail::whereIn('lead_id',$lead_ids)->take($value->qty);
+        if(!$order_data->isEmpty()){
 
-            //         if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-            //             $lead_details->whereNotIn('id',$skip_lead_details_ids);
-            //         }
-            //         $lead_details = $lead_details->get();
+            foreach($order_data as $key => $value){
+                $lead_collection = [];
 
-            //         $lead_details_data[$value->client->email][] = $lead_details;
-            //     }
-            // }
+                $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id,'age_group_id' => $value->age_group_id])->pluck('id')->toArray();
 
+                if(isset($lead_ids) && $lead_ids !=null){
+                    $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
+                    $lead_details = LeadDetail::with(['lead.age_group','country','state','city'])->whereIn('lead_id',$lead_ids)->where('is_duplicate',0)->take($value->qty);
 
-            // Store on a different disk with a defined writer type.
-            return Excel::download(new LeadDetailsExport($order_data), 'LeadReport.xlsx');
+                    if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
+                        $lead_details->whereNotIn('id',$skip_lead_details_ids);
+                    }
+                    $lead_details = $lead_details->get();
+
+                    if(isset($lead_details) && $lead_details !=null){
+                        foreach ($lead_details as $key => $row) {
+
+                            // Update order status
+                            Order::where('id', $value->id)->update(['status' => '1']);
+
+                            $lead_collection[] = array(
+                                'age_group' => $row->lead->age_group->age_from.' - '.$row->lead->age_group->age_to,
+                                'first_name' => $row->first_name,
+                                'last_name' => $row->last_name,
+                                'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
+                                'email' => $row->email,
+                                'address' => $row->address,
+                                'country' => $row->country->name,
+                                'state' => $row->state->name,
+                                'city' => $row->city->name,
+                                'phone_number' => $row->phone_number,
+                                'birth_date' => $row->birth_date,
+                                'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
+                                'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
+                            );
+
+                            //Add records
+                            $where_array = ['order_id' => $value->id, 'lead_details_id' => $row->id];
+                            OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
+                        }
+
+                        if(isset($lead_collection) && $lead_collection !=null){
+
+                            $file_name = 'LeadReport-'.uniqid().'.xlsx';
+                            $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
+
+                            //Mail sending
+                            $to_email = $value->client->email;
+                            $upload_path = 'storage/leadreport/'.$file_name;
+
+                            Mail::send('mail/leadreport', [], function($message) use ($to_email,$upload_path){
+                                $message->to($to_email)->subject('Lead reports');
+                                $message->attach(public_path($upload_path));
+                            });
+                        }
+                    }
+                }
+            }
+
+            if(isset($lead_response) && $lead_response !=null){
+                echo "Lead details send successfuly.";
+                return $lead_response;
+            }
         }
     }
 }

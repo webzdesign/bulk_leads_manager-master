@@ -42,12 +42,15 @@ class ImportHistoryController extends Controller
         return $row->lead_type->name;
        })
        ->editColumn('file_name',function($row){
-        $file =$row->file_name . "_" . strtotime($row->uploaded_datetime). ".csv";
+        $file =$row->file_name;
         $path =url('storage/app/import/' . $file);
         return '<a href="'.$path.'" class="c-16 text-underline" download>'.$row->file_name.'</a>';
        })
        ->editColumn('ageGroup',function($row){
-        return "-";
+            if($row->age_group)
+                    return  $row->age_group->age_from.'-'.$row->age_group->age_to.' Days Old';
+            else
+                return '-';
        })
        ->editColumn('quentity',function($row){
         return $row->total_row . ' Leads';
