@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToLeadFields extends Migration
+class CreateStatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class AddColumnToLeadFields extends Migration
      */
     public function up()
     {
-        Schema::table('lead_fields', function (Blueprint $table) {
-
-                $table->string('columnName')->after('name'); // use this for field after specific column.
-
+        Schema::create('states', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('country_id')->nullable();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -27,9 +28,6 @@ class AddColumnToLeadFields extends Migration
      */
     public function down()
     {
-        Schema::table('lead_fields', function (Blueprint $table) {
-            //
-            $table->dropColumn('columnName');
-        });
+        Schema::dropIfExists('states');
     }
 }

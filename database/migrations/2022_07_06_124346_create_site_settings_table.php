@@ -26,7 +26,7 @@ class CreateSiteSettingsTable extends Migration
             $table->string('bcc_email_address')->nullable();
             $table->string('reply_to_email')->nullable();
             $table->integer('added_by');
-            $table->integer('updated_by');
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

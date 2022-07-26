@@ -140,15 +140,13 @@ class ImportController extends Controller
         $invalid = 0;
         $repeatMail = [];
         $emails = LeadDetail::all()->pluck('email')->toArray();
-        $lead = Lead::latest()->first()->id;
+        $lead = Lead::latest()->first();
 
         $columns = array_filter($request->id, fn($value) => !is_null($value) && $value !== 'null');
         foreach($columns as $key => $column)
         {
             $columnName[$key] = LeadFields::where('id',$column)->first()->columnName;
         }
-
-        $mainArr = [];
 
         foreach($rows[0] as $row) {
             $arr = [];
@@ -247,7 +245,7 @@ class ImportController extends Controller
                 $arr['age'] = $age;
             }
 
-            $arr['lead_id'] = $lead;
+            $arr['lead_id'] = $lead->id;
 
             if($date_generated_index) {
                 $generated_date = date('Y-m-d',strtotime($row[$date_generated_index]));
@@ -257,10 +255,7 @@ class ImportController extends Controller
                 $diff  = date_diff($date1,$date2);
                 $diffDays = $diff->format("%a");
 
-                // print_r($diffDays);
-                // exit;
-
-                $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead)->where('age_from','<=',$diffDays)->where('age_to','>=',$diffDays)->first();
+                $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead->lead_type_id)->where('age_from','<=',$diffDays)->where('age_to','>=',$diffDays)->first();
                 if($ageGroup) {
                     $arr['age_group_id'] = $ageGroup->id;
                 }
@@ -272,20 +267,21 @@ class ImportController extends Controller
             foreach($columnName as $key => $column) {
                 $arr[$column] = $row[$key];
             }
-            array_push($mainArr, $arr);
+
+            LeadDetail::query()->insert($arr);
         }
 
         $imported = $totalRows - ($duplicateRecords+$invalid);
 
-        if(!empty($mainArr)) {
-            foreach(array_chunk($mainArr, 1000) as $details) {
-                LeadDetail::query()->insert($details); //good, just be careful of the size limit of $arr, you may need to chunk it
-            }
-        }
+        // if(!empty($mainArr)) {
+        //     foreach(array_chunk($mainArr, 1000) as $details) {
+        //          //good, just be careful of the size limit of $arr, you may need to chunk it
+        //     }
+        // }
 
 
         if($rows) {
-            Lead::find($lead)->update([
+            Lead::find($lead->id)->update([
                 'rows'=>$totalRows,
                 'duplicate_row'=>$duplicateRecords,
                 'invalid_row'=>$invalid,
@@ -293,12 +289,12 @@ class ImportController extends Controller
                 'updated_by'=> auth()->user()->id
             ]);
 
-            $file = Lead::where('id',$lead)->first()->file_name;
-            $uploadedTime = \Carbon\Carbon::createFromDate(Lead::where('id',$lead)->first()->uploaded_datetime);
+            $file = Lead::where('id',$lead->id)->first()->file_name;
+            $uploadedTime = \Carbon\Carbon::createFromDate(Lead::where('id',$lead->id)->first()->uploaded_datetime);
             $from = \Carbon\Carbon::now();
 
             $uploadTime = $file . " (Uploaded " . $uploadedTime->diffInHours($from) .' hours and '. $uploadedTime->diffInMinutes($from).' minutes ago.)';
-            return response()->json(['message'=>'Data Inserted successFully','duplicate'=>$duplicateRecords,'invalid' => $invalid ,'import'=>$imported,'rows'=>$totalRows ,'done'=>true ,'lead'=>$lead , 'uploadTime'=>$uploadTime]);
+            return response()->json(['message'=>'Data Inserted successFully','duplicate'=>$duplicateRecords,'invalid' => $invalid ,'import'=>$imported,'rows'=>$totalRows ,'done'=>true ,'lead'=>$lead->id , 'uploadTime'=>$uploadTime]);
 
         } else {
             return response()->json(['message'=>'No Data Found In File','done'=>false]);
@@ -351,18 +347,35 @@ class ImportController extends Controller
 
         //adding the data from the array
         foreach ($users as $each_user) {
-            $gender = $each_user->gender;
-            if($each_user->gender == 1)
-            {
-                $gender = 'Male';
+            if($each_user->gender != '') {
+                $gender = $each_user->gender;
+                if($each_user->gender == 1)
+                {
+                    $gender = 'Male';
+                }
+                if($each_user->gender == 0)
+                {
+                    $gender = 'Female';
+                }
+            } else {
+                $gender = null;
             }
-            if($each_user->gender == 0)
-            {
-                $gender = 'Female';
+
+            if($each_user->city_id != '') {
+                $city = City::where('id',$each_user->city_id)->first()->name;
+            } else {
+                $city = null;
             }
-            $city = City::where('id',$each_user->city_id)->first()->name;
-            $state = State::where('id',$each_user->state_id)->first()->name;
-            $country = Country::where('id',$each_user->country_id)->first()->name;
+            if($each_user->state_id != '') {
+                $state = State::where('id',$each_user->state_id)->first()->name;
+            } else {
+                $state = null;
+            }
+            if($each_user->country_id) {
+                $country = Country::where('id',$each_user->country_id)->first()->name;
+            } else {
+                $country = null;
+            }
 
             // $date = new DateTime($each_user->birth_date);
             // $dob = $date->format('Y-m-d');
@@ -372,11 +385,11 @@ class ImportController extends Controller
                 $each_user->last_name,
                 $each_user->email,
                 $each_user->phone_number,
-                 $gender,
-                 $each_user->address,
-                 $city,
-                 $state,
-                 $country,
+                $gender,
+                $each_user->address,
+                $city,
+                $state,
+                $country,
                 $each_user->birth_date,
                 $each_user->age,
                 $each_user->zip

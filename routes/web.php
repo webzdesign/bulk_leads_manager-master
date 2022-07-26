@@ -32,6 +32,7 @@ Route::get('/', function () {
 
 Route::post('import/download', [ImportController::class, 'downloadCsv'])->name('admin.import.download');
 Route::any('import-history/downloadOriginal/{id}', [ImportHistoryController::class, 'downloadOriginal'])->name('admin.import-history.downloadOriginal');
+Route::any('send-lead',[OrdersController::class,'sendLead'])->name('admin.send-lead');
 
 Route::group(['middleware' => 'prevent-back-history'],function(){
 
@@ -101,7 +102,6 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::group(['prefix' => 'orders'], function(){
             Route::get('/', [OrdersController::class, 'index'])->name('admin.orders');
             Route::get('/get-data',[OrdersController::class,'getData'])->name('admin.get-data');
-            Route::get('send-lead',[OrdersController::class,'sendLead'])->name('admin.send-lead');
         });
 
         Route::group(['prefix' => 'stats'], function(){
