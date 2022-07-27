@@ -521,7 +521,7 @@
                     return false;
                 }
                 else if(qty == 0){
-                    $("#qty_validate").text('Quantity must be enter greater than of 0.');
+                    $("#qty_validate").text('Quantity must be greater than 0.');
                     return false;
                 }else{
                     $(".btn_next2").addClass("next");
@@ -562,7 +562,7 @@
                     $("#lead_quantity_validate").text('Please enter lead quantity.');
                     return false;
                 }else if(lead_quantity == 0){
-                    $("#lead_quantity_validate").text('Quantity must be enter greater than of 0.');
+                    $("#lead_quantity_validate").text('Quantity must be greater than 0.');
                     return false;
                 }else if(lead_quantity > total_leads_available){
                     $("#lead_quantity_validate").text('Quantity can\'t be add greater than of total leads.');

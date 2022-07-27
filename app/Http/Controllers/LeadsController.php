@@ -5,99 +5,87 @@ namespace App\Http\Controllers;
 use App\Models\AgeGroup;
 use App\Models\Lead;
 use App\Models\LeadDetail;
+use App\Models\State;
 use App\Models\LeadType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class LeadsController extends Controller
 {
-    //
     private $moduleName = "Leads";
     private $view = "Leads";
 
     public function index()
     {
         $moduleName = $this->moduleName;
-        $leadTypes = LeadType::all();
-        $genders = LeadDetail::all()->unique('gender')->pluck('gender');
-        $states = LeadDetail::with('state')->get()->unique('state_id');
+        $leadTypes = LeadType::select('id', 'name')->get();
+        $states = State::select('id', 'name')->get();
         $leadAge = AgeGroup::with('leadType')->get();
-        return view("$this->view/index", compact('moduleName','leadTypes','genders','leadAge','states'));
+
+        return view("$this->view/index", compact('moduleName', 'leadTypes', 'leadAge', 'states'));
     }
 
     public function getData(Request $request)
     {
-        // dd($request->all());
-        $leadDetail = LeadDetail::with('lead')->orderBy('id','DESC');
-        if($request->leadType)
-        {
-            $leadt = $request->leadType;
-            $leadDetail = $leadDetail->whereHas('lead.lead_type', function($q) use($leadt){
-                $q->where('id',$leadt);
+        $leadDetail = LeadDetail::with('lead')->select('lead_details.*')->orderBy('id','DESC');
+
+        if ($request->leadType) {
+            $leadDetail = $leadDetail->whereHas('lead', function($q) use($request){
+                $q->where('lead_type_id', $request->leadType);
             });
-
-        }
-        if($request->leadAge)
-        {
-            // $ageGroup = AgeGroup::where('id',$request->leadAge)->first();
-            $leadDetail->where('age_group_id',$request->leadAge)->select('*');
-        }
-        if($request->gender)
-        {
-            if($request->gender == 'M')
-            $leadDetail->where('gender',0);
-            else if($request->gender == 'F')
-            $leadDetail->where('gender',1);
-        }
-        if($request->state)
-        {
-            $leadDetail->where('state_id',$request->state);
         }
 
-        $data =$leadDetail;
-        $selected = explode(",",$request->selected);
-        return DataTables::eloquent($data)
-                ->addColumn('check', function ($row) use($selected){
-                    $checked = (in_array($row->id, $selected)) ? 'checked' : '';
-                    // return '<input type="checkbox" class="selected dtcheckbox" name="selected[]" '.$checked.' value="' . $row->id . '" />';
-                    return '<span style="width: 50px;">
-                    <label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand">
-                    <input name="selected[]" class="form-check-input mt-0 selected" type="checkbox" value="'.$row->id.'">&nbsp;<span></span></label></span>';
-                })
-                ->addColumn('zip',function($row){
-                    $zip = $row->zip;
-                    return $zip;
-                })
-                ->addColumn('gender',function($row){
-                    if($row->gender === null)
-                        return '--';
-                    elseif($row->gender == 1)
-                        return 'F';
-                    else
-                        return 'M';
+        if ($request->leadAge) {
+            $leadDetail->where('age_group_id', $request->leadAge);
+        }
 
-                })
-                ->editColumn('state_id',function($row){
-                        if($row->state)
-                        return $row->state->name;
-                        else
-                        return '--';
+        if ($request->gender) {
+            if ($request->gender == 'M') {
+                $leadDetail->where('gender', 0);
+            } else if($request->gender == 'F') {
+                $leadDetail->where('gender', 1);
+            }
+        }
 
-                })
-                ->editColumn('email',function($row){
-                    if($row->email)
-                    return $row->email;
-                    else
+        if ($request->state) {
+            $leadDetail->where('state_id', $request->state);
+        }
+
+        return DataTables::eloquent($leadDetail)
+            ->addColumn('check', function ($row) {
+                return '<span style="width: 50px;">
+                <label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand">
+                <input name="selected[]" class="form-check-input mt-0 selected" type="checkbox" value="'.$row->id.'">&nbsp;<span></span></label></span>';
+            })
+            ->addColumn('gender',function($row){
+                if($row->gender === null)
                     return '--';
+                elseif($row->gender == 1)
+                    return 'F';
+                else
+                    return 'M';
+
+            })
+            ->editColumn('state_id',function($row){
+                if($row->state)
+                return $row->state->name;
+                else
+                return '--';
+            })
+            ->editColumn('email',function($row){
+                if($row->email)
+                return $row->email;
+                else
+                return '--';
+            })
+            ->editColumn('age',function($row){
+                if($row->age)
+                return $row->age;
+                else
+                return '--';
                 })
-                ->editColumn('age',function($row){
-                    if($row->age)
-                    return $row->age;
-                    else
-                    return '--';
-                 })
-                ->rawColumns(['check','zip','gender','state_id','email'])
-                ->make(true);
+            ->rawColumns(['check','zip','gender','state_id','email'])
+            ->make(true);
 
     }
 
