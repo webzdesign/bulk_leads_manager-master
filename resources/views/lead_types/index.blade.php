@@ -379,14 +379,25 @@
                     $('#lead_type_assign_err').addClass('d-none');
                 }
 
+
+
                 if (ageFrom != '' && ageTo != '' && leadType != 'hide') {
+
                     var age_group_id = $('#age_group_id').val();
-                    if(age_group_id != ''){
+
+                    if(ageTo < ageFrom)
+                    {
+                            Swal.fire({
+                                    icon: "info",
+                                    text: "Age TO must be greater than  Age FROM.",
+                                });
+                    }else{
+                        if(age_group_id != ''){
                         var type = "UPDATE";
                         var id = age_group_id;
-                    }
+                        }
 
-                    $.ajax({
+                        $.ajax({
                         type: "POST",
                         url: "{{ route('admin.lead_type.store_age_group') }}",
                         data: {
@@ -397,6 +408,18 @@
                             type: type
                         },
                         success: function(res) {
+                            if (res[0] == false) {
+                                $('#Group').modal('hide');
+
+                                Swal.fire({
+                                    icon: "info",
+                                    title: res[1],
+                                    text: res[2],
+                                }).then(function() {
+                                    window.location.reload();
+                                });
+                            }
+
                             if (res[0] == true) {
                                 $('#Group').modal('hide');
 
@@ -410,6 +433,9 @@
                             }
                         }
                     });
+                    }
+
+
                 }
             });
 
