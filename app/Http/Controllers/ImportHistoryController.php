@@ -53,7 +53,7 @@ class ImportHistoryController extends Controller
 
             return $ageGroup;
        })
-       ->editColumn('quentity',function($row){
+       ->editColumn('total_row',function($row){
             return $row->total_row . ' Leads';
        })
        ->editColumn('duplicate_row',function($row){

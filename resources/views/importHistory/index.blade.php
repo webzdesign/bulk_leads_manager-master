@@ -96,7 +96,7 @@ $(document).ready(function() {
                 data: 'lead_type.name'
             },
             {
-                data: 'ageGroup'
+                data: 'ageGroup', orderable: false, searchable: false
             },
             {
                 data: 'file_name'
@@ -108,7 +108,7 @@ $(document).ready(function() {
                 data: 'uploaded_datetime'
             },
             {
-                data: 'quentity'
+                data: 'total_row'
             },
             {
                 data: 'status',
