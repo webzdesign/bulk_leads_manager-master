@@ -256,7 +256,7 @@ class ImportController extends Controller
             if (!empty($arr)) {
                 $mainArr[] = $arr;
             }
-            if (count($mainArr) == 2000) {
+            if (count($mainArr) == 5000) {
                 LeadDetail::query()->insert($mainArr);
                 $mainArr = [];
             }
