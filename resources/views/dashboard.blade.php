@@ -47,7 +47,7 @@
                     @foreach ($leadTypes as $leadtype)
                         @php
                             $leads = $leadtype->leads->pluck('id');
-                            $totalLeads = \App\Models\LeadDetail::whereIn('lead_id', $leads)->count();
+                            $totalLeads = \App\Models\LeadDetail::whereIn('lead_id', $leads)->where('is_duplicate', 0)->where('is_invalid',0)->count();
                         @endphp
                         <div class="col-md-6 mb-4">
                             <div class="statsCard">
@@ -113,7 +113,7 @@
                                                 <div class="f-16 f-14-500 f-700 c-gr">{{ $ageGroup->age_from }} - {{ $ageGroup->age_to }} DAYS OLD</div>
 
                                                 <div class="f-16 f-14-500 f-700 c-gr">
-                                                    {{ \App\Models\LeadDetail::whereIn('lead_id', $leads)->where('age_group_id', $ageGroup->id)->count() }}
+                                                    {{ \App\Models\LeadDetail::whereIn('lead_id', $leads)->where('age_group_id', $ageGroup->id)->where('is_duplicate', 0)->where('is_invalid',0)->count() }}
                                                 </div>
                                             </li>
                                         @endforeach
