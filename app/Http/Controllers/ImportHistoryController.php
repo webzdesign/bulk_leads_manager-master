@@ -7,91 +7,72 @@ use App\Models\AgeGroup;
 use App\Models\Lead;
 use App\Models\LeadDetail;
 use App\Models\LeadType;
+use App\Models\State;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
-use function PHPUnit\Framework\returnSelf;
-
 class ImportHistoryController extends Controller
 {
-    //
     private $moduleName = "Import History";
     private $view = "importHistory";
 
     public function index()
     {
         $moduleName = $this->moduleName;
-        $leadTypes = LeadType::all();
-        $genders = LeadDetail::all()->unique('gender')->pluck('gender');
-        $states = LeadDetail::with('state')->get()->unique('state_id');
-        $leadAge = AgeGroup::with('leadType')->get();
-        return view("$this->view/index", compact('moduleName','genders','leadAge','leadTypes','states'));
+        $leadTypes = LeadType::get();
+
+        return view("$this->view/index", compact('moduleName', 'leadTypes'));
     }
 
     public function getData(Request $request)
     {
-       $lead = Lead::with('lead_type')->select('*');
-       if($request->leadType)
-        {
-            $lead->where('lead_type_id',$request->leadType)->select('*');
+        $lead = Lead::with('lead_type')->select('leads.*');
+
+        if ($request->leadType) {
+            $lead->where('lead_type_id', $request->leadType);
         }
-        $data = $lead;
-       return DataTables::eloquent($data)
-       ->editColumn('lead_type_id',function($row){
-        return $row->lead_type->name;
-       })
+
+       return DataTables::eloquent($lead)
        ->editColumn('file_name',function($row){
-        $file =$row->file_name;
-        $path =url('storage/app/import/' . $file);
-        return '<a href="'.$path.'" class="c-16 text-underline" download>'.$row->file_name.'</a>';
+            $path = url('storage/app/import/' . $row->file_name);
+            return '<a href="'.$path.'" class="c-16 text-underline" download>'.$row->file_name.'</a>';
        })
        ->editColumn('ageGroup',function($row){
-            $data = '';
-                $agegroups = LeadDetail::where('lead_id',$row->id)->pluck('age_group_id')->unique('age_group_id');
-                if($agegroups)
-                {
-                    foreach($agegroups as $ag)
-                    {
-                        $age = AgeGroup::where('id',$ag)->first();
-                        if($age)
-                        {
-                            $data .= $age->age_from.'-'.$age->age_to.' Days Old <br/>';
-                        }
+            $ageGroup = '';
+            $agegroupIds = LeadDetail::where('lead_id', $row->id)->groupBy('age_group_id')->pluck('age_group_id')->toArray();
+            $agegroups = AgeGroup::whereIn('id', $agegroupIds)->get();
 
-                    }
+            if ($agegroups) {
+                foreach ($agegroups as $age) {
+                    $ageGroup .= $age->age_from.'-'.$age->age_to.' Days Old <br/>';
                 }
-                else
-                {
-                    $data = 'Not specified';
-                }
-                return $data;
+            } else {
+                $ageGroup .= 'Not specified';
+            }
+
+            return $ageGroup;
        })
        ->editColumn('quentity',function($row){
-        return $row->total_row . ' Leads';
+            return $row->total_row . ' Leads';
        })
        ->editColumn('duplicate_row',function($row){
-
-         $downloadUrl =route('admin.import-history.downloadDuplicate', encrypt($row->id));
-         if( $row->duplicate_row == 0)
-            return  $row->duplicate_row;
-        else
-         return $row->duplicate_row .'<a href="'.$downloadUrl.'" class="c-4b"> Download</a>';
-
-        // return $row->duplicate_row.' download';
+            $downloadUrl = route('admin.import-history.downloadDuplicate', encrypt($row->id));
+            if( $row->duplicate_row == 0)
+                return  $row->duplicate_row;
+            else
+                return $row->duplicate_row .'<a href="'.$downloadUrl.'" class="c-4b"> Download</a>';
        })
        ->editColumn('status',function($row){
-        $downloadUrl =route('admin.import-history.downloadOriginal', encrypt($row->id));
-        if($row->status == 3)
-         return '<a href="'.$downloadUrl.'" class="c-4b">Successfully imported - Download</a>';
-        elseif($row->status == 0)
-            return 'Pending';
-        elseif($row->status == 1)
-            return 'Processing';
-        elseif($row->status == 2)
-            return 'error';
+            $downloadUrl =route('admin.import-history.downloadOriginal', encrypt($row->id));
+            if ($row->status == 3)
+                return '<a href="'.$downloadUrl.'" class="c-4b">Successfully imported - Download</a>';
+            elseif ($row->status == 0)
+                return 'Pending';
+            elseif ($row->status == 1)
+                return 'Processing';
+            elseif ($row->status == 2)
+                return 'error';
        })
        ->editColumn('uploaded_datetime',function($row){
          return date('d/m/Y', strtotime($row->uploaded_datetime))." At ".date('H:i A', strtotime($row->uploaded_datetime));
