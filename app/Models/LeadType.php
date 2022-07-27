@@ -13,4 +13,11 @@ class LeadType extends Model
 
     protected $guarded = [];
 
+    public function ageGroup() {
+        return $this->hasMany(AgeGroup::class, 'lead_type_id');
+    }
+
+    public function leads() {
+        return $this->hasMany(Lead::class, 'lead_type_id');
+    }
 }

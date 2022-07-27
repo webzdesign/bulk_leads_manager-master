@@ -46,11 +46,8 @@
                 @if ($leadTypes)
                     @foreach ($leadTypes as $leadtype)
                         @php
-                            $ageGroupsId = \App\Models\AgeGroup::where('lead_type_id', $leadtype->id)->pluck('id');
-                            $ageGroups = \App\Models\AgeGroup::where('lead_type_id', $leadtype->id)->get();
-                            $leads = \App\Models\Lead::where('lead_type_id', $leadtype->id)->pluck('id');
-                            $totalLeads = \App\Models\LeadDetail::whereIn('lead_id', $leads)
-                                ->count();
+                            $leads = $leadtype->leads->pluck('id');
+                            $totalLeads = \App\Models\LeadDetail::whereIn('lead_id', $leads)->count();
                         @endphp
                         <div class="col-md-6 mb-4">
                             <div class="statsCard">
@@ -111,10 +108,9 @@
                                     </div>
 
                                     <div class="cardYearList">
-                                        @foreach ($ageGroups as $ageGroup)
+                                        @foreach ($leadtype->ageGroup as $ageGroup)
                                             <li class="d-flex align-items-center justify-content-between">
-                                                <div class="f-16 f-14-500 f-700 c-gr">{{ $ageGroup->age_from }} -
-                                                    {{ $ageGroup->age_to }} DAYS OLD</div>
+                                                <div class="f-16 f-14-500 f-700 c-gr">{{ $ageGroup->age_from }} - {{ $ageGroup->age_to }} DAYS OLD</div>
 
                                                 <div class="f-16 f-14-500 f-700 c-gr">
                                                     {{ \App\Models\LeadDetail::whereIn('lead_id', $leads)->where('age_group_id', $ageGroup->id)->count() }}
@@ -169,8 +165,7 @@
                                                             </svg>
                                                         </td>
                                                         <td class="c-7b f-16">{{ $order->client->email }}</td>
-                                                        <td class="c-7b f-16">
-                                                            {{ date('d m Y H:i A', strtotime($order->order_date)) }}</td>
+                                                        <td class="c-7b f-16">{{ date('d m Y H:i A', strtotime($order->order_date)) }}</td>
                                                         <td class="c-7b f-16"> {{ $order->qty }} @if ($order->lead_type)
                                                                 {{ $order->lead_type->name }}
                                                                 @endif | @if ($order->age_group)
