@@ -103,229 +103,191 @@
 
     <script>
 
-         var selected = [];
-        var state,leadType,leadAge,gender,datatable;
-        $(document).ready(function () {
+    var selected = [];
+    $(document).ready(function () {
 
-           var datatable = $('#example').DataTable({
-                "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
-                "ordering": false,
-                processing: true,
-                serverSide: true,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search here"
-                },
-                ajax: {
-                    "url": "{{ route('admin.leads.getData') }}",
-                    "dataType": "json",
-                    "type": "GET",
-                    "data":{
-                        state: function() {
-						    return $("#stateDD").val();
-					    },
-                        leadType: function() {
-						    return $("#leadTypeDD").val();
-					    },
-                        leadAge: function() {
-						    return $("#leadAgeDD").val();
-					    },
-                        gender: function() {
-						    return $("#genderDD").val();
-					    },
-                    }
-                },
-                columns: [
-                    {data: 'check',
-                        orderable: false,
-                        searchable: false
+        var datatable = $('#example').DataTable({
+            "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
+            "ordering": false,
+            processing: true,
+            serverSide: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search here"
+            },
+            ajax: {
+                "url": "{{ route('admin.leads.getData') }}",
+                "dataType": "json",
+                "type": "GET",
+                "data":{
+                    state: function() {
+                        return $("#stateDD").val();
                     },
-                    {
-                        data: 'age',
+                    leadType: function() {
+                        return $("#leadTypeDD").val();
                     },
-                    {
-                        data: 'email',
+                    leadAge: function() {
+                        return $("#leadAgeDD").val();
                     },
-                    {
-                        data: 'first_name',
+                    gender: function() {
+                        return $("#genderDD").val();
                     },
-                    {
-                        data: 'last_name',
-                    },
-                    {
-                        data: 'gender',
-                    },
-                    {
-                        data: 'phone_number',
-                    },
-                    {
-                        data: 'zip',
-                    },
-                    {
-                        data:'state_id',
-                    },
-                    {
-                        data:'address',
-                    }
-                ],
-            });
+                }
+            },
+            columns: [
+                { data: 'check', orderable: false, searchable: false },
+                { data: 'age', },
+                { data: 'email', },
+                { data: 'first_name', },
+                { data: 'last_name', },
+                { data: 'gender', },
+                { data: 'phone_number', },
+                { data: 'zip', },
+                { data:'state_id', },
+                { data:'address', }
+            ],
+        });
 
-            $('#filterInput').html($('#searchPannel').html());
+        $('#filterInput').html($('#searchPannel').html());
 
-            $('#filterBtn').html($('#filterDropdown').html());
-            $('#filterInput > input').keyup(function(){
-                datatable.search($(this).val()).draw();
-            });
+        $('#filterBtn').html($('#filterDropdown').html());
+        $('#filterInput > input').keyup(function(){
+            datatable.search($(this).val()).draw();
+        });
 
-            $('#apply').bind("click",  function (t) {
-                t.preventDefault();
-                $(".button-dropdown .dropdown-menu").hide();
-            });
+        $('#apply').bind("click",  function (t) {
+            t.preventDefault();
+            $(".button-dropdown .dropdown-menu").hide();
+        });
 
-            $('body').on('click', '.selected', function(e) {
-                if($(this).is(':checked') == true){
-                    $('.deleteBtn').removeAttr('disabled')
+        $('body').on('click', '.selected', function(e) {
+            if ($(this).is(':checked') == true) {
+                $('.deleteBtn').removeAttr('disabled')
                 selected = $("input.selected:checked").map(function(){
                     return $(this).val();
                 }).get();
-                }
-                else if($(this).is(':checked') == false && selected.length>0)
-                {
-                    selected = $("input.selected:checked").map(function(){
-                    return $(this).val();
-                    }).get();
-                }
-                else
-                {
-                    $(this).prop("checked", false);
-                    selected = [];
-                }
-                if($('.selected').is(':checked') == false  && $('.all-checkbox').is(':checked') == false){
-                    $('.deleteBtn').prop('disabled',true)
-                }
-            });
-
-            $('body').on('click', '.all-checkbox', function(e) {
-                if($('.all-checkbox').is(':checked') == true){
-                    $('.deleteBtn').removeAttr('disabled')
-                    $(".selected").prop("checked", true);
-                    selected = $("input.selected").map(function(){
-                        console.log($(this).val());
-                        return $(this).val();
-                    }).get();
-                }else if($('.selected').is(':checked') == true){
-                    selected = $("input.selected:checked").map(function(){
+            } else if ($(this).is(':checked') == false && selected.length > 0) {
+                selected = $("input.selected:checked").map(function(){
                     return $(this).val();
                 }).get();
-                }
-                else{
-                    $(".selected").prop("checked", false);
-                    selected = [];
-                }
-                if($('.all-checkbox').is(':checked') == false ){
-                     $(".selected").prop("checked", false);
-                    $('.deleteBtn').prop('disabled',true)
-                }
-            });
-
-            $('.form-check-input').change(function(){
-                if ($(this).is(":checked")) {
-                    $('.deleteBtn').removeAttr('disabled')
-                }else if ($(".form-check-input:checked").length == 0) {
-                    $('.deleteBtn').attr('disabled','true')
-                }
-            });
-
-
-        $(document).on('click','#apply',function(){
-                // state = $('#stateDD').val();
-                // leadType = $('#leadTypeDD').val();
-                // leadAge = $('#leadAgeDD').val();
-                // gender = $('#genderDD').val();
-                datatable.draw();
-            });
-
-
-
-        $(document).on('click','.deleteBtn',function(e){
-
-            if (selected.length > 0){
-                Swal.fire({
-                    title: '{{ __("Are you sure?") }}',
-                    text: '{{__("You want to remove this records!")}}',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: "{{ __('Cancel') }}"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{route('admin.leads.bulkRemove')}}",
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                selected: selected
-                            },
-                            success: function(res) {
-                                Swal.fire(
-                                    'User',
-                                    'Records are removed Succesfully!',
-                                    'success'
-                                ).then(function() {
-                                    datatable.draw();
-                                    });
-                              selected = [];
-                              $('.deleteBtn').prop('disabled',true);
-                              $(".selected").prop("checked", false);
-                              $(".all-checkbox").prop("checked", false);
-                            }
-                        });
-                    }
-                });
-            } else
-            {
-                Swal.fire({
-                    title: '{{ __("Error!") }}',
-                    text: '{{ __("Please first make a selection from the list.") }}',
-                    icon: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '{{ __("Okay!") }}'
-                });
+            } else {
+                $(this).prop("checked", false);
+                selected = [];
+            }
+            if ($('.selected').is(':checked') == false  && $('.all-checkbox').is(':checked') == false) {
+                $('.deleteBtn').prop('disabled', true)
             }
         });
 
-        $('#leadTypeDD').on('change', function(){
-            $('body').find('#leadAgeDD').html('<option value=""> Select Lead Age </option>');
-            var type = $(this).val();
-            console.log(type);
-            $.ajax({
-                type: "POST",
-                url: "{{route('admin.leads.getAge')}}",
-                data: {
-                    type:type
-                },
-                success: function (response) {
+        $('body').on('click', '.all-checkbox', function(e) {
+            if($('.all-checkbox').is(':checked') == true){
+                $('.deleteBtn').removeAttr('disabled')
+                $(".selected").prop("checked", true);
+                selected = $("input.selected").map(function(){
+                    console.log($(this).val());
+                    return $(this).val();
+                }).get();
+            }else if($('.selected').is(':checked') == true){
+                selected = $("input.selected:checked").map(function(){
+                return $(this).val();
+            }).get();
+            }
+            else{
+                $(".selected").prop("checked", false);
+                selected = [];
+            }
+            if($('.all-checkbox').is(':checked') == false ){
+                    $(".selected").prop("checked", false);
+                $('.deleteBtn').prop('disabled',true)
+            }
+        });
 
-                    console.log(response[0].length);
-                    if(response[0].length > 0)
-                    {
-                        response[0].forEach(function(el, index) {
-                            $('body').find('#leadAgeDD').append('<option value='+el.id+'> '+ response[1] + '|'+ el.age_from + '-' + el.age_to +' </option>');
-                        });
-                    }
-                }
-            });
+        $('.form-check-input').change(function(){
+            if ($(this).is(":checked")) {
+                $('.deleteBtn').removeAttr('disabled')
+            }else if ($(".form-check-input:checked").length == 0) {
+                $('.deleteBtn').attr('disabled','true')
+            }
         });
 
 
+        $(document).on('click','#apply',function() {
+            datatable.draw();
+        });
+
+    $(document).on('click','.deleteBtn',function(e){
+
+        if (selected.length > 0){
+            Swal.fire({
+                title: '{{ __("Are you sure?") }}',
+                text: '{{__("You want to remove this records!")}}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "{{ __('Cancel') }}"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{route('admin.leads.bulkRemove')}}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            selected: selected
+                        },
+                        success: function(res) {
+                            Swal.fire(
+                                'User',
+                                'Records are removed Succesfully!',
+                                'success'
+                            ).then(function() {
+                                datatable.draw();
+                                });
+                            selected = [];
+                            $('.deleteBtn').prop('disabled',true);
+                            $(".selected").prop("checked", false);
+                            $(".all-checkbox").prop("checked", false);
+                        }
+                    });
+                }
+            });
+        } else
+        {
+            Swal.fire({
+                title: '{{ __("Error!") }}',
+                text: '{{ __("Please first make a selection from the list.") }}',
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ __("Okay!") }}'
+            });
+        }
+    });
+
+    $('#leadTypeDD').on('change', function(){
+        $('body').find('#leadAgeDD').html('<option value=""> Select Lead Age </option>');
+        var type = $(this).val();
+        console.log(type);
+        $.ajax({
+            type: "POST",
+            url: "{{route('admin.leads.getAge')}}",
+            data: {
+                type:type
+            },
+            success: function (response) {
+                if (response[0].length > 0) {
+                    response[0].forEach(function(el, index) {
+                        $('body').find('#leadAgeDD').append('<option value='+el.id+'> '+ response[1] + '|'+ el.age_from + '-' + el.age_to +' </option>');
+                    });
+                }
+            }
+        });
     });
 
 
-
+});
 
     </script>
 @endsection
