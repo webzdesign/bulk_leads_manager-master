@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+
     <div class="middleContent">
         <div class="settingWrpr importWrpr">
             <ul class="m-0 importStep row justify-content-center">
@@ -315,6 +316,8 @@
             </div>
         </div>
     </div>
+
+
 @endsection
 @section('script')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -326,6 +329,7 @@
         var days = 0; var hours = 0; var minutes = 0; secs = 0;
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
         var leadId = '';
+        var FileName = '';
         $(document).ready(function() {
 
             $("input:checkbox").on('click', function() {
@@ -379,6 +383,7 @@
                                     $('#invalidFile_error').text(res[1]);
                                     $('#invalidFile_error').removeClass('d-none');
                                 } else {
+                                    FileName = res.file_name;
                                     uploadTime(res.file_name);
                                     setpwizard();
 
@@ -489,17 +494,25 @@
             });
 
             $(document).on('click','.download',function(){
+                $("#loaderOverlay").removeClass('d-none');
                 var lead_id = $('#lead_id').text();
                 var type = $(this).attr('data-text');
 
+                if(type == "duplicate") {
+                    var Rows = $("#duplicateRows").text();
+                } else {
+                    var Rows = $("#importRows").text();
+                }
+
                 $.ajax({
                     type: "POST",
-                    url: "{{route('admin.import.download')}}",
+                    url: "{{url('import/download')}}",
                     data: {
                         lead_id:lead_id,
                         type:type
                     },
                     success: function (data) {
+                        $("#loaderOverlay").addClass('d-none');
                         var downloadLink = document.createElement("a");
                         var fileData = ['\ufeff'+data];
 
@@ -509,7 +522,8 @@
 
                         var url = URL.createObjectURL(blobObject);
                         downloadLink.href = url;
-                        downloadLink.download = "Sample.csv";
+                        var file = FileName.split(".csv");
+                        downloadLink.download = file[0]+"_"+type+"_"+Rows+".csv";
 
               /*
                * Actually download CSV

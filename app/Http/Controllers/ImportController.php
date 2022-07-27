@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportCSV;
 use App\Exports\ImportDownload;
 use App\Imports\GetData;
 use App\Imports\LeadImport;
@@ -141,6 +142,16 @@ class ImportController extends Controller
 
         $mainArr = array();
         foreach ($rows as $row) {
+            $allEmpty = 0;
+            $totalRow = 0;
+            foreach ($row as $checkRow) {
+                if (trim($checkRow) == '' || trim($checkRow) == null) {
+                    $allEmpty++;
+                }
+                $totalRow++;
+            }
+            if ($totalRow == $allEmpty) { continue; }
+
             $row = array_map("utf8_encode", $row);
             $arr = [];
 
@@ -259,7 +270,7 @@ class ImportController extends Controller
         $imported = $totalRows - ($duplicateRecords+$invalid);
 
         if ($rows) {
-            Lead::find($lead->id)->update(['rows' => $totalRows, 'duplicate_row' => $duplicateRecords, 'invalid_row' => $invalid, 'total_row' => $imported]);
+            Lead::find($lead->id)->update(['rows' => $totalRows, 'duplicate_row' => $duplicateRecords, 'invalid_row' => $invalid, 'total_row' => $imported, 'status' => 3]);
 
             // DB::commit();
 
@@ -278,102 +289,6 @@ class ImportController extends Controller
 
     public function downloadCsv(Request $request)
     {
-        if($request->type == 'duplicate')
-        {
-            $data = LeadDetail::where('lead_id',$request->lead_id)->where('is_duplicate',1)->get();
-        }
-
-
-        if($request->type == 'import')
-        {
-            $data = LeadDetail::where('lead_id',$request->lead_id)->where('is_duplicate',0)->where('is_invalid',0)->get();
-        }
-
-
-        $users = $data;
-
-        $headers = array(
-          'Content-Type' => 'text/csv'
-        );
-        // I am storing the csv file in public >> files folder. So that why I am creating files folder
-        if (!File::exists(public_path()."/files")) {
-            File::makeDirectory(public_path() . "/files");
-        }
-         //creating the download file
-        $filename =  public_path("files/download.csv");
-        $handle = fopen($filename, 'w');
-
-        //adding the first row
-        fputcsv($handle, [
-            "FirstName",
-            "LastName",
-            "Email",
-            "Phone Number",
-            "Gender",
-            "Address",
-            "City",
-            "State",
-            "Country",
-            "Birth Date",
-            "Age",
-            "Zip"
-        ]);
-
-        //adding the data from the array
-        foreach ($users as $each_user) {
-            if($each_user->gender != '') {
-                $gender = $each_user->gender;
-                if($each_user->gender == 1)
-                {
-                    $gender = 'Male';
-                }
-                if($each_user->gender == 0)
-                {
-                    $gender = 'Female';
-                }
-            } else {
-                $gender = null;
-            }
-
-            if($each_user->city_id != '') {
-                $city = City::where('id',$each_user->city_id)->first()->name;
-            } else {
-                $city = null;
-            }
-            if($each_user->state_id != '') {
-                $state = State::where('id',$each_user->state_id)->first()->name;
-            } else {
-                $state = null;
-            }
-            if($each_user->country_id) {
-                $country = Country::where('id',$each_user->country_id)->first()->name;
-            } else {
-                $country = null;
-            }
-
-            // $date = new DateTime($each_user->birth_date);
-            // $dob = $date->format('Y-m-d');
-
-            fputcsv($handle, [
-                $each_user->first_name,
-                $each_user->last_name,
-                $each_user->email,
-                $each_user->phone_number,
-                $gender,
-                $each_user->address,
-                $city,
-                $state,
-                $country,
-                $each_user->birth_date,
-                $each_user->age,
-                $each_user->zip
-            ]);
-
-        }
-        fclose($handle);
-
-        //download command
-        return Response::download($filename, ".csv", $headers);
-
+        return Excel::download(new ExportCSV($request->lead_id,$request->type),"test.csv");
     }
 }

@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $moduleName = $this->moduleName;
-        $leadTypes = LeadType::all();
+        $leadTypes = LeadType::with(['ageGroup','leads'])->get();
         $orders = Order::with(['client','lead_type','age_group'])->orderBy('created_at', 'desc')->limit(2)->get();
         $Allleads = Lead::orderBy('created_at', 'desc')->limit(2)->get();
         return view('dashboard',compact('moduleName','leadTypes','orders','Allleads'));
