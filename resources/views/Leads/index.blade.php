@@ -83,7 +83,7 @@
                             <select id='stateDD' class="select2">
                                 <option value="">Select State</option>
                                 @foreach ($states as $state)
-                                <option value='@if($state->state){{$state->state->id}}@endif'> @if($state->state){{$state->state->name}}@endif</option>
+                                <option value='{{ $state->id }}'> {{$state->name}}</option>
                                 @endforeach
                             </select>
                         </div>
