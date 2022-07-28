@@ -106,16 +106,6 @@
     var selected = [];
     $(document).ready(function () {
 
-        // $(document).find('#example tr td:nth-child(2)').addClass('c-e9 whiteSpace');
-
-        // $(document).find('td:nth-child(3)').addClass('c-16');
-
-        $('.table tbody tr').each(function(){
-            console.log('hello');
-            $(this).find('td:nth-child(2)').addClass('c-e9 whiteSpace');
-            $(this).find('td:nth-child(3)').addClass('c-16');
-        });
-
         var datatable = $('#example').DataTable({
             "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
             "ordering": false,
