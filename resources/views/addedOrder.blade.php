@@ -8,7 +8,7 @@
         </svg></td>
     <td class="c-7b f-16">{{$order->client->email}}</td>
     <td class="c-7b f-16">{{date('d m Y H:i A',strtotime($order->order_date))}}</td>
-    <td class="c-7b f-16">{{$order->qty}} {{$order->lead_type->name}} | {{$order->age_group->age_from}}-{{$order->age_group->age_to}} Days Old </td>
+    <td class="c-7b f-16">{{$order->qty}} {{$order->lead_type->name}} | @if($order->age_group) {{$order->age_group->age_from}}-{{$order->age_group->age_to}} Days Old @endif</td>
 </tr>
 @endforeach
 @endif
