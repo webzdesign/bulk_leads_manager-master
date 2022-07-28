@@ -80,11 +80,11 @@ class LeadsController extends Controller
             })
             ->editColumn('age',function($row){
                 if($row->age)
-                return $row->age;
+                return $row->age .' D';
                 else
                 return '--';
                 })
-            ->rawColumns(['check','zip','gender','state_id','email'])
+            ->rawColumns(['check','zip','gender','state_id','email','age'])
             ->make(true);
 
     }

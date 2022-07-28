@@ -107,6 +107,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::group(['prefix' => 'stats'], function(){
             Route::get('/', [StatsController::class, 'index'])->name('admin.stats');
+            Route::post('/getStats', [StatsController::class, 'getStats'])->name('admin.stats.getStats');
         });
 
         /*New order route*/
