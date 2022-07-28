@@ -15,8 +15,8 @@ class AgeGroupController extends Controller
 
     public function store_age_group(Request $request)
     {
-        // dd($request->all())
-        $validate = $request->validate([
+
+        $request->validate([
             'age_from' => 'required',
             'age_to' => 'required',
             'lead_type' => 'required',
@@ -24,8 +24,8 @@ class AgeGroupController extends Controller
 
         if($request->age_from != '' && $request->age_to != '' && $request->lead_type != '') {
 
-            $from = $request->age_from;
-            $to = $request->age_to;
+            $from = intval($request->age_from);
+            $to = intval($request->age_to);
 
             $check = AgeGroup::where(function($q) use($from, $to){
                 $q->where(function($qu) use($from){
@@ -34,6 +34,8 @@ class AgeGroupController extends Controller
                     $que->where('age_from','<=',$to)->where('age_to','>=',$to);
                 });
             })->where('lead_type_id', $request->lead_type)->get();
+
+            // dd(($check));
 
             if(count($check) == 0)
             {

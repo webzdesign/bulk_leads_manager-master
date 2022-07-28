@@ -384,8 +384,8 @@
                 if (ageFrom != '' && ageTo != '' && leadType != 'hide') {
 
                     var age_group_id = $('#age_group_id').val();
-
-                    if(ageTo < ageFrom)
+                    console.log(ageTo , ageFrom);
+                    if(parseInt(ageTo) < parseInt(ageFrom) || parseInt(ageFrom) > parseInt(ageTo))
                     {
                             Swal.fire({
                                     icon: "info",

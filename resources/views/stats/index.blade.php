@@ -119,7 +119,7 @@
                                                     </svg>
                                                     Last 24 hours
                                                 </div>
-                                                <div class="c-34 f-24 f-18-500 f-700">3,234</div>
+                                                <div class="c-34 f-24 f-18-500 f-700">@if($last24hours){{$last24hours}}@endif</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="f-20 f-16-500 f-700 c-43 d-flex align-items-center">
@@ -134,7 +134,9 @@
                                                     </svg>
                                                     Last 7 days
                                                 </div>
-                                                <div class="c-34 f-24 f-18-500 f-700">33,234</div>
+                                                <div class="c-34 f-24 f-18-500 f-700">@if($last7days)
+                                                        {{$last7days}}
+                                                @endif</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="f-20 f-16-500 f-700 c-43 d-flex align-items-center">
@@ -149,7 +151,9 @@
                                                     </svg>
                                                     Last 30 days
                                                 </div>
-                                                <div class="c-34 f-24 f-18-500 f-700">433,234</div>
+                                                <div class="c-34 f-24 f-18-500 f-700">@if($last30days)
+                                                    {{$last30days}}
+                                            @endif</div>
                                             </div>
                                         </div>
                                     </div>
@@ -162,8 +166,6 @@
 
     @section('script')
     <script>
-        $(document).ready(function () {
 
-        });
     </script>
     @endsection
