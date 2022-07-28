@@ -230,6 +230,9 @@
                 "ordering": false,
                 processing: true,
                 serverSide: true,
+                createdRow: function( row, data, dataIndex ) {
+                $( row ).find('td:eq(2)').addClass('c-16');
+                },
                 ajax: {
                     "url": "{{ route('admins.getData') }}",
                     "dataType": "json",
