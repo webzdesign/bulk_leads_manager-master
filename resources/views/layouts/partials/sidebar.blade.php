@@ -102,14 +102,14 @@
                 <span class="d-none-add">Lead Types</span>
             </a>
         </li>
-        {{-- <li>
+        <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Stats" href="{{route('admin.stats')}}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('stats') ? 'active' : '' }}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.33337 1.3335V14.6668C3.93337 14.3335 1.33337 11.4668 1.33337 8.00016C1.33337 4.5335 3.93337 1.66683 7.33337 1.3335ZM8.66671 1.3335V7.3335H14.6667C14.3334 4.1335 11.8667 1.66683 8.66671 1.3335ZM8.66671 8.66683V14.6668C11.8 14.3335 14.3334 11.8668 14.6667 8.66683H8.66671Z" fill="white"/>
                 </svg>
                 <span class="d-none-add">Stats</span>
             </a>
-        </li> --}}
+        </li>
         <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Admins" href="{{route('menu.admin.index')}}" class="d-flex align-items-center text-white f-400 f-14 @if(Route::current()->getName() == 'menu.admin.index') active  @endif">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
