@@ -74,7 +74,11 @@
                                         @if ($LeadType->id == $ageGroup->lead_type_id)
                                             <div class="mb-2 d-flex align-items-center">
                                                 <div class="dayBx">{{ $ageGroup->age_from }} - {{ $ageGroup->age_to }}
-                                                    days <span class="c-7b">(0 records)</span></div>
+                                                    days
+                                                    @php
+                                                        $records = \App\Models\LeadDetail::where('age_group_id',$ageGroup->id)->count();
+                                                    @endphp
+                                                    <span class="c-7b">({{$records}} records)</span></div>
                                                 <div class="editRemove">
                                                     <label class="cursor-pointer c-16 f-14 f-500 age_edit" data-ageId="{{ $ageGroup->id }}">Edit</label>
                                                     <label class="cursor-pointer c-e9 f-14 f-500 age_remove"

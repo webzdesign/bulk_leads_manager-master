@@ -54,7 +54,7 @@
                                 <div class="cards pt-0 mb-0 position-relative">
                                     <div class="cardTop w-auto d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
-                                            <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="34"
+                                            <svg id='' class="me-3" xmlns="http://www.w3.org/2000/svg" width="34"
                                                 height="34" viewBox="0 0 34 34" fill="none">
                                                 <path
                                                     d="M25.5 3.50625C23.0031 1.96562 20.1344 1.0625 17 1.0625V3.50625H25.5Z"
@@ -168,7 +168,7 @@
                                                         <td class="c-7b f-16">{{ date('d m Y H:i A', strtotime($order->order_date)) }}</td>
                                                         <td class="c-7b f-16"> {{ $order->qty }} @if ($order->lead_type)
                                                                 {{ $order->lead_type->name }}
-                                                                @endif | @if ($order->age_group)
+                                                                @endif  @if ($order->age_group) |
                                                                     {{ $order->age_group->age_from }}-{{ $order->age_group->age_to }}
                                                                     Days Old
                                                                 @endif
