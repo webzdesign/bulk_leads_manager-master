@@ -575,7 +575,7 @@
                     }
                 });
 
-                if($.inArray('1', status) !== -1 && $.inArray('2', status) !== -1 && $.inArray('3', status) !== -1 && $.inArray('12', status) !== -1) {
+                if($.inArray('3', status) !== -1 && $.inArray('8', status) !== -1) {
                     $('.select_heading').addClass('d-none');
                     return true;
                 } else {

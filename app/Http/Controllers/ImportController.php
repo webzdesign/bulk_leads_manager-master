@@ -128,6 +128,7 @@ class ImportController extends Controller
         $country_index = array_search($leadFields['country_id'] ,$request->id) ? array_search($leadFields['country_id'] ,$request->id) : null;
         $dob_index = array_search($leadFields['birth_date'] ,$request->id) ? array_search($leadFields['birth_date'] ,$request->id) : null;
         $date_generated_index = array_search($leadFields['date_generated'],$request->id) ? array_search($leadFields['date_generated'],$request->id) : null;
+        $ip_index = array_search($leadFields['ip'],$request->id) ? array_search($leadFields['ip'],$request->id) : null;
 
         $emails = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('email')->toArray();
         $countries = Country::pluck('id', 'name')->toArray();
@@ -232,7 +233,12 @@ class ImportController extends Controller
                 $row[$dob_index] = date('Y-m-d', strtotime($row[$dob_index]));
             }
 
+            if($ip_index) {
+                $arr['ip'] = $row[$ip_index];
+            }
+
             $arr['lead_id'] = $lead->id;
+            $arr['created_at'] = now();
 
             if ($date_generated_index) {
                 $generated_date = date('Y-m-d',strtotime($row[$date_generated_index]));
@@ -249,6 +255,8 @@ class ImportController extends Controller
 
                 $arr['age'] = $diffDays;
                 $row[$date_generated_index] = $generated_date;
+            } else {
+                $arr['age'] = 0;
             }
 
             foreach($columnName as $key => $column) {

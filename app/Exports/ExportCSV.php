@@ -48,7 +48,8 @@ class ExportCSV implements FromCollection, WithHeadings, WithMapping
             "Country",
             "Birth Date",
             "Age",
-            "Zip"
+            "Zip",
+            "IP"
         ];
     }
 
@@ -90,7 +91,8 @@ class ExportCSV implements FromCollection, WithHeadings, WithMapping
             "Country"      => $country,
             "Birth Date"   => $data->birth_date,
             "Age"          => $data->age,
-            "Zip"          => $data->zip
+            "Zip"          => $data->zip,
+            "IP"           => $data->ip
         ];
     }
 }

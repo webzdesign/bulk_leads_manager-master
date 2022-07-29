@@ -4,9 +4,8 @@ namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class LeadImport implements ToCollection, WithChunkReading
+class LeadImport implements ToCollection
 {
     /**
     * @param Collection $collection
@@ -14,10 +13,5 @@ class LeadImport implements ToCollection, WithChunkReading
     public function collection(Collection $collection)
     {
         //
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000;
     }
 }
