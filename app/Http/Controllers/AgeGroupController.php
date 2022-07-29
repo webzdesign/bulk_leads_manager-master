@@ -35,8 +35,6 @@ class AgeGroupController extends Controller
                 });
             })->where('lead_type_id', $request->lead_type)->get();
 
-            // dd(($check));
-
             if(count($check) == 0)
             {
                 $message = '';

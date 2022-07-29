@@ -415,8 +415,6 @@
                                     icon: "info",
                                     title: res[1],
                                     text: res[2],
-                                }).then(function() {
-                                    window.location.reload();
                                 });
                             }
 

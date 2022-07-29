@@ -81,7 +81,7 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
                 $sheet = $event->sheet;
 
                 foreach($columns as $column){
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                    $sheet->getDelegate()->getColumnDimension($column)->setAutoSize(true);
                 }
 
                 $cellRange = 'A1:P1';

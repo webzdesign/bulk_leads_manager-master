@@ -64,10 +64,10 @@
                                         </div>
                                         <div class="cardYearList text-end">
                                             <h4 class="c-7b f-20 f-500 mb-16 f-16-500">Total Inventory</h4>
-                                            <h4 class="f-30 f-800 c-34 mb-0 f-20-500 mb-20-500">767,194</h4>
+                                            <h4 class="f-30 f-800 c-34 mb-0 f-20-500 mb-20-500">{{$inventory}}</h4>
                                         </div>
                                         <div class="cardsFooter f-16 f-700 c-4b">
-                                            +3% <span class="c-7b f-300">than last week</span>
+                                         @if($inventeryPercent)   +{{$inventeryPercent}}% <span class="c-7b f-300">than last week</span> @endif
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@
                                             <h4 class="f-30 f-800 c-34 mb-0 f-20-500 mb-20-500">{{\App\Models\LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->count()}}</h4>
                                         </div>
                                         <div class="cardsFooter f-16 f-700 c-4b">
-                                            +3% <span class="c-7b f-300">than last week</span>
+                                         @if($leadsPercent)   +{{$leadsPercent}}% <span class="c-7b f-300">than last week</span> @endif
                                         </div>
                                     </div>
                                 </div>
