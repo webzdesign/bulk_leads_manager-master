@@ -180,15 +180,17 @@
                 <div class="cardsHeader">
                     <span class="f-18 f-600 f-16-500 c-gr f-700">Filter</span>
                 </div>
-                <div class="cardsBody settingWrpr">
+                <div class="cardsBody settingWrpr stateCard">
                     <div class="form-group">
                         <label class="c-gr f-500 f-16 w-100 mb-2">State</label>
+                        <div id='states'>
                         <select id='stateDD' class="select2">
                             <option value="">Select state</option>
                             @foreach ($states as $state)
                             <option value='{{$state}}'>{{$state}}</option>
                             @endforeach
                         </select>
+                    </div>
                     </div>
                 </div>
                 <div class="py-3 cardsFooter d-flex justify-content-end">
@@ -292,10 +294,6 @@
 
                 var mainFlag = checkValidation(email,type,id);
 
-                // if(mainFlag == true)
-                // {
-                //     duplicateEmail = checkUniqueMail(email,type,id);
-                // }
                 if(mainFlag == true )
                 {
                     var firstName = $('#firstName').val();
@@ -340,6 +338,10 @@
                                     title: res[1],
                                     text: res[2],
                                 }).then(function() {
+                                    $('.stateCard').find('#stateDD').html('<option value="">Select state</option>');
+                                    $.each(res[3], function (i, value) {
+                                         $('.stateCard').find('#stateDD').append('<option id=' + value + '>' + value + '</option>');
+                                        });
                                    tbl.draw();
                                 });
                             }

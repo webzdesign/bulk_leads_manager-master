@@ -70,14 +70,14 @@
                 <span class="d-none-add">Orders</span>
             </a>
         </li> --}}
-        {{-- <li>
+        <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Clients" href="{{route('admin.clients.index')}}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('clients') ? 'active' : '' }}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13.6 13.5202V11.5202C13.6 10.9602 13.52 10.4002 13.2 9.84018C12.88 9.28018 12.48 8.80018 11.92 8.48018C11.36 8.08018 10.16 8.00018 9.60003 8.00018L8.32002 9.36018L8.80002 10.4002V12.8002L8.00002 13.6802L7.20002 12.8002V10.4002L7.76002 9.36018L6.40002 8.00018C5.76002 8.00018 4.56002 8.08018 4.00002 8.48018C3.44002 8.80018 3.12002 9.28018 2.80002 9.84018C2.48002 10.4002 2.40002 10.8802 2.40002 11.5202V13.5202C2.40002 13.5202 4.48002 14.4002 8.00002 14.4002C11.52 14.4002 13.6 13.5202 13.6 13.5202ZM8.00002 1.68018C6.48002 1.68018 5.60002 3.12018 5.84002 4.72018C6.08002 6.32018 6.88002 7.44018 8.00002 7.44018C9.12003 7.44018 9.92002 6.32018 10.16 4.72018C10.4 3.04018 9.52003 1.68018 8.00002 1.68018Z" fill="white"/>
                 </svg>
                 <span class="d-none-add">Clients</span>
             </a>
-        </li> --}}
+        </li>
         <li>
             <a data-bs-toggle="tooltip" data-bs-placement="right" title="Import History" href="{{route('admin.import-history')}}" class="d-flex align-items-center text-white f-400 f-14 {{ Request::is('import-history') ? 'active' : '' }}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
