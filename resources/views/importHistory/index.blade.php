@@ -132,7 +132,6 @@ $(document).ready(function() {
     $('#leadTypeDD').on('change', function(){
         $('body').find('#leadAgeDD').html('<option value=""> Select Lead Age </option>');
         var type = $(this).val();
-        console.log(type);
         $.ajax({
             type: "POST",
             url: "{{route('admin.import-history.getAge')}}",
@@ -141,7 +140,6 @@ $(document).ready(function() {
             },
             success: function (response) {
 
-                console.log(response[0].length);
                 if(response[0].length > 0)
                 {
                     response[0].forEach(function(el, index) {
