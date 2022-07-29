@@ -190,7 +190,6 @@
                 $('.deleteBtn').removeAttr('disabled')
                 $(".selected").prop("checked", true);
                 selected = $("input.selected").map(function(){
-                    console.log($(this).val());
                     return $(this).val();
                 }).get();
             }else if($('.selected').is(':checked') == true){
@@ -275,7 +274,6 @@
     $('#leadTypeDD').on('change', function(){
         $('body').find('#leadAgeDD').html('<option value=""> Select Lead Age </option>');
         var type = $(this).val();
-        console.log(type);
         $.ajax({
             type: "POST",
             url: "{{route('admin.leads.getAge')}}",
