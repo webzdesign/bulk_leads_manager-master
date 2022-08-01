@@ -11,6 +11,7 @@ use App\Models\LeadType;
 use App\Models\AgeGroup;
 use App\Models\State;
 use App\Models\OrderDetail;
+use App\Models\SiteSetting;
 use App\Exports\LeadDetailsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use DB,DataTables,Mail,Storage;
@@ -90,7 +91,6 @@ class OrdersController extends Controller
 
     public function sendLead($order_id = ''){
 
-        // DB::enableQueryLog();
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
 
         $order_data = Order::with(['client'])->where('status',$status);
@@ -98,9 +98,6 @@ class OrdersController extends Controller
             $order_data->where('id',$order_id);
         }
         $order_data = $order_data->get();
-
-        // dd($order_data);
-        // dd(DB::getQueryLog());
 
         $lead_response = [];
 
@@ -160,11 +157,27 @@ class OrdersController extends Controller
                             $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
 
                             //Mail sending
-                            $to_email = $value->client->email;
+                            $site_setting = SiteSetting::first()->toArray();
+
+                            $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
+                            $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
+                            $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
+                            $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
+
+                            $client_email = $value->client->email;
+                            $to_email = [$client_email,$from_email];
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$upload_path){
-                                $message->to($to_email)->subject('Lead reports');
+                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email,$upload_path){
+
+                                $message->from($from_email, $from_name);
+                                if($bcc_email !=''){
+                                    $message->bcc([$bcc_email]);
+                                }
+                                if($replay_email !=''){
+                                    $message->replyTo($replay_email);
+                                }
+                                $message->to($to_email)->subject('Leads send');
                                 $message->attach(public_path($upload_path));
                             });
                         }

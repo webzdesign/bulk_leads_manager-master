@@ -146,18 +146,33 @@ class NewOrderController extends Controller
 
     public function count_total_leads_available(Request $request){
         $total_leads_available = 0;
-
         $lead_id = Lead::where('lead_type_id',$request->lead_type_id)->pluck('id')->toArray();
 
         if(count($lead_id) > 0){
-            $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['is_duplicate' => 0,'is_invalid' => 0]);
+            $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0]);
+            $order_ids = Order::where(['client_id' => $request->client_id,'lead_type_id' => $request->lead_type_id,'age_group_id' => $request->age_group_id]);
 
             if(isset($request->gender) && $request->gender !=null){
                 $leads_details->where('gender',$request->gender);
+                $order_ids->where('gender',$request->gender);
             }
             if(isset($request->state_id) && $request->state_id !=null){
                 $leads_details->where('state_id',$request->state_id);
+                $order_ids->where('state_id',$request->state_id);
             }
+
+            //Skip lead details from client
+            $order_ids = $order_ids->pluck('id')->toArray();
+
+            if(isset($order_ids) && $order_ids !=null){
+                $skip_lead_details_ids = OrderDetail::whereIn('order_id',$order_ids)->pluck('lead_details_id')->toArray();
+
+                if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
+                    $skip_lead_details_ids = array_unique($skip_lead_details_ids);
+                    $leads_details->whereNotIn('id',$skip_lead_details_ids);
+                }
+            }
+
             $leads_details = $leads_details->count();
             $total_leads_available = $leads_details;
         }
