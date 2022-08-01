@@ -89,7 +89,7 @@ class OrdersController extends Controller
         return $datatable;
     }
 
-    public function sendLead($order_id = ''){
+    public static function sendLead($order_id = ''){
 
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
 
