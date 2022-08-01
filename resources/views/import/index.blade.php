@@ -371,6 +371,8 @@
                         formData.append('title', $("#title").val());
 
                         var filesize = document.querySelector('#file').files[0].size;
+                        $("#loaderOverlay").removeClass('d-none');
+
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.importCSV') }}",
@@ -379,6 +381,7 @@
                             dataType: 'json',
                             data: formData,
                             success: function(res) {
+                                $("#loaderOverlay").addClass('d-none');
                                 if(res[0] == 'error') {
                                     $('#invalidFile_error').text(res[1]);
                                     $('#invalidFile_error').removeClass('d-none');
