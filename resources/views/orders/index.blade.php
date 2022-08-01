@@ -1,26 +1,30 @@
 @extends('layouts.master')
 @section('content')
-                <div class="middleContent">
-                    <div class="importWrpr">
-                        <div class="cards">
-                            <table id="example" class="table datatable" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>First name</th>
-                                        <th>Last name</th>
-                                        <th>Email</th>
-                                        <th>Order date</th>
-                                        <th>Last product ordered</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+    <div class="middleContent">
+        <div class="alert-msg">
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        </div>
+
+        <div class="importWrpr">
+            <div class="cards">
+                <table id="example" class="table datatable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                            <th>Order date</th>
+                            <th>Last product ordered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -156,6 +160,21 @@
 
             $(document).on("click",".resend_order", function (t) {
                 var order_id = $(this).attr('data-order_id');
+                $('.loaderOverlay').removeClass('d-none');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('send-lead') }}"+'/'+order_id,
+                    data: '',
+                    cache: false,
+                    success: function(response){
+                        if(response !=''){
+                            $('.alert-msg').html('<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '+response+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+
+                            $('.loaderOverlay').addClass('d-none');
+                        }
+                    }
+                });
             });
         });
     </script>

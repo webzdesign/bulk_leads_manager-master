@@ -33,7 +33,7 @@ Route::get('/', function () {
 Route::post('import/download', [ImportController::class, 'downloadCsv'])->name('admin.import.download');
 Route::any('import-history/downloadOriginal/{id}', [ImportHistoryController::class, 'downloadOriginal'])->name('admin.import-history.downloadOriginal');
 Route::any('import-history/downloadDuplicate/{id}', [ImportHistoryController::class, 'downloadDuplicate'])->name('admin.import-history.downloadDuplicate');
-Route::any('send-lead',[OrdersController::class,'sendLead'])->name('admin.send-lead');
+Route::any('send-lead/{id}',[OrdersController::class,'sendLead'])->name('admin.send-lead');
 
 Route::group(['middleware' => 'prevent-back-history'],function(){
 

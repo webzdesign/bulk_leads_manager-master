@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AgeGroup;
 use App\Models\Client;
 use App\Models\LeadType;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -92,9 +93,9 @@ class ClientsController extends Controller
                     'firstName' => $request->firstName,
                     'lastName' => $request->lastName,
                     'email' => $request->email,
-                    'city' => $request->city,
-                    'state' => $request->state,
-                    'country' => $request->country,
+                    'city' => strtolower($request->city),
+                    'state' => strtolower($request->state),
+                    'country' => strtolower($request->country),
                     'ip_address' => $request->ipAdrs,
                     'updated_by' => auth()->user()->id,
                 ]);
@@ -117,9 +118,9 @@ class ClientsController extends Controller
                     'firstName' => $request->firstName,
                     'lastName' => $request->lastName,
                     'email' => $request->email,
-                    'city' => $request->city,
-                    'state'=> $request->state,
-                    'country' => $request->country,
+                    'city' => strtolower($request->city),
+                    'state' => strtolower($request->state),
+                    'country' => strtolower($request->country),
                     'ip_address' => $request->ipAdrs,
                     'added_by' => auth()->user()->id,
                 ]);
@@ -127,7 +128,8 @@ class ClientsController extends Controller
             }
 
         }
-        return response()->json([true,$moduleName,$message]);
+        $states = Client::all()->unique('state')->pluck('state');
+        return response()->json([true,$moduleName,$message,$states]);
     }
 
     public function edit(Request $request)

@@ -415,7 +415,7 @@
                         id: id
                     },
                     success: function(res) {
-                        console.log(res);
+
                         $('#firstName').val(res['firstName']);
                         $('#lastName').val(res['lastName']);
                         $('#email').val(res['email']);
