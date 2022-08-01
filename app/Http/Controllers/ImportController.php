@@ -14,6 +14,7 @@ use App\Models\LeadDetail;
 use App\Models\LeadFields;
 use App\Models\LeadType;
 use App\Models\State;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -241,7 +242,39 @@ class ImportController extends Controller
             $arr['created_at'] = now();
 
             if ($date_generated_index) {
-                $generated_date = date('Y-m-d',strtotime($row[$date_generated_index]));
+                if (strpos($row[$date_generated_index], '-') !== false) {
+                    $checkDate = explode('-',$row[$date_generated_index]);
+                    if(isset($checkDate[0]) && isset($checkDate[1]) && isset($checkDate[2])) {
+
+                        if(strlen($checkDate[0]) == '2' && strlen($checkDate[1]) == '2' ) {
+                            if(strlen($checkDate[2]) == '2') {
+                                $dates = DateTime::createFromFormat('y', $checkDate[2]);
+                                $year = $dates->format('Y');
+
+                                $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$year));
+                            } else {
+                                $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$checkDate[2]));
+                            }
+                        }
+                    }
+
+                } else {
+                    $checkDate = explode('/',$row[$date_generated_index]);
+                    if(isset($checkDate[0]) && isset($checkDate[1]) && isset($checkDate[2])) {
+
+                        if(strlen($checkDate[0]) == '2' && strlen($checkDate[1]) == '2' ) {
+                            if(strlen($checkDate[2]) == '2') {
+                                $dates = DateTime::createFromFormat('y', $checkDate[2]);
+                                $year = $dates->format('Y');
+
+                                $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$year));
+                            } else {
+                                $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$checkDate[2]));
+                            }
+                        }
+                    }
+                }
+
                 $today = date('Y-m-d');
                 $date1 = date_create($generated_date);
                 $date2 = date_create($today);
