@@ -102,15 +102,15 @@ class OrdersController extends Controller
         $lead_response = [];
 
         if(!$order_data->isEmpty()){
-
             foreach($order_data as $key => $value){
                 $lead_collection = [];
 
                 $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id])->pluck('id')->toArray();
 
                 if(isset($lead_ids) && $lead_ids !=null){
-                    if($order_id == 0){
-                        $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
+                    if($order_id == ''){
+                        // $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
+                        $skip_lead_details_ids = OrderDetail::pluck('lead_details_id')->toArray();
                     }
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
 
@@ -134,7 +134,7 @@ class OrdersController extends Controller
                             $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : '';
 
                             // Update order status
-                            // Order::where('id', $value->id)->update(['status' => '1']);
+                            Order::where('id', $value->id)->update(['status' => '1']);
 
                             $lead_collection[] = array(
                                 'age_group' => $age_from.' - '.$age_to,
@@ -154,7 +154,7 @@ class OrdersController extends Controller
 
                             //Add records
                             $where_array = ['order_id' => $value->id, 'lead_details_id' => $row->id];
-                            // OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
+                            OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
                         }
 
                         if(isset($lead_collection) && $lead_collection !=null){
@@ -174,18 +174,18 @@ class OrdersController extends Controller
                             $to_email = [$client_email,$from_email];
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            // Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email,$upload_path){
+                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email,$upload_path){
 
-                            //     $message->from($from_email, $from_name);
-                            //     if($bcc_email !=''){
-                            //         $message->bcc([$bcc_email]);
-                            //     }
-                            //     if($replay_email !=''){
-                            //         $message->replyTo($replay_email);
-                            //     }
-                            //     $message->to($to_email)->subject('Leads send');
-                            //     $message->attach(public_path($upload_path));
-                            // });
+                                $message->from($from_email, $from_name);
+                                if($bcc_email !=''){
+                                    $message->bcc([$bcc_email]);
+                                }
+                                if($replay_email !=''){
+                                    $message->replyTo($replay_email);
+                                }
+                                $message->to($to_email)->subject('Leads send');
+                                $message->attach(public_path($upload_path));
+                            });
                         }
                     }
                 }
