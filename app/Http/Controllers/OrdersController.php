@@ -108,10 +108,10 @@ class OrdersController extends Controller
                 $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id])->pluck('id')->toArray();
 
                 if(isset($lead_ids) && $lead_ids !=null){
-                    // if($order_id == ''){
-                        $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
-                    // }
-                    dd($skip_lead_details_ids);
+                    if($order_id == ''){
+                        // $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
+                        $skip_lead_details_ids = OrderDetail::pluck('lead_details_id')->toArray();
+                    }
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
 
                     if(isset($value->state_id) && $value->state_id !=null){
@@ -134,7 +134,7 @@ class OrdersController extends Controller
                             $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : '';
 
                             // Update order status
-                            // Order::where('id', $value->id)->update(['status' => '1']);
+                            Order::where('id', $value->id)->update(['status' => '1']);
 
                             $lead_collection[] = array(
                                 'age_group' => $age_from.' - '.$age_to,
