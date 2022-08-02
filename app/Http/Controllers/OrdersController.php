@@ -102,7 +102,7 @@ class OrdersController extends Controller
         $lead_response = [];
 
         if(!$order_data->isEmpty()){
-
+            dd($order_id);
             foreach($order_data as $key => $value){
                 $lead_collection = [];
 
@@ -111,8 +111,8 @@ class OrdersController extends Controller
                 if(isset($lead_ids) && $lead_ids !=null){
                     if($order_id == '0'){
                         $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
+                        dd($skip_lead_details_ids);
                     }
-                    dd($skip_lead_details_ids);
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
 
                     if(isset($value->state_id) && $value->state_id !=null){
