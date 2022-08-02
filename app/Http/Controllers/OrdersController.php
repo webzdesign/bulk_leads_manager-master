@@ -114,9 +114,16 @@ class OrdersController extends Controller
                     }
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0])->take($value->qty);
 
+                    if(isset($value->state_id) && $value->state_id !=null){
+                        $lead_details->where('state_id',$value->state_id);
+                    }
+                    if(isset($value->gender) && $value->gender !=null){
+                        $lead_details->where('gender',$value->gender);
+                    }
                     if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
                         $lead_details->whereNotIn('id',$skip_lead_details_ids);
                     }
+
                     $lead_details = $lead_details->get();
 
                     if(isset($lead_details) && $lead_details !=null){
