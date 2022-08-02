@@ -13,6 +13,7 @@ use App\Models\Lead;
 use App\Models\LeadDetail;
 use App\Models\LeadFields;
 use App\Models\LeadType;
+use App\Models\SiteSetting;
 use App\Models\State;
 use DateTime;
 use Illuminate\Http\Request;
@@ -86,6 +87,8 @@ class ImportController extends Controller
 
         $lead = Lead::find($request->id);
         $fileName = $lead->file_name;
+        $lead_older = SiteSetting::find(1);
+        $days = $lead_older->disallow_import_lead_older * 30;
 
         $getData = Excel::toArray(new GetData,storage_path('app/import/'.$fileName));
 
@@ -100,7 +103,7 @@ class ImportController extends Controller
             $values[] = $row;
         }
         // $col = (count($values[0]));
-        return json_encode($values);
+        return json_encode(['values' => $values, 'days' => $days]);
     }
 
     public function start_upload(Request $request)
@@ -239,7 +242,7 @@ class ImportController extends Controller
             }
 
             $arr['lead_id'] = $lead->id;
-            $arr['created_at'] = now();
+            $arr['created_at'] = date('Y-m-d H:i:s');
 
             if ($date_generated_index) {
                 if (strpos($row[$date_generated_index], '-') !== false) {
@@ -293,8 +296,13 @@ class ImportController extends Controller
             }
 
             foreach($columnName as $key => $column) {
-                $arr[$column] = utf8_encode($row[$key]);
+                if ($row[$key] == '' || strlen($row[$key]) == 0) {
+                    $arr[$column] = NULL;
+                } else {
+                    $arr[$column] = utf8_encode($row[$key]);
+                }
             }
+
             if (!empty($arr)) {
                 $mainArr[] = $arr;
             }
@@ -330,6 +338,9 @@ class ImportController extends Controller
 
     public function downloadCsv(Request $request)
     {
+        ini_set('memory_limit', -1);
+        ini_set('MAX_EXECUTION_TIME', 0);
+
         return Excel::download(new ExportCSV($request->lead_id,$request->type),"test.csv");
     }
 }

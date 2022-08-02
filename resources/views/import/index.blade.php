@@ -316,7 +316,7 @@
             </div>
         </div>
     </div>
-
+    <input type="hidden" id="days">
 
 @endsection
 @section('script')
@@ -440,7 +440,9 @@
 
                 if(index == 2) {
                     var selectfield = selectField();
-                    if(selectfield == true) {
+                    var datecheck = dateCheck();
+
+                    if(selectfield == true && datecheck == true) {
                         $('#next').prop('disabled', true);
 
                         var list = [];
@@ -565,6 +567,67 @@
                 return status;
             }
 
+            function dateCheck() {
+                var status = [];
+                var validDate = true;
+
+                $('.select_field > option:selected').each(function(key, value) {
+                    var value = $(this).val();
+                    if(value == 'null') {
+                        status.push(value);
+                    } else {
+                        status.push(value);
+                    }
+                });
+
+                if($.inArray('12', status) !== -1)  {
+                    var Days = $("#days").val();
+                    var dateIndex = status.indexOf('12');
+                    $('#tbody tr').each(function(key, value){
+                        var date = $(this).find("td").eq(dateIndex).html();
+                        var generatedDate = '';
+
+                        if(date.search("/") !== -1) {
+                            var dateParts = date.split("/");
+                            if(dateParts[2].length == 2) {
+                                var Year = '20'+dateParts[2];
+                                generatedDate =  dateParts[0] + '/' + dateParts[1] +'/'+ Year;
+                            } else {
+                                generatedDate =  dateParts[0] + '/' + dateParts[1] +'/'+ dateParts[2];
+                            }
+                        } else {
+                            var dateParts = date.split("-");
+                            if(dateParts[2].length == 2) {
+                                var Year = '20'+dateParts[2];
+                                generatedDate =  dateParts[0] + '/' + dateParts[1] +'/'+ Year;
+                            } else {
+                                generatedDate =  dateParts[0] + '/' + dateParts[1] +'/'+ dateParts[2];
+                            }
+                        }
+
+                        const date1 = new Date(generatedDate);
+                        const date2 = new Date();
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        if(diffDays > Days) {
+                            Swal.fire({
+                                icon: "info",
+                                title: "import",
+                                text: "Disallow import of leads older.",
+                            });
+                            validDate = false;
+                        } else {
+                            validDate = true;
+                        }
+                    })
+
+                    return validDate;
+                } else {
+                    return validDate;
+                }
+            }
+
             function selectField() {
                 var status = [];
                 $('.select_field > option:selected').each(function(key, value) {
@@ -581,14 +644,13 @@
                 if($.inArray('3', status) !== -1 && $.inArray('8', status) !== -1) {
                     $('.select_heading').addClass('d-none');
                     return true;
-                } else {
+                }else {
                     if($.inArray("null", status) !== -1) {
                         return false;
                     } else {
                         return true;
                     }
                 }
-
             }
 
 
@@ -628,11 +690,12 @@
                     dataType: "json",
                     data:{ id: id},
                     success: function(res) {
+                        $("#days").val(res.days);
                         width = 98;
                         var thead = '';
                         var tbody = '';
-                        if (res) {
-                            $.each(res, function (key, value) {
+                        if (res.values) {
+                            $.each(res.values, function (key, value) {
                                 tbody += "<tr>";
                                 $.each(value, function(subkey, subvalue){
                                     tbody += "<td>"
