@@ -133,6 +133,7 @@ class ImportController extends Controller
         $dob_index = array_search($leadFields['birth_date'] ,$request->id) ? array_search($leadFields['birth_date'] ,$request->id) : null;
         $date_generated_index = array_search($leadFields['date_generated'],$request->id) ? array_search($leadFields['date_generated'],$request->id) : null;
         $ip_index = array_search($leadFields['ip'],$request->id) ? array_search($leadFields['ip'],$request->id) : null;
+        $phone_number_index = array_search($leadFields['phone_number'],$request->id) ? array_search($leadFields['phone_number'],$request->id) : null;
 
         $emails = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('email')->toArray();
         $countries = Country::pluck('id', 'name')->toArray();
@@ -186,6 +187,16 @@ class ImportController extends Controller
                     $arr['is_duplicate'] = 0;
                     $arr['is_invalid'] = 1;
                     $invalid++;
+                    continue;
+                }
+            }
+
+            if($phone_number_index) {
+                if($row[$phone_number_index] != '' || $row[$phone_number_index] != null) {
+                    $arr['phone_number'] = $row[$phone_number_index];
+                } else {
+                    $invalid++;
+                    continue;
                 }
             }
 
