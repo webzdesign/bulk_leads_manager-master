@@ -11,6 +11,7 @@ use App\Models\LeadType;
 use App\Models\AgeGroup;
 use App\Models\State;
 use App\Models\OrderDetail;
+use App\Models\SiteSetting;
 use App\Exports\LeadDetailsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use DB,DataTables,Mail,Storage;
@@ -88,9 +89,8 @@ class OrdersController extends Controller
         return $datatable;
     }
 
-    public function sendLead($order_id = ''){
+    public static function sendLead($order_id = ''){
 
-        // DB::enableQueryLog();
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
 
         $order_data = Order::with(['client'])->where('status',$status);
@@ -98,9 +98,6 @@ class OrdersController extends Controller
             $order_data->where('id',$order_id);
         }
         $order_data = $order_data->get();
-
-        // dd($order_data);
-        // dd(DB::getQueryLog());
 
         $lead_response = [];
 
@@ -112,14 +109,21 @@ class OrdersController extends Controller
                 $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id])->pluck('id')->toArray();
 
                 if(isset($lead_ids) && $lead_ids !=null){
-                    if($order_id == null){
+                    if($order_id == 0){
                         $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
                     }
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0])->take($value->qty);
 
+                    if(isset($value->state_id) && $value->state_id !=null){
+                        $lead_details->where('state_id',$value->state_id);
+                    }
+                    if(isset($value->gender) && $value->gender !=null){
+                        $lead_details->where('gender',$value->gender);
+                    }
                     if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
                         $lead_details->whereNotIn('id',$skip_lead_details_ids);
                     }
+
                     $lead_details = $lead_details->get();
 
                     if(isset($lead_details) && $lead_details !=null){
@@ -140,9 +144,9 @@ class OrdersController extends Controller
                                 'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
                                 'email' => $row->email,
                                 'address' => $row->address,
-                                'country' => $row->country->name,
-                                'state' => $row->state->name,
-                                'city' => $row->city->name,
+                                'country' => isset($row->country->name) && $row->country->name !=null ? $row->country->name : '',
+                                'state' => isset($row->state->name) && $row->state->name !=null ? $row->state->name : '',
+                                'city' => isset($row->city->name) && $row->city->name !=null ? $row->city->name : '',
                                 'phone_number' => $row->phone_number,
                                 'birth_date' => $row->birth_date,
                                 'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
@@ -160,11 +164,27 @@ class OrdersController extends Controller
                             $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
 
                             //Mail sending
-                            $to_email = $value->client->email;
+                            $site_setting = SiteSetting::first()->toArray();
+
+                            $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
+                            $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
+                            $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
+                            $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
+
+                            $client_email = $value->client->email;
+                            $to_email = [$client_email,$from_email];
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$upload_path){
-                                $message->to($to_email)->subject('Lead reports');
+                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email,$upload_path){
+
+                                $message->from($from_email, $from_name);
+                                if($bcc_email !=''){
+                                    $message->bcc([$bcc_email]);
+                                }
+                                if($replay_email !=''){
+                                    $message->replyTo($replay_email);
+                                }
+                                $message->to($to_email)->subject('Leads send');
                                 $message->attach(public_path($upload_path));
                             });
                         }
