@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('lead:delete')->daily();
         $schedule->command('lead:send')->everyFiveMinutes()->withoutOverlapping();
     }
 
