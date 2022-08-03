@@ -167,9 +167,9 @@ class ImportController extends Controller
 
             if ($gender_index) {
                 if( strtolower($row[$gender_index]) == 'm' || strtolower($row[$gender_index]) == 'male') {
-                    $row[$gender_index] = 1;
+                    $row[$gender_index] = 0;
                 } else if(strtolower($row[$gender_index]) == 'f' || strtolower($row[$gender_index]) == 'female') {
-                    $row[$gender_index] = 0 ;
+                    $row[$gender_index] = 1 ;
                 } else {
                     $row[$gender_index] = 1;
                 }
@@ -316,7 +316,7 @@ class ImportController extends Controller
             }
 
             foreach($columnName as $key => $column) {
-                if ($row[$key] == '' || strlen($row[$key]) == 0) {
+                if (strlen($row[$key]) == 0) {
                     $arr[$column] = NULL;
                 } else {
                     $arr[$column] = utf8_encode($row[$key]);

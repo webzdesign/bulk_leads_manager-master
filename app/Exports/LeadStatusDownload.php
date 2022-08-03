@@ -34,7 +34,7 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
         }
         else
         {
-            $temp = LeadDetail::where('lead_id',decrypt($this->id))->get();
+            $temp = LeadDetail::where('lead_id',decrypt($this->id))->where('is_duplicate',0)->get();
         }
 
         return $temp;
