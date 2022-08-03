@@ -297,6 +297,10 @@
                                     <div class="colTwo c-19 f-16 f-500" id='invalidRows'> </div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
+                                    <div class="colOne c-gr f-16 f-500">Rejected Records:</div>
+                                    <div class="colTwo c-19 f-16 f-500" id='rejectRecords'> </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Imported Records</div>
                                     <div class="colTwo c-19 f-16 f-500" ><span id='importRows'></span> <a  href="javascript:;"
                                             class="c-43 download" data-text="import" data-lead='{{isset($lead) ? $lead :''}}'>Download</a></div>
@@ -480,6 +484,7 @@
                                         $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an email.)' );
                                         $('#importRows').text(res['import']);
                                         $('#lead_id').text(res['lead']);
+                                        $("#rejectRecords").text(res['rejected']);
                                         // $('.file_name').text(res['uploadTime']);
                                     }
                                     if(res['done'] == false)
@@ -569,7 +574,8 @@
 
             function dateCheck() {
                 var status = [];
-                var validDate = true;
+                var validDate = [];
+                var status1 = true;
 
                 $('.select_field > option:selected').each(function(key, value) {
                     var value = $(this).val();
@@ -611,20 +617,24 @@
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                         if(diffDays > Days) {
+                            validDate.push("false");
+                        } else {
+                            validDate.push("true");
+                        }
+
+                        if($.inArray("false", validDate) !== -1) {
                             Swal.fire({
                                 icon: "info",
                                 title: "import",
                                 text: "Disallow import of leads older.",
                             });
-                            validDate = false;
-                        } else {
-                            validDate = true;
+                            status1 = false;
                         }
                     })
 
-                    return validDate;
+                    return status1;
                 } else {
-                    return validDate;
+                    return status1;
                 }
             }
 
