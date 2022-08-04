@@ -146,6 +146,7 @@ class NewOrderController extends Controller
 
     public function count_total_leads_available(Request $request){
         $total_leads_available = 0;
+        $LeadTypes = LeadType::find($request->lead_type_id);
         $lead_id = Lead::where('lead_type_id',$request->lead_type_id)->pluck('id')->toArray();
 
         if(count($lead_id) > 0){
@@ -177,6 +178,6 @@ class NewOrderController extends Controller
             $total_leads_available = $leads_details;
         }
 
-        return response()->json([true, ['total_leads_available' => $total_leads_available]]);
+        return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
     }
 }

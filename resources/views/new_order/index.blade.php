@@ -535,7 +535,7 @@
                         dataType: "json",
                         data: $('#order_form').serialize(),
                         success: function(response) {
-                            $('.total_leads_available').text(response[1].total_leads_available + ' US Leads');
+                            $('.total_leads_available').text(response[1].total_leads_available +' '+response[1].LeadTypes);
                             $('[name="total_leads_available"]').val(response[1].total_leads_available);
                             $('[name="lead_quantity"]').val(qty);
                         }
