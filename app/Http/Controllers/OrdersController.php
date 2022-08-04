@@ -63,7 +63,7 @@ class OrdersController extends Controller
             })
             ->addColumn('last_product_ordered',function($row){
                 $age_group = OrderDetail::where('order_id',$row->id)->count();
-                return ($age_group > 0 ? $age_group.' US Leads | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
+                return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
             })
             ->addIndexColumn()
 
