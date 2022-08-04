@@ -24,9 +24,8 @@ class LeadDeleteController extends Controller
         $newDate = date('Y-m-d', strtotime("-$days days"));
 
         $leadDetails = LeadDetail::where("date_generated","<",$newDate)->get();
-        $leadDetailsId = $leadDetails->pluck('id')->toArray();
 
-        if(!empty($leadDetailsId)) {
+        if(count($leadDetails) > 0) {
 
             $fileName = 'Leade_Delete_'.date('m-d-Y').'.csv';
             $columnNames = [
@@ -93,7 +92,7 @@ class LeadDeleteController extends Controller
 
             fclose($file);
 
-            LeadDetail::whereIn('id',$leadDetailsId)->delete();
+            LeadDetail::where("date_generated","<",$newDate)->delete();
 
             echo "Record Deleted Successfully.\n";
 
@@ -146,7 +145,7 @@ class LeadDeleteController extends Controller
                 });
             }
 
-            echo ('Mail sent successfully');
+            echo ('Mail sent successfully.\n');
 
             if (File::exists(public_path('assets/'.$fileName))) {
                 unlink(public_path('assets/'.$fileName));
