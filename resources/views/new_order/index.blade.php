@@ -564,7 +564,7 @@
                 }else if(lead_quantity == 0){
                     $("#lead_quantity_validate").text('Quantity must be greater than 0.');
                     return false;
-                }else if(lead_quantity > total_leads_available){
+                }else if(parseInt(lead_quantity) > parseInt(total_leads_available)){
                     $("#lead_quantity_validate").text('Quantity can\'t be add greater than of total leads.');
                     return false;
                 }
