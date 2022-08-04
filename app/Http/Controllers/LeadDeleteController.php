@@ -16,7 +16,7 @@ use ZipArchive;
 
 class LeadDeleteController extends Controller
 {
-    public function LeadDelete()
+    public static function LeadDelete()
     {
         $setting = SiteSetting::find(1);
         $emailTemplate = EmailTemplate::find(1);
