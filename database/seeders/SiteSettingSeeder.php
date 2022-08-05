@@ -16,8 +16,8 @@ class SiteSettingSeeder extends Seeder
     public function run()
     {
         $records = array(
-            'auto_delete_rec_after' => 1,
-            'disallow_import_lead_older' => 1,
+            'auto_delete_rec_after' => 12,
+            'disallow_import_lead_older' => 12,
             'frequency_of_deleted_archives' => 1,
             'no_of_time_lead_download' => 1,
             'email_from_address' => 'developer@gmail.com',
