@@ -62,7 +62,7 @@ class OrdersController extends Controller
                 return date('d/m/y',strtotime($row->order_date));
             })
             ->addColumn('last_product_ordered',function($row){
-                $age_group = OrderDetail::where('order_id',$row->id)->count();
+                $age_group = $row->qty;
                 return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
             })
             ->addIndexColumn()
@@ -110,7 +110,8 @@ class OrdersController extends Controller
                 if(isset($lead_ids) && $lead_ids !=null){
                     if($order_id == ''){
                         // $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
-                        $skip_lead_details_ids = OrderDetail::pluck('lead_details_id')->toArray();
+                        $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
+                        $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
                     }
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
 
@@ -123,6 +124,11 @@ class OrdersController extends Controller
                     if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
                         $lead_details->whereNotIn('id',$skip_lead_details_ids);
                     }
+                    if(isset($order_id) && $order_id != null) {
+                        $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
+                        $lead_details->whereIn('id',$orderDetailsID);
+                    }
+
                     $lead_details = $lead_details->get()->take($value->qty);
 
                     if(isset($lead_details) && $lead_details !=null){
