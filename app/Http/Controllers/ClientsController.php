@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AgeGroup;
 use App\Models\Client;
 use App\Models\LeadType;
+use App\Models\Order;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -56,11 +57,21 @@ class ClientsController extends Controller
                     return $actions;
                 })
                 ->addColumn('lastOrderDate',function($row){
-                    $lastOrderDate = '';
+                    $orderDate = Order::where('client_id', $row->id)->orderBy('created_at','desc')->first();
+                    if(isset($orderDate)) {
+                        $lastOrderDate = date('d/m/y',strtotime($orderDate->order_date));
+                    } else {
+                        $lastOrderDate = '--- Not Order Yet ---';
+                    }
                     return $lastOrderDate;
                 })
                 ->addColumn('lastProductOrder',function($row){
-                    $lastProductOrder = '';
+                    $order = Order::where('client_id', $row->id)->orderBy('created_at','desc')->first();
+                    if(isset($order)) {
+                        $lastProductOrder = $order->qty.' '.$order->lead_type->name.' | '.$order->age_group->age_from.'-'.$order->age_group->age_to.' Days Old';
+                    } else {
+                        $lastProductOrder = '';
+                    }
                     return $lastProductOrder;
                 })
                 ->editColumn('created_at',function($row){
