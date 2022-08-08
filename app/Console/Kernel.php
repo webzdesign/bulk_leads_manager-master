@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\SiteSetting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +16,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('lead:delete')->daily()->withoutOverlapping();
+        $setting = SiteSetting::find(1);
+        $schedule->command('lead:delete')->cron('* * */'.$setting->frequency_of_deleted_archives.' * *')->withoutOverlapping();
         $schedule->command('lead:send')->everyFiveMinutes()->withoutOverlapping();
     }
 
