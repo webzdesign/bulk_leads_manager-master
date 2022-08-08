@@ -12,6 +12,7 @@ use App\Models\LeadDetail;
 use App\Models\State;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\SiteSetting;
 use Auth,Validator,DB,ckeditor,Carbon;
 
 class NewOrderController extends Controller
@@ -148,9 +149,10 @@ class NewOrderController extends Controller
         $total_leads_available = 0;
         $LeadTypes = LeadType::find($request->lead_type_id);
         $lead_id = Lead::where('lead_type_id',$request->lead_type_id)->pluck('id')->toArray();
+        $setting = SiteSetting::find(1);
 
         if(count($lead_id) > 0){
-            $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0]);
+            $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0])->where('is_send','<',$setting->no_of_time_lead_download);
             $order_ids = Order::where(['client_id' => $request->client_id,'lead_type_id' => $request->lead_type_id,'age_group_id' => $request->age_group_id]);
 
             if(isset($request->gender) && $request->gender !=null){

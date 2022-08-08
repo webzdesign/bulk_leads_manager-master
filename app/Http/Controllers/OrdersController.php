@@ -102,6 +102,7 @@ class OrdersController extends Controller
 
     public static function sendLead($order_id = ''){
 
+        $setting = SiteSetting::find(1);
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
 
         $order_data = Order::with(['client'])->where('status',$status);
@@ -126,6 +127,9 @@ class OrdersController extends Controller
                     }
                     $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
 
+                    if($order_id == '') {
+                        $lead_details->where('is_send','<',$setting->no_of_time_lead_download);
+                    }
                     if(isset($value->state_id) && $value->state_id !=null){
                         $lead_details->where('state_id',$value->state_id);
                     }
@@ -172,6 +176,10 @@ class OrdersController extends Controller
                             //Add records
                             $where_array = ['order_id' => $value->id, 'lead_details_id' => $row->id];
                             OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
+
+                            if($order_id == '') {
+                                LeadDetail::where('id', $row->id)->increment('is_send', 1);
+                            }
                         }
 
                         if(isset($lead_collection) && $lead_collection !=null){
