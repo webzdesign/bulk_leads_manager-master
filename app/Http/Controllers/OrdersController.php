@@ -199,7 +199,7 @@ class OrdersController extends Controller
                             $to_email = [$client_email,$from_email];
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            Mail::send('mail/leadreport', ['order_data' => $value], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email,$upload_path){
+                            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
 
                                 $message->from($from_email, $from_name);
                                 if($bcc_email !=''){
@@ -209,7 +209,6 @@ class OrdersController extends Controller
                                     $message->replyTo($replay_email);
                                 }
                                 $message->to($to_email)->subject('Leads send');
-                                $message->attach(public_path($upload_path));
                             });
                         }
                     }

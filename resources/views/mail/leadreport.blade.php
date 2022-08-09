@@ -13,6 +13,14 @@
 
             $client_name = isset($client) && $client !=null ? $client[0]['firstName'] : '';
             $client_email = isset($client) && $client !=null ? $client[0]['email'] : '';
+
+            if(isset($description) && $description !=null){
+                $csvlink = url('public/storage/leadreport/'.$file);
+
+                if(str_contains($description[0]['content'], '[link]')) {
+                    $description[0]['content'] = str_replace('[link]','<a href="'.$csvlink.'">'.$csvlink.'</a>',$description[0]['content']);
+                }
+            }
         @endphp
         <center>
             <h4>Please download attachment and show lead reports.</h4>
