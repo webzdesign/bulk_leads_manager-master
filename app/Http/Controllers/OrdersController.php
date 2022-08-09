@@ -100,9 +100,8 @@ class OrdersController extends Controller
         return $datatable;
     }
 
-    public static function sendLead($order_id = null){
+    public static function sendLead($order_id = ''){
 
-        $isSend = 0;
         $setting = SiteSetting::find(1);
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
 
@@ -211,14 +210,12 @@ class OrdersController extends Controller
                                 }
                                 $message->to($to_email)->subject('Leads send');
                             });
-
-                            $isSend = 1;
                         }
                     }
                 }
             }
 
-            if($isSend == 1){
+            if(isset($lead_response) && $lead_response !=null){
                 echo "Lead details send successfuly.";
                 return $lead_response;
             }
