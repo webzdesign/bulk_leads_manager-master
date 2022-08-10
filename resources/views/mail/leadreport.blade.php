@@ -18,7 +18,7 @@
                 $csvlink = url('public/storage/leadreport/'.$file);
 
                 if(str_contains($description[0]['content'], '[link]')) {
-                    $description[0]['content'] = str_replace('[link]','<a href="'.$csvlink.'">'.$csvlink.'</a>',$description[0]['content']);
+                    $description[0]['content'] = str_replace('[link]',$csvlink,$description[0]['content']);
                 }
             }
         @endphp
