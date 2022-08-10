@@ -15,8 +15,8 @@
             $client_email = isset($client) && $client !=null ? $client[0]['email'] : '';
 
             if(isset($description) && $description !=null){
-                $csvlink = public_path('storage/leadreport/'.$file);
-                $csvlink = url('download/'.$csvlink);
+                //$csvlink = public_path('storage/leadreport/'.$file);
+                $csvlink = url('download/'.$file);
 
                 if(str_contains($description[0]['content'], '[link]')) {
                     $description[0]['content'] = str_replace('[link]',$csvlink,$description[0]['content']);

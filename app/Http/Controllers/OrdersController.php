@@ -225,6 +225,7 @@ class OrdersController extends Controller
 
     public static function download($path)
     {
+        $path = public_path('storage/leadreport/'.$path);
         return response()->download($path);
     }
 }
