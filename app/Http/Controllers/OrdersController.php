@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Client;
-use App\Models\Order;
+use Response;
 use App\Models\Lead;
-use App\Models\LeadDetail;
-use App\Models\LeadType;
-use App\Models\AgeGroup;
+use App\Models\Order;
 use App\Models\State;
+use App\Models\Client;
+use App\Models\AgeGroup;
+use App\Models\LeadType;
+use App\Models\LeadDetail;
 use App\Models\OrderDetail;
 use App\Models\SiteSetting;
+use Illuminate\Http\Request;
+use DB,DataTables,Mail,Storage;
 use App\Exports\LeadDetailsExport;
 use Maatwebsite\Excel\Facades\Excel;
-use DB,DataTables,Mail,Storage;
 
 class OrdersController extends Controller
 {
@@ -220,5 +221,10 @@ class OrdersController extends Controller
                 return $lead_response;
             }
         }
+    }
+
+    public static function download($path)
+    {
+        return response()->download($path);
     }
 }

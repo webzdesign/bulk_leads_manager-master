@@ -30,6 +30,7 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::get('download/{path}', [OrdersController::class, 'download']);
 Route::post('import/download', [ImportController::class, 'downloadCsv'])->name('admin.import.download');
 Route::any('import-history/downloadOriginal/{id}', [ImportHistoryController::class, 'downloadOriginal'])->name('admin.import-history.downloadOriginal');
 Route::any('import-history/downloadDuplicate/{id}', [ImportHistoryController::class, 'downloadDuplicate'])->name('admin.import-history.downloadDuplicate');
