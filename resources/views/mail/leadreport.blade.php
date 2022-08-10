@@ -15,7 +15,7 @@
             $client_email = isset($client) && $client !=null ? $client[0]['email'] : '';
 
             if(isset($description) && $description !=null){
-                $csvlink = url('public/storage/leadreport/'.$file);
+                $csvlink = public_path('storage/leadreport/'.$file);
                 $csvlink = url('download/'.$csvlink);
 
                 if(str_contains($description[0]['content'], '[link]')) {
