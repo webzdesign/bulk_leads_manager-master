@@ -192,9 +192,6 @@ class OrdersController extends Controller
                             $age_from = !$age_group->isEmpty() ? $age_group[0]->age_from : '';
                             $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : '';
 
-                            // Update order status
-                            Order::where('id', $value->id)->update(['status' => '1']);
-
                             $lead_collection[] = array(
                                 'age_group' => $age_from.' - '.$age_to,
                                 'first_name' => $row->first_name,
@@ -249,7 +246,8 @@ class OrdersController extends Controller
                                 $message->to($to_email)->subject('Leads send');
                             });
 
-                            Order::where('id', $value->id)->update(['file_name' => $file_name]);
+                            // Update order status
+                            Order::where('id', $value->id)->update(['status' => '1','file_name' => $file_name]);
                         }
                     }
                 }
