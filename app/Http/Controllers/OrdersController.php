@@ -34,7 +34,7 @@ class OrdersController extends Controller
 
     public function getData(Request $request)
     {
-        $orders = Order::with(['client','lead_type','age_group'])->select('*');
+        $orders = Order::with(['client','lead_type','age_group'])->select('*')->orderBy('created_at','desc');
 
         if($request->lead_type_id !=''){
             $orders->where('lead_type_id',$request->lead_type_id);
@@ -70,6 +70,7 @@ class OrdersController extends Controller
 
             ->addColumn('action', function ($row) {
                 $actions = '';
+                $url = url('download/'.$row->file_name);
                 if($row->status == '1'){
                     $actions .= '<div class="editDlbtn d-flex">
                         <a href="javascript:void(0)" class="resend_order" data-order_id="'.$row->id.'">
@@ -78,6 +79,15 @@ class OrdersController extends Controller
                                     <path d="M11.8334 11.9999C11.0934 11.9999 10.5001 12.5933 10.5001 13.3333C10.5001 13.6869 10.6406 14.026 10.8906 14.2761C11.1407 14.5261 11.4798 14.6666 11.8334 14.6666C12.187 14.6666 12.5262 14.5261 12.7762 14.2761C13.0263 14.026 13.1667 13.6869 13.1667 13.3333C13.1667 12.5933 12.5667 11.9999 11.8334 11.9999ZM1.16675 1.33325V2.66659H2.50008L4.90008 7.72659L3.99341 9.35992C3.89341 9.54659 3.83341 9.76659 3.83341 9.99992C3.83341 10.3535 3.97389 10.6927 4.22394 10.9427C4.47399 11.1928 4.81313 11.3333 5.16675 11.3333H13.1667V9.99992H5.44675C5.40254 9.99992 5.36015 9.98236 5.3289 9.9511C5.29764 9.91985 5.28008 9.87745 5.28008 9.83325C5.28008 9.79992 5.28675 9.77325 5.30008 9.75325L5.90008 8.66659H10.8667C11.3667 8.66659 11.8067 8.38659 12.0334 7.97992L14.4201 3.66659C14.4667 3.55992 14.5001 3.44659 14.5001 3.33325C14.5001 3.15644 14.4298 2.98687 14.3048 2.86185C14.1798 2.73682 14.0102 2.66659 13.8334 2.66659H3.97341L3.34675 1.33325H1.16675ZM5.16675 11.9999C4.42675 11.9999 3.83341 12.5933 3.83341 13.3333C3.83341 13.6869 3.97389 14.026 4.22394 14.2761C4.47399 14.5261 4.81313 14.6666 5.16675 14.6666C5.52037 14.6666 5.85951 14.5261 6.10956 14.2761C6.3596 14.026 6.50008 13.6869 6.50008 13.3333C6.50008 12.5933 5.90008 11.9999 5.16675 11.9999Z" fill="white"/>
                                 </svg>
                                 Resend Order
+                            </button>
+                        </a>
+
+                        <a href="'.$url.'">
+                            <button class="cartBtn w-auto px-3 text-white f-500">
+                                <svg class="me-2" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_1701_5415)"><path d="M17.125 12.875H12.4316L10.8408 14.4658C10.4172 14.8895 9.85117 15.125 9.25 15.125C8.64883 15.125 8.08422 14.891 7.65918 14.4658L6.06836 12.875H1.375C0.753789 12.875 0.25 13.3788 0.25 14V17.375C0.25 17.9962 0.753789 18.5 1.375 18.5H17.125C17.7462 18.5 18.25 17.9962 18.25 17.375V14C18.25 13.3777 17.7473 12.875 17.125 12.875ZM15.4375 16.5312C14.9734 16.5312 14.5938 16.1516 14.5938 15.6875C14.5938 15.2234 14.9734 14.8438 15.4375 14.8438C15.9016 14.8438 16.2812 15.2234 16.2812 15.6875C16.2812 16.1516 15.9016 16.5312 15.4375 16.5312ZM8.45547 13.6695C8.67344 13.891 8.96172 14 9.25 14C9.53828 14 9.82586 13.8901 10.0452 13.6704L14.5452 9.17041C14.9843 8.73096 14.9843 8.01904 14.5452 7.57959C14.1058 7.14014 13.3935 7.14014 12.9544 7.57959L10.375 10.1609V1.625C10.375 1.00379 9.87121 0.5 9.25 0.5C8.62773 0.5 8.125 1.00379 8.125 1.625V10.1609L5.54453 7.58047C5.10543 7.14102 4.39316 7.14102 3.95371 7.58047C3.51461 8.01992 3.51461 8.73184 3.95371 9.17129L8.45547 13.6695Z" fill="white"></path></g><defs><clipPath id="clip0_1701_5415"><rect width="18" height="18" fill="white" transform="translate(0.25 0.5)"></rect></clipPath></defs>
+                                </svg>
+                                Download Order
                             </button>
                         </a>
                     </div>';
@@ -108,7 +118,34 @@ class OrdersController extends Controller
 
         $order_data = Order::with(['client'])->where('status',$status);
         if(isset($order_id) && $order_id !=null){
-            $order_data->where('id',$order_id);
+
+            $value = $order_data->where('id',$order_id)->first();
+            $site_setting = SiteSetting::first()->toArray();
+            $file_name = $value->file_name;
+
+            $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
+            $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
+            $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
+            $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
+
+            $client_email = $value->client->email;
+            $to_email = [$client_email,$from_email];
+
+            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
+
+                $message->from($from_email, $from_name);
+                if($bcc_email !=''){
+                    $message->bcc([$bcc_email]);
+                }
+                if($replay_email !=''){
+                    $message->replyTo($replay_email);
+                }
+                $message->to($to_email)->subject('Leads send');
+            });
+
+            echo "Lead details send successfuly.";
+            return true;
+            // $order_data->where('id',$order_id);
         }
         $order_data = $order_data->get();
 
@@ -185,7 +222,7 @@ class OrdersController extends Controller
 
                         if(isset($lead_collection) && $lead_collection !=null){
 
-                            $file_name = 'LeadReport-'.uniqid().'.xlsx';
+                            $file_name = 'LeadReport-'.uniqid().'.csv';
                             $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
 
                             //Mail sending
@@ -211,6 +248,8 @@ class OrdersController extends Controller
                                 }
                                 $message->to($to_email)->subject('Leads send');
                             });
+
+                            Order::where('id', $value->id)->update(['file_name' => $file_name]);
                         }
                     }
                 }

@@ -24,8 +24,6 @@
             }
         @endphp
         <center>
-            <h4>Please download attachment and show lead reports.</h4>
-
             <?php
                 if(isset($description) && $description !=null){
                     echo '<div style="text-align:justify">'.str_replace('[username]',$client_name,str_replace('[email]',$client_email,$description[0]['content'])).'</div>';
