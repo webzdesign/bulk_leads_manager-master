@@ -32,10 +32,7 @@ class StatsController extends Controller
         // return $lastWeekStartDate.' --- '.$lastWeekEndDate.' --- '.$currentWeekStartDate.' --- '.$currentWeekEndDate;
 
         // $inventory = Lead::sum('total_row');
-        $order_lead_details_id = OrderDetail::with('done_order')->whereHas('done_order', function ($query) {
-            $query->where('status','=','1');
-        })->pluck('lead_details_id')->toArray();
-        $inventory = LeadDetail::whereNotIn('id',array_unique($order_lead_details_id))->where('is_duplicate', 0)->where('is_invalid',0)->count();
+        $inventory = LeadDetail::where('is_send','=',0)->count();
 
         $totalInventory =   $inventory;
         $newInventory = Lead::where('created_at', '>=', Carbon::now()->subDay(7))->sum('total_row');
@@ -45,8 +42,8 @@ class StatsController extends Controller
           //      $inventeryPercent = intval((intval($newInventory) * 100) / intval($totalInventory-$newInventory));
 
         // total revenue inc-dec in percentage calculation
-        $lastWeekInventery = LeadDetail::whereNotIn('id',array_unique($order_lead_details_id))->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$lastWeekStartDate, $lastWeekEndDate])->count();
-        $currentWeekInventery = LeadDetail::whereNotIn('id',array_unique($order_lead_details_id))->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$currentWeekStartDate, $currentWeekEndDate])->count();
+        $lastWeekInventery = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$lastWeekStartDate, $lastWeekEndDate])->count();
+        $currentWeekInventery = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$currentWeekStartDate, $currentWeekEndDate])->count();
         // return $lastWeekInventery.' --- '.$currentWeekInventery;
         if($lastWeekInventery > $currentWeekInventery) {
             if($currentWeekInventery != 0){
