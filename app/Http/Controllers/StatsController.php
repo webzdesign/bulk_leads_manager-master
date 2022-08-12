@@ -32,7 +32,7 @@ class StatsController extends Controller
         // return $lastWeekStartDate.' --- '.$lastWeekEndDate.' --- '.$currentWeekStartDate.' --- '.$currentWeekEndDate;
 
         // $inventory = Lead::sum('total_row');
-        $inventory = LeadDetail::where('is_send','=',0)->count();
+        $inventory = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->count();
 
         $totalInventory =   $inventory;
         $newInventory = Lead::where('created_at', '>=', Carbon::now()->subDay(7))->sum('total_row');
