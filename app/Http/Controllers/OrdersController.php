@@ -313,7 +313,6 @@ class OrdersController extends Controller
             foreach($order_data as $key => $value){
 
                 $lead_collection = [];
-                $skip_lead_details_exists = false;
                 if(Lead::where(['lead_type_id' => $value->lead_type_id])->exists()){
                     if($order_id == ''){
                         $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
@@ -333,7 +332,7 @@ class OrdersController extends Controller
                     if(isset($value->gender) && $value->gender !=null){
                         $lead_details->where('gender',$value->gender);
                     }
-                    if($skip_lead_details_exists){
+                    if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
                         foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
                             $lead_details->whereNotIn('id',$skip_lead_details_id);
                         }
