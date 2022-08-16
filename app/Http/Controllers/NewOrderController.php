@@ -172,7 +172,9 @@ class NewOrderController extends Controller
 
                 if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
                     $skip_lead_details_ids = array_unique($skip_lead_details_ids);
-                    $leads_details->whereNotIn('id',$skip_lead_details_ids);
+                    foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
+                        $leads_details->whereNotIn('id',$skip_lead_details_id);
+                    }
                 }
             }
 
