@@ -152,35 +152,45 @@ class NewOrderController extends Controller
         $setting = SiteSetting::find(1);
 
         if(count($lead_id) > 0){
-            $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0])->where('is_send','<',$setting->no_of_time_lead_download);
             $skip_lead_details_ids = OrderDetail::select('lead_details_id')->whereHas('done_order',function($q) use ($request){
                 $q->where(['client_id' => $request->client_id,'lead_type_id' => $request->lead_type_id,'age_group_id' => $request->age_group_id]);
             });
 
 
             if(isset($request->gender) && $request->gender !=null){
-                $leads_details->where('gender',$request->gender);
                 $skip_lead_details_ids->whereHas('done_order',function($q) use ($request){
                     $q->where('gender',$request->gender);
                 });
             }
             if(isset($request->state_id) && $request->state_id !=null){
-                $leads_details->where('state_id',$request->state_id);
                 $skip_lead_details_ids->whereHas('done_order',function($q) use ($request){
                     $q->where('state_id',$request->state_id);
-
                 });
             }
 
-            $result = $skip_lead_details_ids->get()->toArray();
+            $result = $skip_lead_details_ids->pluck('lead_details_id')->toArray();
 
             if(count($result)) {
+                
                 foreach(array_chunk($result, 50000) as $row) {
-                    $leads_details->whereNotIn('id',$row);
+
+                    $leads_details = LeadDetail::whereHas('lead' , function($q) use($request) {
+                        $q->where('lead_type_id',$request->lead_type_id);
+                    })->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0])
+                    ->where('is_send','<',$setting->no_of_time_lead_download)
+                    ->whereNotIn('id',$row);
+
+                    if(isset($request->gender) && $request->gender !=null){
+                        $leads_details->where('gender',$request->gender);
+                    }
+
+                    if(isset($request->state_id) && $request->state_id !=null){
+                        $leads_details->where('state_id',$request->state_id);
+                    }
+                    
                     $total_leads_available += $leads_details->count();
                 }
             }
-
         }
 
         return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
