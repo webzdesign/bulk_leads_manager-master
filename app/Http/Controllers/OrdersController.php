@@ -370,7 +370,7 @@ class OrdersController extends Controller
                             );
 
                             //Add/Update records array
-                            $order_details[] = ['order_id' => $value->id, 'lead_details_id' => $row->id];
+                            $order_details[] = ['order_id' => $value->id, 'lead_details_id' => $row->id, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')];
 
                             if($order_id == '') {
                                 LeadDetail::where('id', $row->id)->increment('is_send', 1);
@@ -379,7 +379,7 @@ class OrdersController extends Controller
 
                         if(count($order_details)) {
                             foreach(array_chunk($order_details, 2000) as $order_detail) {
-                                DB::table('order_details')->upsert($order_detail, ['order_id', 'lead_details_id'], ['order_id', 'lead_details_id']);
+                                DB::table('order_details')->upsert($order_detail, ['order_id', 'lead_details_id'], ['order_id', 'lead_details_id','created_at', 'updated_at']);
                             }
                         }
 
