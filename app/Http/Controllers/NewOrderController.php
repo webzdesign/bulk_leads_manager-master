@@ -175,13 +175,12 @@ class NewOrderController extends Controller
             $result = $skip_lead_details_ids->get()->toArray();
 
             if(count($result)) {
-                foreach(array_chunk($result, 200) as $row) {
+                foreach(array_chunk($result, 50000) as $row) {
                     $leads_details->whereNotIn('id',$row);
+                    $total_leads_available += $leads_details->count();
                 }
             }
 
-            $leads_details = $leads_details->count();
-            $total_leads_available = $leads_details;
         }
 
         return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
