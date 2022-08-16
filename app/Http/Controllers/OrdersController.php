@@ -175,7 +175,9 @@ class OrdersController extends Controller
                         $lead_details->where('gender',$value->gender);
                     }
                     if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-                        $lead_details->whereNotIn('id',$skip_lead_details_ids);
+                        foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
+                            $lead_details->whereNotIn('id',$skip_lead_details_id);
+                        }
                     }
                     // if(isset($order_id) && $order_id != null) {
                     //     $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
