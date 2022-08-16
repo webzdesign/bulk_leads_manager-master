@@ -529,12 +529,16 @@
                     $(".tab2").addClass("done");
                     $(".step3").addClass("active");
 
+                    $("#loaderOverlay").removeClass('d-none');
+
                     $.ajax({
                         type: "POST",
                         url: "{{ route('admin.count-total-leads-available') }}",
                         dataType: "json",
                         data: $('#order_form').serialize(),
                         success: function(response) {
+                            $("#loaderOverlay").addClass('d-none');
+
                             $('.total_leads_available').text(response[1].total_leads_available +' '+response[1].LeadTypes);
                             $('[name="total_leads_available"]').val(response[1].total_leads_available);
                             $('[name="lead_quantity"]').val(qty);
