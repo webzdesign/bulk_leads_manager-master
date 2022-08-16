@@ -13,7 +13,7 @@ use App\Models\State;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\SiteSetting;
-use Auth,Validator,DB,ckeditor,Carbon;
+use Auth,Validator,Carbon;
 
 class NewOrderController extends Controller
 {
@@ -153,28 +153,30 @@ class NewOrderController extends Controller
 
         if(count($lead_id) > 0){
             $leads_details = LeadDetail::whereIn('lead_id',$lead_id)->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0])->where('is_send','<',$setting->no_of_time_lead_download);
-            $order_ids = Order::where(['client_id' => $request->client_id,'lead_type_id' => $request->lead_type_id,'age_group_id' => $request->age_group_id]);
+            $skip_lead_details_ids = OrderDetail::select('lead_details_id')->whereHas('done_order',function($q) use ($request){
+                $q->where(['client_id' => $request->client_id,'lead_type_id' => $request->lead_type_id,'age_group_id' => $request->age_group_id]);
+            });
+
 
             if(isset($request->gender) && $request->gender !=null){
                 $leads_details->where('gender',$request->gender);
-                $order_ids->where('gender',$request->gender);
+                $skip_lead_details_ids->whereHas('done_order',function($q) use ($request){
+                    $q->where('gender',$request->gender);
+                });
             }
             if(isset($request->state_id) && $request->state_id !=null){
                 $leads_details->where('state_id',$request->state_id);
-                $order_ids->where('state_id',$request->state_id);
+                $skip_lead_details_ids->whereHas('done_order',function($q) use ($request){
+                    $q->where('state_id',$request->state_id);
+
+                });
             }
 
-            //Skip lead details from client
-            $order_ids = $order_ids->pluck('id')->toArray();
+            $result = $skip_lead_details_ids->get()->toArray();
 
-            if(isset($order_ids) && $order_ids !=null){
-                $skip_lead_details_ids = OrderDetail::whereIn('order_id',$order_ids)->pluck('lead_details_id')->toArray();
-
-                if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-                    $skip_lead_details_ids = array_unique($skip_lead_details_ids);
-                    foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
-                        $leads_details->whereNotIn('id',$skip_lead_details_id);
-                    }
+            if(count($result)) {
+                foreach(array_chunk($result, 200) as $row) {
+                    $leads_details->whereNotIn('id',$row);
                 }
             }
 
