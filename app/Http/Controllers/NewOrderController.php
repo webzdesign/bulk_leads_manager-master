@@ -171,7 +171,7 @@ class NewOrderController extends Controller
             $result = $skip_lead_details_ids->pluck('lead_details_id')->toArray();
 
             if(count($result)) {
-                
+
                 foreach(array_chunk($result, 50000) as $row) {
 
                     $leads_details = LeadDetail::whereHas('lead' , function($q) use($request) {
@@ -190,6 +190,23 @@ class NewOrderController extends Controller
                     
                     $total_leads_available += $leads_details->count();
                 }
+                
+            } else {
+
+                $leads_details = LeadDetail::whereHas('lead' , function($q) use($request) {
+                    $q->where('lead_type_id',$request->lead_type_id);
+                })->where(['age_group_id' => $request->age_group_id,'is_duplicate' => 0,'is_invalid' => 0])
+                ->where('is_send','<',$setting->no_of_time_lead_download);
+
+                if(isset($request->gender) && $request->gender !=null){
+                    $leads_details->where('gender',$request->gender);
+                }
+
+                if(isset($request->state_id) && $request->state_id !=null){
+                    $leads_details->where('state_id',$request->state_id);
+                }
+                
+                $total_leads_available += $leads_details->count();
             }
         }
 
