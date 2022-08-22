@@ -265,10 +265,10 @@ class OrdersController extends Controller
 
     public static function sendLead($order_id = ''){
 
-
+        $start_time = time();
         $setting = SiteSetting::find(1);
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
-
+        $totalRecords = 0;
         $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty')->with(['client'=>function($query){
             $query->select('id', 'email');
         }])->where('status',$status);
@@ -313,15 +313,30 @@ class OrdersController extends Controller
             foreach($order_data as $key => $value){
 
                 $lead_collection = [];
+                $skip_lead_details_id_exists = false;
+
                 if(Lead::where(['lead_type_id' => $value->lead_type_id])->exists()){
                     if($order_id == ''){
-                        $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
-                        $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
+                        $clientOrderId = $value->client_id;
+                        /* Old Version Query Starts */
+                        
+                        // $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
+                        // $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
+
+                        /* Old Version Query Ends*/
+
+                        /* Optimized Version Query Starts */
+
+                        $skip_lead_details_id_exists = OrderDetail::whereIn('order_id',function($query) use($clientOrderId) {
+                            $query->select('id')->from('orders')->where('client_id', $clientOrderId);
+                        })->exists();
+
+                        /* Optimized Version Query Ends */
                     }
                     $leadIds = $value->lead_type_id;
-                    $lead_details = LeadDetail::with(['lead' => function($q) use($leadIds){
+                    $lead_details = LeadDetail::whereHas('lead' , function($q) use($leadIds){
                         $q->where('lead_type_id',$leadIds);
-                    }])->with(['country','state','city'])->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
+                    })->with(['country','state','city'])->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
 
                     if($order_id == '') {
                         $lead_details->where('is_send','<',$setting->no_of_time_lead_download);
@@ -332,11 +347,24 @@ class OrdersController extends Controller
                     if(isset($value->gender) && $value->gender !=null){
                         $lead_details->where('gender',$value->gender);
                     }
-                    if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-                        foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
-                            $lead_details->whereNotIn('id',$skip_lead_details_id);
-                        }
+
+                    if($skip_lead_details_id_exists) {
+                        $lead_details->whereNotIn('id', function($q) use($clientOrderId) {
+                            $q->select('lead_details_id')->from('order_details')->whereIn('order_id',function($query) use($clientOrderId) {
+                                $query->select('id')->from('orders')->where('client_id', $clientOrderId);
+                            });
+                        });
                     }
+                    
+                    /* Old Version Query Starts */
+
+                    // if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
+                    //     foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
+                    //         $lead_details->whereNotIn('id',$skip_lead_details_id);
+                    //     }
+                    // }
+                    
+                    /* Old Version Query Ends */
                     // if(isset($order_id) && $order_id != null) {
                     //     $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
                     //     $lead_details->whereIn('id',$orderDetailsID);
@@ -344,44 +372,49 @@ class OrdersController extends Controller
 
                     // $lead_details = $lead_details->get()->take($value->qty);
                     $lead_details = $lead_details->limit($value->qty)->get();
-                    $order_details = array();
+                    $totalRecords = $lead_details->count();
                     if(isset($lead_details) && $lead_details !=null){
 
-                        foreach ($lead_details as $key => $row) {
-                            $age_group = AgeGroup::where('id',$row->age_group_id)->get();
+                        foreach ($lead_details->chunk(2000) as $lead_detail) {
 
-                            $age_from = !$age_group->isEmpty() ? $age_group[0]->age_from : '';
-                            $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : '';
+                            $order_details = array();
 
-                            $lead_collection[] = array(
-                                // 'age_group' => $age_from.' - '.$age_to,
-                                'first_name' => $row->first_name,
-                                'last_name' => $row->last_name,
-                                'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
-                                'email' => $row->email,
-                                'address' => $row->address,
-                                'country' => isset($row->country->name) && $row->country->name !=null ? $row->country->name : '',
-                                'state' => isset($row->state->name) && $row->state->name !=null ? $row->state->name : '',
-                                'city' => isset($row->city->name) && $row->city->name !=null ? $row->city->name : '',
-                                'phone_number' => $row->phone_number,
-                                'birth_date' => $row->birth_date,
-                                // 'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
-                                'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
-                                'ip'  => isset($row->ip) && $row->ip != null ? $row->ip : 'N/A',
-                                'date_generated' => $row->date_generated,
-                            );
+                            foreach ($lead_detail as $row) {
+                                /* $age_group = AgeGroup::where('id',$row->age_group_id)->get();
 
-                            //Add/Update records array
-                            $order_details[] = ['order_id' => $value->id, 'lead_details_id' => $row->id, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')];
+                                $age_from = !$age_group->isEmpty() ? $age_group[0]->age_from : '';
+                                $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : ''; */
 
-                            if($order_id == '') {
-                                LeadDetail::where('id', $row->id)->increment('is_send', 1);
+                                $lead_collection[] = array(
+                                    // 'age_group' => $age_from.' - '.$age_to,
+                                    'first_name' => $row->first_name,
+                                    'last_name' => $row->last_name,
+                                    'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
+                                    'email' => $row->email,
+                                    'address' => $row->address,
+                                    'country' => isset($row->country->name) && $row->country->name !=null ? $row->country->name : '',
+                                    'state' => isset($row->state->name) && $row->state->name !=null ? $row->state->name : '',
+                                    'city' => isset($row->city->name) && $row->city->name !=null ? $row->city->name : '',
+                                    'phone_number' => $row->phone_number,
+                                    'birth_date' => $row->birth_date,
+                                    // 'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
+                                    'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
+                                    'ip'  => isset($row->ip) && $row->ip != null ? $row->ip : 'N/A',
+                                    'date_generated' => $row->date_generated,
+                                );
+
+                                //Add/Update records array
+                                $order_details[] = ['order_id' => $value->id, 'lead_details_id' => $row->id, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')];
+
+                                if($order_id == '') {
+                                    LeadDetail::where('id', $row->id)->increment('is_send', 1);
+                                }
                             }
-                        }
 
-                        if(count($order_details)) {
-                            foreach(array_chunk($order_details, 2000) as $order_detail) {
-                                DB::table('order_details')->upsert($order_detail, ['order_id', 'lead_details_id'], ['order_id', 'lead_details_id','created_at', 'updated_at']);
+                            if(count($order_details)) {
+                                foreach(array_chunk($order_details, 2000) as $order_detail) {
+                                    DB::table('order_details')->upsert($order_detail, ['order_id', 'lead_details_id'], ['order_id', 'lead_details_id','created_at', 'updated_at']);
+                                }
                             }
                         }
 
@@ -422,7 +455,7 @@ class OrdersController extends Controller
             }
 
             if(isset($lead_response) && $lead_response !=null){
-                echo "Lead details send successfuly.";
+                echo $totalRecords." Lead details send successfuly in ".(time() - $start_time). "ms";
                 return $lead_response;
             }
         }
