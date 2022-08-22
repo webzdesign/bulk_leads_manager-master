@@ -28,7 +28,7 @@ class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,Shoul
 
     public function headings(): array
     {
-        return ["Age group", "First name", "Last name", "Gender", "Email", "Address", "Country", "State", "City", "Phone number", "Birth date", "Age", "Zip code"];
+        return ["First name", "Last name", "Gender", "Email", "Address", "Country", "State", "City", "Phone number", "Birth date", "Zip code", "IP", "Date Generated"];
     }
 
     public function collection()
@@ -53,9 +53,8 @@ class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,Shoul
                 $lead_details_data->sheet->getDelegate()->getColumnDimension('J')->setWidth(30);
                 $lead_details_data->sheet->getDelegate()->getColumnDimension('K')->setWidth(30);
                 $lead_details_data->sheet->getDelegate()->getColumnDimension('L')->setWidth(30);
-                $lead_details_data->sheet->getDelegate()->getColumnDimension('M')->setWidth(30);
 
-                $lead_details_data->sheet->getDelegate()->getStyle('A1:M1')
+                $lead_details_data->sheet->getDelegate()->getStyle('A1:L1')
                     ->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()

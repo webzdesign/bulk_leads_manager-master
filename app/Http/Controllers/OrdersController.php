@@ -354,7 +354,7 @@ class OrdersController extends Controller
                             $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : '';
 
                             $lead_collection[] = array(
-                                'age_group' => $age_from.' - '.$age_to,
+                                // 'age_group' => $age_from.' - '.$age_to,
                                 'first_name' => $row->first_name,
                                 'last_name' => $row->last_name,
                                 'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
@@ -365,8 +365,10 @@ class OrdersController extends Controller
                                 'city' => isset($row->city->name) && $row->city->name !=null ? $row->city->name : '',
                                 'phone_number' => $row->phone_number,
                                 'birth_date' => $row->birth_date,
-                                'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
+                                // 'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
                                 'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
+                                'ip'  => isset($row->ip) && $row->ip != null ? $row->ip : 'N/A',
+                                'date_generated' => $row->date_generated,
                             );
 
                             //Add/Update records array
