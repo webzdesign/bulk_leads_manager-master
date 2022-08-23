@@ -27,7 +27,7 @@ class LeadsController extends Controller
 
     public function getData(Request $request)
     {
-        $leadDetail = LeadDetail::with('lead')->select('lead_details.*')->orderBy('id','DESC');
+        $leadDetail = LeadDetail::with('lead')->select('lead_details.*')->where('is_duplicate',0)->where('is_invalid',0)->orderBy('id','DESC');
 
         if ($request->leadType) {
             $leadDetail = $leadDetail->whereHas('lead', function($q) use($request){
