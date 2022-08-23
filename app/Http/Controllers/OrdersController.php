@@ -34,7 +34,7 @@ class OrdersController extends Controller
 
     public function getData(Request $request)
     {
-        $orders = Order::with(['client','lead_type','age_group'])->select('*')->orderBy('created_at','desc');
+        $orders = Order::with(['client','lead_type','age_group'])->select('*');
 
         if($request->lead_type_id !=''){
             $orders->where('lead_type_id',$request->lead_type_id);
@@ -50,19 +50,19 @@ class OrdersController extends Controller
         }
 
         $datatable = Datatables()->eloquent($orders)
-            ->addColumn('first_name',function($row){
+            ->editColumn('client.firstName',function($row){
                 return isset($row->client) && $row->client !=null ? $row->client['firstName'] : 'N/A';
             })
-            ->addColumn('last_name',function($row){
+            ->editColumn('client.lastName',function($row){
                 return isset($row->client) && $row->client !=null ? $row->client['lastName'] : 'N/A';
             })
-            ->addColumn('email',function($row){
+            ->editColumn('client.email',function($row){
                 return isset($row->client) && $row->client !=null ? $row->client['email'] : 'N/A';
             })
             ->editColumn('order_date',function($row){
                 return date('d/m/y',strtotime($row->order_date));
             })
-            ->addColumn('last_product_ordered',function($row){
+            ->editColumn('qty',function($row){
                 $age_group = $row->qty;
                 return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
             })
@@ -105,7 +105,7 @@ class OrdersController extends Controller
                 }
                 return $actions;
         })
-        ->rawColumns(['first_name','last_name','email','order_date','last_product_ordered','action'])
+        ->rawColumns(['action'])
         ->make(true);
 
         return $datatable;
@@ -319,7 +319,7 @@ class OrdersController extends Controller
                     if($order_id == ''){
                         $clientOrderId = $value->client_id;
                         /* Old Version Query Starts */
-                        
+
                         // $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
                         // $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
 
@@ -355,7 +355,7 @@ class OrdersController extends Controller
                             });
                         });
                     }
-                    
+
                     /* Old Version Query Starts */
 
                     // if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
@@ -363,7 +363,7 @@ class OrdersController extends Controller
                     //         $lead_details->whereNotIn('id',$skip_lead_details_id);
                     //     }
                     // }
-                    
+
                     /* Old Version Query Ends */
                     // if(isset($order_id) && $order_id != null) {
                     //     $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
