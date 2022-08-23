@@ -202,7 +202,7 @@
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="form-group">
-                                <label class="c-gr f-500 f-16 w-100 mb-2">Email Subject</label>
+                                <label class="c-gr f-500 f-16 w-100 mb-2">Email Type</label>
                                 <select name="email_subject" class="select2">
                                     <option value="lead-send" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-send' ? 'selected' : '';?>>Leads Send</option>
                                     <option value="lead-delete" <?= isset($email_template) && $email_template !=null && $email_template['email_subject'] == 'lead-delete' ? 'selected' : '';?>>Leads Delete</option>
@@ -214,6 +214,9 @@
                                 @enderror
 
                                 <p class="c-7b f-14 f-400 mt-2 mb-4">[username] [email] [link] are placed with the correct values.</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter Email Subject" id="subject" name="subject" value="{{ isset($email_template) && $email_template !=null ? $email_template->subject : '' }}">
                             </div>
                             <div class="form-group">
                                 <label class="c-gr f-500 f-16 w-100 mb-2">Email Description</label>
@@ -304,10 +307,12 @@
             rules:{
                 email_subject: {required: true},
                 content: {required: true},
+                subject: {required: true}
             },
             messages:{
                 email_subject:{required: "This Fields Is Required."},
                 content:{required: "This Fields Is Required."},
+                subject:{required: "Email Subject Is Required."},
             },
             errorPlacement: function(error, element) {
                 error.addClass('text-danger f-400 f-14').appendTo(element.parent("div"));
@@ -334,6 +339,7 @@
                 success: function(response) {
                     CKEDITOR.instances['content'].destroy();
 
+                    $("#subject").val(response.subject);
                     $('[name="content"]').val(response.content);
                     CKEDITOR.replace('content');
                 }

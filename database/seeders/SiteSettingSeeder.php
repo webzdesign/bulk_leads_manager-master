@@ -33,6 +33,7 @@ class SiteSettingSeeder extends Seeder
         $records = array(
             'email_subject' => 'lead-delete',
             'content' => 'Delete Lead',
+            'subject' => 'Lead Delete',
             'added_by' => 1,
         );
         EmailTemplate::updateOrCreate(['id' => 1],$records);
@@ -40,6 +41,7 @@ class SiteSettingSeeder extends Seeder
         $records = array(
             'email_subject' => 'lead-send',
             'content' => 'Send Lead',
+            'subject' => 'Lead Send',
             'added_by' => 1,
         );
         EmailTemplate::updateOrCreate(['id' => 2],$records);

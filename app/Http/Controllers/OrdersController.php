@@ -15,6 +15,7 @@ use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use DataTables,Mail,Storage;
 use App\Exports\LeadDetailsExport;
+use App\Models\EmailTemplate;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 class OrdersController extends Controller
@@ -278,6 +279,7 @@ class OrdersController extends Controller
             $value = $order_data->where('id',$order_id)->first();
             $site_setting = SiteSetting::first()->toArray();
             $file_name = $value->file_name;
+            $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
 
             $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
             $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
@@ -287,7 +289,7 @@ class OrdersController extends Controller
             $client_email = $value->client->email;
             $to_email = [$client_email,$from_email];
 
-            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
+            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
 
                 $message->from($from_email, $from_name);
                 if($bcc_email !=''){
@@ -296,7 +298,7 @@ class OrdersController extends Controller
                 if($replay_email !=''){
                     $message->replyTo($replay_email);
                 }
-                $message->to($to_email)->subject('Leads send');
+                $message->to($to_email)->subject($emailSubject->subject);
             });
 
             echo "Lead details send successfuly.";
@@ -425,6 +427,7 @@ class OrdersController extends Controller
 
                             //Mail sending
                             $site_setting = SiteSetting::first()->toArray();
+                            $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
 
                             $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
                             $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
@@ -435,7 +438,7 @@ class OrdersController extends Controller
                             $to_email = [$client_email,$from_email];
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
+                            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
 
                                 $message->from($from_email, $from_name);
                                 if($bcc_email !=''){
@@ -444,7 +447,7 @@ class OrdersController extends Controller
                                 if($replay_email !=''){
                                     $message->replyTo($replay_email);
                                 }
-                                $message->to($to_email)->subject('Leads send');
+                                $message->to($to_email)->subject($emailSubject->subject);
                             });
 
                             // Update order status
