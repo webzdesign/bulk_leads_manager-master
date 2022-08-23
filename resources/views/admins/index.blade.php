@@ -227,7 +227,6 @@
                 "dom": "<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" +
                     "<'row m-0'<'col-sm-12 p-0'tr>>" +
                     "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
-                "ordering": false,
                 processing: true,
                 serverSide: true,
                 createdRow: function( row, data, dataIndex ) {
