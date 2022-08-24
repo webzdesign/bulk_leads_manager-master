@@ -42,7 +42,7 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
 
     public function headings(): array
     {
-        return ['Sr.No','Lead Type','FirstName','LastName','Gender','Email','Address','City','State','Country','Phone Number','BirthDate','Age','Zip','Is Duplicate','Is Invalid'];
+        return ['Sr.No','Lead Type','FirstName','LastName','Gender','Email','Address','City','State','Country','Phone Number','BirthDate','Age','Zip','IP','Is Duplicate','Is Invalid','Date Generated'];
     }
 
     public function map($temp): array
@@ -63,8 +63,10 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
             $temp->birth_date,
             $temp->age,
             $temp->zip,
+            $temp->ip,
             $temp->is_duplicate == 1 ? 'Record Having Duplicate Email' : '' ,
-            $temp->is_invalid == 1 ? 'Invalid Record , Email not specified' : ''
+            $temp->is_invalid == 1 ? 'Invalid Record , Email not specified' : '',
+            $temp->date_generated
         ];
     }
 
