@@ -23,14 +23,15 @@ class OrdersController extends Controller
     private $moduleName = "Orders";
     private $view = "orders";
 
-    public function index()
+    public function index(Request $request)
     {
         $moduleName = $this->moduleName;
         $lead_type = LeadType::orderBy('id','desc')->get();
         $age_group = AgeGroup::orderBy('id','desc')->get();
         $state = State::orderBy('id','desc')->get();
+        $clientId = isset($request->id) ? decrypt($request->id) : '';
 
-        return view("$this->view/index", compact('moduleName','lead_type','age_group','state'));
+        return view("$this->view/index", compact('moduleName','lead_type','age_group','state','clientId'));
     }
 
     public function getData(Request $request)
@@ -48,6 +49,9 @@ class OrdersController extends Controller
         }
         if($request->state_id !=''){
             $orders->where('state_id',$request->state_id);
+        }
+        if($request->clientId != ''){
+            $orders->where('client_id', $request->clientId);
         }
 
         $datatable = Datatables()->eloquent($orders)

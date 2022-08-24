@@ -77,7 +77,11 @@ class ClientsController extends Controller
                 ->editColumn('created_at',function($row){
                     return date('d/m/y',strtotime($row->created_at));
                 })
-                ->rawColumns(['action','lastOrderDate','lastProductOrder','created_at'])
+                ->editColumn('email', function($row) {
+                    $url = url('orders/?id='.encrypt($row->id));
+                    return "<a href='$url' title='Show All Orders'>$row->email</a>";
+                })
+                ->rawColumns(['action','lastOrderDate','lastProductOrder','created_at','email'])
                 ->make(true);
         }
 

@@ -121,6 +121,7 @@
                         state_id: function() {
                             return $('[name="state_id"]').val();
                         },
+                        clientId: "{{ $clientId }}",
                     },
                 },
                 columns: [
