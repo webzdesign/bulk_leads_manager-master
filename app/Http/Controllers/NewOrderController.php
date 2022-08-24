@@ -185,8 +185,8 @@ class NewOrderController extends Controller
                 })->exists();
 
                 if($skip_lead_details_id_exists) {
-                    $leads_details->whereNotIn('id',function($qs) use($gender, $state_id, $request) {
-                        $qs->select('lead_details_id')->from('order_details')->whereIn('order_id',function($qs) use($gender, $state_id, $request){
+                    $leads_details->whereNotIn('id',function($query) use($gender, $state_id, $request) {
+                        $query->select('lead_details_id')->from('order_details')->whereIn('order_id',function($qs) use($gender, $state_id, $request){
                             $qs->select('id')->from('orders');
                             if($gender){
                                 $qs->where('gender', $request->gender)->orWhere('gender','')->orWhereNull('gender');
@@ -200,7 +200,7 @@ class NewOrderController extends Controller
                 }
             }
 
-            $leads_details = $leads_details->get()->count();
+            $leads_details = $leads_details->count();
             $qry[] = DB::getQueryLog();
             $total_leads_available = $leads_details;
         }
