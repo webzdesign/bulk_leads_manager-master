@@ -76,6 +76,7 @@ $(document).ready(function() {
             "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
         processing: true,
         serverSide: true,
+        order: [[4, 'desc']],
         language: {
             search: "_INPUT_",
             searchPlaceholder: "Search here"
