@@ -14,7 +14,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\SiteSetting;
 use Auth,Validator,Carbon;
-
+use Illuminate\Support\Facades\DB;
 class NewOrderController extends Controller
 {
     private $moduleName = 'New order';
@@ -154,7 +154,8 @@ class NewOrderController extends Controller
         $setting = SiteSetting::find(1);
         $gender = isset($request->gender) && $request->gender !=null;
         $state_id = isset($request->state_id) && $request->state_id !=null;
-
+        DB::enableQueryLog();
+        $qry = array();
         if($lead_id){
 
             $leads_details = LeadDetail::whereIn('lead_id',function($q) use($lead) {
@@ -200,10 +201,11 @@ class NewOrderController extends Controller
             }
 
             $leads_details = $leads_details->count();
+            $qry[] = DB::getQueryLog();
             $total_leads_available = $leads_details;
         }
 
-        return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
+        return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name, 'qry' => $qry]]);
     }
 
     /* public function count_total_leads_available(Request $request){
