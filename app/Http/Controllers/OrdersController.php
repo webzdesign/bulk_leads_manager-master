@@ -426,7 +426,8 @@ class OrdersController extends Controller
 
                         if(isset($lead_collection) && $lead_collection !=null){
 
-                            $file_name = 'LeadReport-'.uniqid().'.csv';
+                            $leadType = LeadType::find($value->lead_type_id);
+                            $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$value->qty.'_'.uniqid().'.csv';
                             $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
 
                             //Mail sending
