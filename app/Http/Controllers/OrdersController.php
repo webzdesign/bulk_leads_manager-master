@@ -15,6 +15,7 @@ use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use DataTables,Mail,Storage;
 use App\Exports\LeadDetailsExport;
+use App\Models\EmailTemplate;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 class OrdersController extends Controller
@@ -22,19 +23,20 @@ class OrdersController extends Controller
     private $moduleName = "Orders";
     private $view = "orders";
 
-    public function index()
+    public function index(Request $request)
     {
         $moduleName = $this->moduleName;
         $lead_type = LeadType::orderBy('id','desc')->get();
         $age_group = AgeGroup::orderBy('id','desc')->get();
         $state = State::orderBy('id','desc')->get();
+        $clientId = isset($request->id) ? decrypt($request->id) : '';
 
-        return view("$this->view/index", compact('moduleName','lead_type','age_group','state'));
+        return view("$this->view/index", compact('moduleName','lead_type','age_group','state','clientId'));
     }
 
     public function getData(Request $request)
     {
-        $orders = Order::with(['client','lead_type','age_group'])->select('*')->orderBy('created_at','desc');
+        $orders = Order::with(['client','lead_type','age_group'])->select('*');
 
         if($request->lead_type_id !=''){
             $orders->where('lead_type_id',$request->lead_type_id);
@@ -48,21 +50,24 @@ class OrdersController extends Controller
         if($request->state_id !=''){
             $orders->where('state_id',$request->state_id);
         }
+        if($request->clientId != ''){
+            $orders->where('client_id', $request->clientId);
+        }
 
         $datatable = Datatables()->eloquent($orders)
-            ->addColumn('first_name',function($row){
+            ->editColumn('client.firstName',function($row){
                 return isset($row->client) && $row->client !=null ? $row->client['firstName'] : 'N/A';
             })
-            ->addColumn('last_name',function($row){
+            ->editColumn('client.lastName',function($row){
                 return isset($row->client) && $row->client !=null ? $row->client['lastName'] : 'N/A';
             })
-            ->addColumn('email',function($row){
+            ->editColumn('client.email',function($row){
                 return isset($row->client) && $row->client !=null ? $row->client['email'] : 'N/A';
             })
             ->editColumn('order_date',function($row){
                 return date('d/m/y',strtotime($row->order_date));
             })
-            ->addColumn('last_product_ordered',function($row){
+            ->editColumn('qty',function($row){
                 $age_group = $row->qty;
                 return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
             })
@@ -105,7 +110,7 @@ class OrdersController extends Controller
                 }
                 return $actions;
         })
-        ->rawColumns(['first_name','last_name','email','order_date','last_product_ordered','action'])
+        ->rawColumns(['action'])
         ->make(true);
 
         return $datatable;
@@ -269,7 +274,7 @@ class OrdersController extends Controller
         $setting = SiteSetting::find(1);
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
         $totalRecords = 0;
-        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty')->with(['client'=>function($query){
+        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date')->with(['client'=>function($query){
             $query->select('id', 'email');
         }])->where('status',$status);
 
@@ -278,6 +283,7 @@ class OrdersController extends Controller
             $value = $order_data->where('id',$order_id)->first();
             $site_setting = SiteSetting::first()->toArray();
             $file_name = $value->file_name;
+            $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
 
             $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
             $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
@@ -287,7 +293,7 @@ class OrdersController extends Controller
             $client_email = $value->client->email;
             $to_email = [$client_email,$from_email];
 
-            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
+            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
 
                 $message->from($from_email, $from_name);
                 if($bcc_email !=''){
@@ -296,7 +302,7 @@ class OrdersController extends Controller
                 if($replay_email !=''){
                     $message->replyTo($replay_email);
                 }
-                $message->to($to_email)->subject('Leads send');
+                $message->to($to_email)->subject($emailSubject->subject);
             });
 
             echo "Lead details send successfuly.";
@@ -319,7 +325,7 @@ class OrdersController extends Controller
                     if($order_id == ''){
                         $clientOrderId = $value->client_id;
                         /* Old Version Query Starts */
-                        
+
                         // $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
                         // $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
 
@@ -355,7 +361,7 @@ class OrdersController extends Controller
                             });
                         });
                     }
-                    
+
                     /* Old Version Query Starts */
 
                     // if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
@@ -363,7 +369,7 @@ class OrdersController extends Controller
                     //         $lead_details->whereNotIn('id',$skip_lead_details_id);
                     //     }
                     // }
-                    
+
                     /* Old Version Query Ends */
                     // if(isset($order_id) && $order_id != null) {
                     //     $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
@@ -420,11 +426,13 @@ class OrdersController extends Controller
 
                         if(isset($lead_collection) && $lead_collection !=null){
 
-                            $file_name = 'LeadReport-'.uniqid().'.csv';
+                            $leadType = LeadType::find($value->lead_type_id);
+                            $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$value->qty.'_'.uniqid().'.csv';
                             $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
 
                             //Mail sending
                             $site_setting = SiteSetting::first()->toArray();
+                            $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
 
                             $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
                             $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
@@ -435,7 +443,7 @@ class OrdersController extends Controller
                             $to_email = [$client_email,$from_email];
                             $upload_path = 'storage/leadreport/'.$file_name;
 
-                            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
+                            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
 
                                 $message->from($from_email, $from_name);
                                 if($bcc_email !=''){
@@ -444,11 +452,13 @@ class OrdersController extends Controller
                                 if($replay_email !=''){
                                     $message->replyTo($replay_email);
                                 }
-                                $message->to($to_email)->subject('Leads send');
+                                $message->to($to_email)->subject($emailSubject->subject);
                             });
 
                             // Update order status
                             Order::where('id', $value->id)->update(['status' => '1','file_name' => $file_name]);
+                            $lastProductOrder = $value->qty.' '. $value->lead_type->name .' | '. $value->age_group->age_from .'-'. $value->age_group->age_to . ' Days Old';
+                            Client::where('id', $value->client_id)->update(['last_order_date' => $value->order_date, 'last_product_ordered' => $lastProductOrder]);
                         }
                     }
                 }

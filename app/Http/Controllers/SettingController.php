@@ -117,14 +117,17 @@ class SettingController extends Controller
         $validation = $request->validate([
             'email_subject' => ['required'],
             'content' => ['required'],
+            'subject' => ['required'],
         ], [
             'email_subject.required' => "This Fields Is Required.",
             'content.required' => "This Fields Is Required.",
+            'subject.required' => "This Fields Is Required.",
         ]);
 
         $records = array(
             'email_subject' => $request['email_subject'],
             'content' => $request['content'],
+            'subject' => $request['subject'],
             'added_by' => Auth::user()->id,
             'updated_by' => Auth::user()->id,
         );
@@ -139,7 +142,7 @@ class SettingController extends Controller
 
         $email_template = EmailTemplate::where('email_subject',$request->email_subject)->first();
         if(isset($email_template) && $email_template !=null){
-            $response_array = ['status' => true,'content' => $email_template->content];
+            $response_array = ['status' => true,'content' => $email_template->content, 'subject' => $email_template->subject];
         }
 
         return response()->json($response_array);

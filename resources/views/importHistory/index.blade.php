@@ -74,9 +74,9 @@ $(document).ready(function() {
         "dom": "<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" +
             "<'row m-0'<'col-sm-12 p-0'tr>>" +
             "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
-        "ordering": false,
         processing: true,
         serverSide: true,
+        order: [[4, 'desc']],
         language: {
             search: "_INPUT_",
             searchPlaceholder: "Search here"
@@ -112,6 +112,8 @@ $(document).ready(function() {
             },
             {
                 data: 'status',
+                orderable: false,
+                searchable: false
             },
         ],
     });

@@ -130,7 +130,7 @@ class LeadDeleteController extends Controller
 
             if(isset($setting->deleted_lead_email_two)) {
                 $data["email"] = $setting->deleted_lead_email_two;
-                $data["title"] = "Bulk Leads Manager";
+                $data["title"] = $emailTemplate->subject;
                 $data["body"] = $emailTemplate->content;
 
                 $files = [ $filetopath ];

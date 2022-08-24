@@ -56,28 +56,22 @@ class ClientsController extends Controller
                 </button>';
                     return $actions;
                 })
-                ->addColumn('lastOrderDate',function($row){
-                    $orderDate = Order::where('client_id', $row->id)->orderBy('created_at','desc')->first();
-                    if(isset($orderDate)) {
-                        $lastOrderDate = date('d/m/y',strtotime($orderDate->order_date));
+                ->editColumn('last_order_date',function($row){
+                    if($row->last_order_date != '') {
+                        $lastOrderDate = date('d/m/y',strtotime($row->last_order_date));
                     } else {
                         $lastOrderDate = '--- Not Order Yet ---';
                     }
                     return $lastOrderDate;
                 })
-                ->addColumn('lastProductOrder',function($row){
-                    $order = Order::where('client_id', $row->id)->orderBy('created_at','desc')->first();
-                    if(isset($order)) {
-                        $lastProductOrder = $order->qty.' '.$order->lead_type->name.' | '.$order->age_group->age_from.'-'.$order->age_group->age_to.' Days Old';
-                    } else {
-                        $lastProductOrder = '';
-                    }
-                    return $lastProductOrder;
-                })
                 ->editColumn('created_at',function($row){
                     return date('d/m/y',strtotime($row->created_at));
                 })
-                ->rawColumns(['action','lastOrderDate','lastProductOrder','created_at'])
+                ->editColumn('email', function($row) {
+                    $url = url('orders/?id='.encrypt($row->id));
+                    return "<a href='$url' title='Show All Orders'>$row->email</a>";
+                })
+                ->rawColumns(['action','created_at','email'])
                 ->make(true);
         }
 

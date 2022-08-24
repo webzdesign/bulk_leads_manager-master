@@ -101,9 +101,9 @@
 
             var datatable = $('.datatable').DataTable({
                 "dom":"<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" + "<'row m-0'<'col-sm-12 p-0'tr>>" + "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",
-                ordering: false,
                 processing: true,
                 serverSide: true,
+                order: [[3, 'desc']],
                 ajax: {
                     "url": "{{ route('admin.get-data') }}",
                     "type": "GET",
@@ -121,27 +121,30 @@
                         state_id: function() {
                             return $('[name="state_id"]').val();
                         },
+                        clientId: "{{ $clientId }}",
                     },
                 },
                 columns: [
                     {
-                        data: 'first_name'
+                        data: 'client.firstName'
                     },
                     {
-                        data: 'last_name'
+                        data: 'client.lastName'
                     },
                     {
-                        data: 'email'
+                        data: 'client.email'
                     },
                     {
                         data: 'order_date'
                     },
                     {
-                        data: 'last_product_ordered'
+                        data: 'qty'
                     },
                     {
                         data: 'action',
-                        className: "c-7b tableCards"
+                        className: "c-7b tableCards",
+                        orderable: false,
+                        searchable: false,
                     },
                 ],
             });
