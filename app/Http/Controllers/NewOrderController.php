@@ -200,7 +200,7 @@ class NewOrderController extends Controller
                 }
             }
 
-            $leads_details = $leads_details->count();
+            $leads_details = $leads_details->get()->count();
             $qry[] = DB::getQueryLog();
             $total_leads_available = $leads_details;
         }
