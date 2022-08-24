@@ -200,10 +200,10 @@
                         data: 'email'
                     },
                     {
-                        data: 'lastOrderDate'
+                        data: 'last_order_date'
                     },
                     {
-                        data: 'lastProductOrder'
+                        data: 'last_product_ordered'
                     },
                     {
                         data: 'created_at'

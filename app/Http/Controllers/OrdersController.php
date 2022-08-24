@@ -274,7 +274,7 @@ class OrdersController extends Controller
         $setting = SiteSetting::find(1);
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
         $totalRecords = 0;
-        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty')->with(['client'=>function($query){
+        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date')->with(['client'=>function($query){
             $query->select('id', 'email');
         }])->where('status',$status);
 
@@ -457,6 +457,8 @@ class OrdersController extends Controller
 
                             // Update order status
                             Order::where('id', $value->id)->update(['status' => '1','file_name' => $file_name]);
+                            $lastProductOrder = $value->qty.' '. $value->lead_type->name .' | '. $value->age_group->age_from .'-'. $value->age_group->age_to . ' Days Old';
+                            Client::where('id', $value->client_id)->update(['last_order_date' => $value->order_date, 'last_product_ordered' => $lastProductOrder]);
                         }
                     }
                 }
