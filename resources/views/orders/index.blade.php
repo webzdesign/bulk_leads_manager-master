@@ -81,6 +81,22 @@
                                 @endif
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="c-gr f-500 f-16 w-100 mb-2">From Date</label>
+
+                            <div class="input-group date" id="datepicker1">
+                                <input type="text" class="form-control" placeholder="From Date" id="fromDate" autocomplete="off"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="c-gr f-500 f-16 w-100 mb-2">To Date</label>
+
+                            <div class="input-group date" id="datepicker2">
+                                <input type="text" class="form-control" placeholder="To Date" id="toDate" autocomplete="off"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="py-3 cardsFooter d-flex justify-content-end">
                         <button type="button" class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
@@ -122,6 +138,12 @@
                             return $('[name="state_id"]').val();
                         },
                         clientId: "{{ $clientId }}",
+                        fromDate: function() {
+                            return $("#fromDate").val();
+                        },
+                        toDate: function() {
+                            return $("#toDate").val();
+                        }
                     },
                 },
                 columns: [

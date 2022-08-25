@@ -53,6 +53,12 @@ class OrdersController extends Controller
         if($request->clientId != ''){
             $orders->where('client_id', $request->clientId);
         }
+        if($request->fromDate != '') {
+            $orders->where('order_date','>=',date('Y-m-d',strtotime($request->fromDate)));
+        }
+        if($request->toDate != '') {
+            $orders->whereDate('order_date','<=',date('Y-m-d',strtotime($request->toDate)));
+        }
 
         $datatable = Datatables()->eloquent($orders)
             ->editColumn('client.firstName',function($row){

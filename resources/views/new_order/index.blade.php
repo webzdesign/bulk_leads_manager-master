@@ -204,7 +204,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">State(s): </label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="state_id" class="form-control select2">
+                                            <select name="state_id[]" class="form-control select2" multiple="multiple">
                                                 <option value="">Select states</option>
                                                 @if ($States->isNotEmpty())
                                                     @foreach ($States as $value)

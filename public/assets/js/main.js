@@ -2,25 +2,24 @@ $(document).ready(function() {
 
     var tooltipCus = $('[data-bs-toggle="tooltip"]');
     tooltipCus.tooltip('disable');
-    $('.menuicn').click(function () {
+    $('.menuicn').click(function() {
         $('aside').toggleClass('sidebarClose');
         $('.d-none-add').addClass('displayNone');
         $('.sidebarOverlay').removeClass('d-none');
 
-        
-        if( $('aside').hasClass('sidebarClose') ){
-            
+
+        if ($('aside').hasClass('sidebarClose')) {
+
             tooltipCus.tooltip('enable')
-        }else{
+        } else {
             tooltipCus.tooltip('disable')
         }
-        
+
 
     });
 
     $(window).resize(function() {
-        if($(window).width() < 1024)
-        {
+        if ($(window).width() < 1024) {
             tooltipCus.tooltip('disable');
         } else {
             tooltipCus.tooltip('enable');
@@ -188,7 +187,25 @@ $(document).ready(function() {
     })
 
     $('.select2').select2({
-        width:'100%',
+        width: '100%',
         minimumResultsForSearch: -1
     });
+
+    $('#datepicker1').datepicker({
+        format: "dd-mm-yyyy",
+        autoclose: true,
+        todayHighlight: true,
+        endDate: "25-08-2022"
+    });
+
+    $('#datepicker2').datepicker({
+        format: "dd-mm-yyyy",
+        autoclose: true,
+        todayHighlight: true,
+    });
+
+    $('#datepicker1').on('change', function(e) {
+        $('#toDate').val('');
+        $('#datepicker2').datepicker('setStartDate', $('#fromDate').val());
+    })
 });

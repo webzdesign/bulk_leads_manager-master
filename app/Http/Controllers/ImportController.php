@@ -218,15 +218,15 @@ class ImportController extends Controller
 
             if ($state_index) {
                 if ($row[$state_index] != '' && $row[$state_index] != null) {
-                    if (isset($states[$row[$state_index]])) {
-                        $row[$state_index] = $states[$row[$state_index]];
+                    if (isset($states[strtoupper($row[$state_index])])) {
+                        $row[$state_index] = $states[strtoupper($row[$state_index])];
                     } else {
                         $stateCountry = null;
                         if ($country_index) {
                             $stateCountry = $row[$country_index];
                         }
-                        $newState = State::create(['name' => $row[$state_index], 'country_id'=> $stateCountry]);
-                        $states[$row[$state_index]] = $newState->id;
+                        $newState = State::create(['name' => strtoupper($row[$state_index]), 'country_id'=> $stateCountry]);
+                        $states[strtoupper($row[$state_index])] = $newState->id;
                         $row[$state_index] = $newState->id;
                     }
                 }
