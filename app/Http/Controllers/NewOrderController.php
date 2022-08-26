@@ -93,6 +93,11 @@ class NewOrderController extends Controller
                 return response()->json([false, $response_arrray]);
             }
         }else {
+            $States = '';
+            foreach($request->state_id as $state) {
+                $States .= $state.',';
+            }
+
             $records = array(
                 'order_date' => $order_date,
                 'client_id' => $request['client_id'],
@@ -100,7 +105,7 @@ class NewOrderController extends Controller
                 'age_group_id' => $request['age_group_id'],
                 'qty' => $request['lead_quantity'],
                 'gender' => $request['gender'],
-                'state_id' => $request['state_id'],
+                'state_id' => rtrim($States,','),
                 'status' => '0',
                 'added_by' => Auth::user()->id
             );

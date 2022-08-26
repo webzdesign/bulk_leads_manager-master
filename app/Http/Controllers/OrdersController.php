@@ -354,7 +354,7 @@ class OrdersController extends Controller
                         $lead_details->where('is_send','<',$setting->no_of_time_lead_download);
                     }
                     if(isset($value->state_id) && $value->state_id !=null){
-                        $lead_details->where('state_id',$value->state_id);
+                        $lead_details->whereIn('state_id',explode(',',$value->state_id));
                     }
                     if(isset($value->gender) && $value->gender !=null){
                         $lead_details->where('gender',$value->gender);
