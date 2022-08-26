@@ -156,7 +156,7 @@ class NewOrderController extends Controller
             $total_leads_available = 0;
        
             $setting = SiteSetting::find(1);
-            $Leads = Lead::select('id')->where('lead_type_id',$leadTypeId)->toArray();
+            $Leads = Lead::select('id')->where('lead_type_id',$leadTypeId)->pluck('id')->toArray();
             $LeadTypes = LeadType::find($leadTypeId);
             
 
@@ -177,9 +177,8 @@ class NewOrderController extends Controller
                 $checkOrder->where('orders.state_id',$state_id)->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
             }
 
-           
             if($checkOrder->exists()) {
-                $ExistOrderId = $checkOrder->select('id')->toArray();
+                $ExistOrderId = $checkOrder->pluck('id')->toArray();
                 $skip_lead_details_id_exists = OrderDetail::whereIn('order_details.order_id',$ExistOrderId)->exists();
 
                 if($skip_lead_details_id_exists) {
