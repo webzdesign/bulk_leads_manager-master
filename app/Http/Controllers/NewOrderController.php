@@ -22,7 +22,7 @@ class NewOrderController extends Controller
     public function index(){
         $moduleName = $this->moduleName;
         $LeadTypes = LeadType::orderBy('id','desc')->get();
-        $States = State::orderBy('id','desc')->get();
+        $States = State::orderBy('name')->get();
 
         return view('new_order/index',compact('moduleName','LeadTypes','States'));
     }
@@ -146,7 +146,7 @@ class NewOrderController extends Controller
     }
 
     public function count_total_leads_available(Request $request){
-        
+
         $total_leads_available = 0;
         $LeadTypes = LeadType::find($request->lead_type_id);
         $lead = $request->lead_type_id;
