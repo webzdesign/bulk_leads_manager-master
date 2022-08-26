@@ -176,7 +176,7 @@ class NewOrderController extends Controller
             }
 
             if(isset($request->state_id) && $request->state_id !=null){
-                $leads_details->where('lead_details.state_id',$request->state_id);
+                $leads_details->whereIn('lead_details.state_id',$request->state_id);
                 $order_ids->where(function($q)use($request){
                     foreach($request->state_id as $states) {
                         $q->orWhere('orders.state_id', 'like', "%$states%");
