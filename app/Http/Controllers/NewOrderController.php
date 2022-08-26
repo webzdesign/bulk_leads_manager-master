@@ -93,9 +93,11 @@ class NewOrderController extends Controller
                 return response()->json([false, $response_arrray]);
             }
         }else {
-            $States = '';
-            foreach($request->state_id as $state) {
-                $States .= $state.',';
+            $States = NULL;
+            if(isset($request->state_id)) {
+                foreach($request->state_id as $state) {
+                    $States .= $state.',';
+                }
             }
 
             $records = array(
