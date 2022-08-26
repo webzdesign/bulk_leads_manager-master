@@ -174,9 +174,15 @@ class NewOrderController extends Controller
                 $leads_details->where('lead_details.gender',$request->gender);
                 $order_ids->where('orders.gender',$request->gender)->orWhere('orders.gender','')->orWhereNull('orders.gender');
             }
+
             if(isset($request->state_id) && $request->state_id !=null){
                 $leads_details->where('lead_details.state_id',$request->state_id);
-                $order_ids->where('orders.state_id',$request->state_id)->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
+                $order_ids->where(function($q)use($request){
+                    foreach($request->state_id as $states) {
+                        $q->orWhere('orders.state_id', 'like', "%$states%");
+                    }
+                    $q->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
+                });
             }
 
             if($order_ids->exists()) {
@@ -186,7 +192,12 @@ class NewOrderController extends Controller
                         $q->where('orders.gender', $request->gender)->orWhere('orders.gender','')->orWhereNull('orders.gender');
                     }
                     if($state_id){
-                        $q->where('orders.state_id', $request->state_id)->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
+                        $q->where(function($q)use($request){
+                            foreach($request->state_id as $states) {
+                                $q->orWhere('orders.state_id', 'like', "%$states%");
+                            }
+                            $q->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
+                        });
                     }
                     $q->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id,'orders.age_group_id' => $request->age_group_id]);
                 })->exists();
@@ -198,9 +209,16 @@ class NewOrderController extends Controller
                             if($gender){
                                 $qs->where('orders.gender', $request->gender)->orWhere('orders.gender','')->orWhereNull('orders.gender');
                             }
+
                             if($state_id){
-                                $qs->where('orders.state_id', $request->state_id)->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
+                                $qs->where(function($q)use($request){
+                                    foreach($request->state_id as $states) {
+                                        $q->orWhere('orders.state_id', 'like', "%$states%");
+                                    }
+                                    $q->orWhere('orders.state_id','')->orWhereNull('orders.state_id');
+                                });
                             }
+
                             $qs->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id,'orders.age_group_id' => $request->age_group_id]);
                         });
                     });
