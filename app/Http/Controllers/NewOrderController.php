@@ -266,24 +266,29 @@ class NewOrderController extends Controller
             $ExistOrderId = $checkOrder->pluck('id')->toArray();
             if(!empty($ExistOrderId)) {
 
-               $leads_details->whereNotIn('lead_details.id',function($query) use($gender, $state_id, $request) {
+               /*$leads_details->whereNotIn('lead_details.id',function($query) use($gender, $state_id, $request) {
                     $query->select('order_details.lead_details_id')->from('order_details')->whereIn('order_details.order_id',function($qs) use($gender, $state_id, $request){
                         $qs->select('orders.id')->from('orders');
                         $qs->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id,'orders.age_group_id' => $request->age_group_id]);
                     });
-                });
+                });*/
+                $LeadExistId = OrderDetail::whereIn('order_id', $ExistOrderId)->pluck('lead_details_id')->toArray();
 
-
-               /* $LeadExistId = OrderDetail::whereIn('order_id', $ExistOrderId)->pluck('lead_details_id')->toArray();
                 if(!empty($LeadExistId)) {
-                    $leads_details->whereNotIn('lead_details.id', $LeadExistId);
-                }*/
+                    $getLeadDetails = $leads_details->pluck('id')->toArray();
+                    $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
+                    $leads_details_count = count($getLeadDiff);
+                    //$leads_details->whereNotIn('lead_details.id', $LeadExistId);
+                }else{
+                    $leads_details_count = $leads_details->count();
+                }
+            }else{
+                $leads_details_count = $leads_details->count();
             }
 
             $leads_details = $leads_details->count();
             $qry[] = DB::getQueryLog();
             $total_leads_available = $leads_details;
-
 
         }
 
