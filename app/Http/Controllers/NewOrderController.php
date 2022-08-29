@@ -152,7 +152,7 @@ class NewOrderController extends Controller
         }
     }
 
-    public function count_total_leads_available(Request $request){
+    public function count_total_leads_available_bkp(Request $request){
 
         $total_leads_available = 0;
         $LeadTypes = LeadType::find($request->lead_type_id);
@@ -233,7 +233,7 @@ class NewOrderController extends Controller
         return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name, 'qry' => $qry]]);
     }
 
-    public function count_total_leads_available_new(Request $request){
+    public function count_total_leads_available(Request $request){
 
         $checkExist = Lead::where('lead_type_id',$request->lead_type_id)->exists();
         if($checkExist){
