@@ -278,9 +278,10 @@ class NewOrderController extends Controller
                
                 if(count($LeadExistId) > 0) {
                     $getLeadDetails = $leads_details->pluck('id')->toArray();
-                    $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
-                    $leads_details_count = count($getLeadDiff);
+                   // $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
+                   // $leads_details_count = count($getLeadDiff);
                     //$leads_details->whereNotIn('lead_details.id', $LeadExistId);
+                    $leads_details_count =  count($getLeadDetails) -  count($LeadExistId);
                 }else{
                     $leads_details_count = $leads_details->count();
                 }
