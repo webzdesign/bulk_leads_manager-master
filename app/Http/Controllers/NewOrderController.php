@@ -246,6 +246,7 @@ class NewOrderController extends Controller
 
             $leads_details = LeadDetail::whereIn('lead_details.lead_id',$Leads)->where(['lead_details.age_group_id' => $request->age_group_id,'lead_details.is_duplicate' => 0,'lead_details.is_invalid' => 0])->where('lead_details.is_send','<',$setting->no_of_time_lead_download);
 
+
             $checkOrder = Order::where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $leadTypeId,'orders.age_group_id' => $request->age_group_id]);
 
             if($gender != NULL){
@@ -257,7 +258,9 @@ class NewOrderController extends Controller
 
             }
             $ExistOrderId = $checkOrder->pluck('id')->toArray();
-            if(!empty($ExistOrderId)) {
+            echo "<br>".count($ExistOrderId);
+            
+            if(count( $ExistOrderId ) > 0) {
 
                /*$leads_details->whereNotIn('lead_details.id',function($query) use($gender, $state_id, $request) {
                     $query->select('order_details.lead_details_id')->from('order_details')->whereIn('order_details.order_id',function($qs) use($gender, $state_id, $request){
@@ -266,9 +269,10 @@ class NewOrderController extends Controller
                     });
                 });*/
                 $LeadExistId = OrderDetail::whereIn('order_id', $ExistOrderId)->pluck('lead_details_id')->toArray();
-
-                if(!empty($LeadExistId)) {
+                echo "<br>".count($LeadExistId);
+                if(count($LeadExistId) > 0) {
                     $getLeadDetails = $leads_details->pluck('id')->toArray();
+                    echo "<br>".count($getLeadDetails);
                     $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
                     $leads_details_count = count($getLeadDiff);
                     //$leads_details->whereNotIn('lead_details.id', $LeadExistId);
