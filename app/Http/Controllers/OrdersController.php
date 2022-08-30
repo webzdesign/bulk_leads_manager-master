@@ -281,7 +281,7 @@ class OrdersController extends Controller
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
         $totalRecords = 0;
         $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date')->with(['client'=>function($query){
-            $query->select('id', 'email');
+            $query->select('id', 'email','lastName');
         }])->where('status',$status);
 
         if(isset($order_id) && $order_id !=null){ //resend
@@ -433,7 +433,7 @@ class OrdersController extends Controller
                         if(isset($lead_collection) && $lead_collection !=null){
 
                             $leadType = LeadType::find($value->lead_type_id);
-                            $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$value->qty.'_'.uniqid().'.csv';
+                            $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$value->qty.'_'.$value->client->lastName.'_'.uniqid().'.csv';
                             $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
 
                             //Mail sending
