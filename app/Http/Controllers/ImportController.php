@@ -127,15 +127,15 @@ class ImportController extends Controller
         $lead_older = SiteSetting::find(1);
         $days = $lead_older->disallow_import_lead_older * 30;
 
-        $email_index = array_search($leadFields['email'], $request->id) ? array_search($leadFields['email'],$request->id) : null;
-        $gender_index = array_search($leadFields['gender'] ,$request->id) ? array_search($leadFields['gender'], $request->id) : null;
-        $city_index = array_search($leadFields['city_id'] ,$request->id) ? array_search($leadFields['city_id'], $request->id) : null;
-        $state_index = array_search($leadFields['state_id'] ,$request->id) ? array_search($leadFields['state_id'], $request->id) : null;
-        $country_index = array_search($leadFields['country_id'] ,$request->id) ? array_search($leadFields['country_id'] ,$request->id) : null;
-        $dob_index = array_search($leadFields['birth_date'] ,$request->id) ? array_search($leadFields['birth_date'] ,$request->id) : null;
-        $date_generated_index = array_search($leadFields['date_generated'],$request->id) ? array_search($leadFields['date_generated'],$request->id) : null;
-        $ip_index = array_search($leadFields['ip'],$request->id) ? array_search($leadFields['ip'],$request->id) : null;
-        $phone_number_index = array_search($leadFields['phone_number'],$request->id) ? array_search($leadFields['phone_number'],$request->id) : null;
+        $email_index = in_array($leadFields['email'],$request->id) ? array_search($leadFields['email'],$request->id) : null;
+        $gender_index = in_array($leadFields['gender'] ,$request->id) ? array_search($leadFields['gender'], $request->id) : null;
+        $city_index = in_array($leadFields['city_id'] ,$request->id) ? array_search($leadFields['city_id'], $request->id) : null;
+        $state_index = in_array($leadFields['state_id'] ,$request->id) ? array_search($leadFields['state_id'], $request->id) : null;
+        $country_index = in_array($leadFields['country_id'] ,$request->id) ? array_search($leadFields['country_id'] ,$request->id) : null;
+        $dob_index = in_array($leadFields['birth_date'] ,$request->id) ? array_search($leadFields['birth_date'] ,$request->id) : null;
+        $date_generated_index = in_array($leadFields['date_generated'],$request->id) ? array_search($leadFields['date_generated'],$request->id) : null;
+        $ip_index = in_array($leadFields['ip'],$request->id) ? array_search($leadFields['ip'],$request->id) : null;
+        $phone_number_index = in_array($leadFields['phone_number'],$request->id) ? array_search($leadFields['phone_number'],$request->id) : null;
 
         $emails = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('email')->toArray();
         $countries = Country::pluck('id', 'name')->toArray();
@@ -165,7 +165,7 @@ class ImportController extends Controller
             $row = array_map("utf8_encode", $row);
             $arr = [];
 
-            if ($gender_index) {
+            if (!is_null($gender_index)) {
                 if( strtolower($row[$gender_index]) == 'm' || strtolower($row[$gender_index]) == 'male') {
                     $row[$gender_index] = 0;
                 } else if(strtolower($row[$gender_index]) == 'f' || strtolower($row[$gender_index]) == 'female') {
@@ -175,7 +175,7 @@ class ImportController extends Controller
                 }
             }
 
-            if ($email_index) {
+            if (!is_null($email_index)) {
 
                 if ($row[$email_index] != '' || $row[$email_index] != null) {
                     if (in_array($row[$email_index], $emails)) {
@@ -195,7 +195,7 @@ class ImportController extends Controller
                 }
             }
 
-            if($phone_number_index) {
+            if(!is_null($phone_number_index)) {
                 if($row[$phone_number_index] != '' || $row[$phone_number_index] != null) {
                     $arr['phone_number'] = $row[$phone_number_index];
                 } else {
@@ -204,7 +204,7 @@ class ImportController extends Controller
                 }
             }
 
-            if ($country_index) {
+            if (!is_null($country_index)) {
                 if ($row[$country_index] != '' && $row[$country_index] != null) {
                     if (isset($countries[$row[$country_index]])) {
                         $row[$country_index] = $countries[$row[$country_index]];
@@ -216,7 +216,7 @@ class ImportController extends Controller
                 }
             }
 
-            if ($state_index) {
+            if (!is_null($state_index)) {
                 if ($row[$state_index] != '' && $row[$state_index] != null) {
                     if (isset($states[strtoupper($row[$state_index])])) {
                         $row[$state_index] = $states[strtoupper($row[$state_index])];
@@ -232,7 +232,7 @@ class ImportController extends Controller
                 }
             }
 
-            if ($city_index) {
+            if (!is_null($city_index)) {
                 if ($row[$city_index] != '' && $row[$city_index] != null) {
                     if (isset($cities[$row[$city_index]])) {
                         $row[$city_index] = $cities[$row[$city_index]];
@@ -248,18 +248,18 @@ class ImportController extends Controller
                 }
             }
 
-            if ($dob_index) {
+            if (!is_null($dob_index)) {
                 $row[$dob_index] = date('Y-m-d', strtotime($row[$dob_index]));
             }
 
-            if($ip_index) {
+            if(!is_null($ip_index)) {
                 $arr['ip'] = $row[$ip_index];
             }
 
             $arr['lead_id'] = $lead->id;
             $arr['created_at'] = date('Y-m-d H:i:s');
 
-            if ($date_generated_index) {
+            if (!is_null($date_generated_index)) {
                 if (strpos($row[$date_generated_index], '-') !== false) {
                     $checkDate = explode('-',$row[$date_generated_index]);
                     if(isset($checkDate[0]) && isset($checkDate[1]) && isset($checkDate[2])) {
