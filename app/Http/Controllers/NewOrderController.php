@@ -235,6 +235,8 @@ class NewOrderController extends Controller
 
     public function count_total_leads_available(Request $request){
 
+        $total_leads_available = 0;
+        $LeadTypes = LeadType::find($request->lead_type_id);
         $checkExist = Lead::where('lead_type_id',$request->lead_type_id)->exists();
         if($checkExist){
 
@@ -265,7 +267,7 @@ class NewOrderController extends Controller
 
             }
             $ExistOrderId = $checkOrder->pluck('id')->toArray();
-           
+
             if(count( $ExistOrderId ) > 0) {
 
                /*$leads_details->whereNotIn('lead_details.id',function($query) use($gender, $state_id, $request) {
@@ -275,13 +277,13 @@ class NewOrderController extends Controller
                     });
                 });*/
                 $LeadExistId = OrderDetail::whereIn('order_id', $ExistOrderId)->pluck('lead_details_id')->toArray();
-               
+
                 if(count($LeadExistId) > 0) {
                     $getLeadDetails = $leads_details->pluck('id')->toArray();
                     $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
                     $leads_details_count = count($getLeadDiff);
                     //$leads_details->whereNotIn('lead_details.id', $LeadExistId);
-                    
+
                 }else{
                     $leads_details_count = $leads_details->count();
                 }
@@ -295,7 +297,7 @@ class NewOrderController extends Controller
 
         }
 
-        return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name, 'qry' => $qry]]);
+        return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
     }
 
     /* public function count_total_leads_available(Request $request){
