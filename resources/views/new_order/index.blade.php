@@ -161,7 +161,7 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">Lead Type:</label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="lead_type_id" class="select2">
+                                            <select name="lead_type_id" class="select2" id="lead_type">
                                                 <option value="">Select a lead type</option>
                                                 @if ($LeadTypes->isNotEmpty())
                                                     @foreach ($LeadTypes as $value)
@@ -204,13 +204,13 @@
                                     <div class="d-flex align-items-center mb-4 d-block-768">
                                         <label class="f-16 f-500 c-gr col-order-1">State(s): </label>
                                         <div class="col-order-2 position-relative">
-                                            <select name="state_id[]" class="form-control select2" multiple="multiple">
+                                            <select name="state_id[]" class="form-control select2" id="state_id" multiple="multiple">
                                                 <option value="">Select states</option>
-                                                @if ($States->isNotEmpty())
+                                                {{-- @if ($States->isNotEmpty())
                                                     @foreach ($States as $value)
                                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
                                                     @endforeach
-                                                @endif
+                                                @endif --}}
                                             </select>
                                         </div>
                                     </div>
@@ -597,6 +597,24 @@
                                 title: 'Opps!',
                                 text: response[1].message,
                             })
+                        }
+                    }
+                });
+            });
+
+            $("#lead_type").change(function(e) {
+                $("#state_id").empty();
+                $.ajax({
+                    type:"POST",
+                    url: "{{ route('admin.getState') }}",
+                    data: {leadTypeId : $(this).val()},
+                    success: function(res) {
+                        if(res[0] == true) {
+                            $.each(res[1], function(key, value) {
+                                $("#state_id").append('<option value="'+ value +'">'+ value +'</option>');
+                            });
+                        } else {
+                            $("#state_id").append('<option value="">Select states</option>');
                         }
                     }
                 });

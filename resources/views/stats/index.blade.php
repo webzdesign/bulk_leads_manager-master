@@ -63,7 +63,7 @@
                                             </svg>
                                         </div>
                                         <div class="cardYearList text-end">
-                                            <h4 class="c-7b f-20 f-500 mb-16 f-16-500">Total Inventory</h4>
+                                            <h4 class="c-7b f-20 f-500 mb-16 f-16-500">Leads Never Sent</h4>
                                             <h4 class="f-30 f-800 c-34 mb-0 f-20-500 mb-20-500">{{$inventory}}</h4>
                                         </div>
                                         @if($inventeryPercentType == "dec")

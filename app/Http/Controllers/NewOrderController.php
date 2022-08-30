@@ -242,7 +242,14 @@ class NewOrderController extends Controller
 
             $leadTypeId = $request->lead_type_id;
             $gender = isset($request->gender) ? $request->gender : NULL;
-            $state_id = isset($request->state_id) ? $request->state_id : NULL;
+
+            $allStateID = State::whereIn('name', $request->state_id)->pluck('id')->toArray();
+            if(count($allStateID) > 0) {
+                $state_id = $allStateID;
+            } else {
+                $state_id = NULL;
+            }
+            // $state_id = () ? $allStateID : NULL;
 
             $total_leads_available = 0;
 
@@ -339,4 +346,21 @@ class NewOrderController extends Controller
 
         return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
     } */
+
+    public function getState(Request $request)
+    {
+        // dd($request->all());
+        if($request->leadTypeId != '') {
+
+            if($request->leadTypeId == 2) {
+                $array = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+            } else {
+                $array = ['ACT','NSW','NT','QLD','SA','VIC','TAS','WA'];
+            }
+
+            return response()->json([true,$array]);
+        }
+
+        return response()->json([false]);
+    }
 }
