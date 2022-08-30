@@ -76,7 +76,7 @@
                                                 <div class="dayBx">{{ $ageGroup->age_from }} - {{ $ageGroup->age_to }}
                                                     days
                                                     @php
-                                                        $records = \App\Models\LeadDetail::where('age_group_id',$ageGroup->id)->count();
+                                                        $records = \App\Models\LeadDetail::where('age_group_id',$ageGroup->id)->where('is_duplicate',0)->count();
                                                     @endphp
                                                     <span class="c-7b">({{$records}} records)</span></div>
                                                 <div class="editRemove">
