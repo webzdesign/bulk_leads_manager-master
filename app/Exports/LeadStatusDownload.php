@@ -66,7 +66,7 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
             $temp->ip,
             $temp->is_duplicate == 1 ? 'Record Having Duplicate Email' : '' ,
             $temp->is_invalid == 1 ? 'Invalid Record , Email not specified' : '',
-            $temp->date_generated
+            date("m-d-Y", strtotime($temp->date_generated))
         ];
     }
 
