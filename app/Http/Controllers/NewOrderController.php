@@ -95,7 +95,8 @@ class NewOrderController extends Controller
         }else {
             $States = NULL;
             if(isset($request->state_id)) {
-                foreach($request->state_id as $state) {
+                $stateId = State::whereIn('name',$request->state_id)->pluck('id')->toArray();
+                foreach($stateId as $state) {
                     $States .= $state.',';
                 }
             }
