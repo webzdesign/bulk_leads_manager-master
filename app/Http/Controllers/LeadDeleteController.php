@@ -88,7 +88,7 @@ class LeadDeleteController extends Controller
                     $leadDetail->zip,
                     $leadDetail->ip,
                     $leadDetail->age,
-                    $leadDetail->date_generated
+                    date("m-d-Y", strtotime($leadDetail->date_generated))
                 ]);
             }
 

@@ -280,7 +280,7 @@ class OrdersController extends Controller
         $setting = SiteSetting::find(1);
         $status = isset($order_id) && $order_id !=null ? '1' : '0';
         $totalRecords = 0;
-        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date')->with(['client'=>function($query){
+        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date','file_name')->with(['client'=>function($query){
             $query->select('id', 'email','lastName');
         }])->where('status',$status);
 
@@ -412,7 +412,7 @@ class OrdersController extends Controller
                                     // 'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
                                     'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
                                     'ip'  => isset($row->ip) && $row->ip != null ? $row->ip : 'N/A',
-                                    'date_generated' => $row->date_generated,
+                                    'date_generated' => date("m-d-Y", strtotime($row->date_generated)),
                                 );
 
                                 //Add/Update records array
