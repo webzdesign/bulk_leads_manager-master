@@ -39,9 +39,10 @@ class LeadDeleteController extends Controller
                 "State",
                 "Country",
                 "Birth Date",
-                "Age",
                 "Zip",
-                "IP"
+                "IP",
+                "Age Of Leads",
+                "Date Generated"
             ];
 
             $file = fopen('public/assets/' . $fileName, 'w');
@@ -84,9 +85,10 @@ class LeadDeleteController extends Controller
                     $state,
                     $country,
                     $leadDetail->birth_date,
-                    $leadDetail->age,
                     $leadDetail->zip,
-                    $leadDetail->ip
+                    $leadDetail->ip,
+                    $leadDetail->age,
+                    $leadDetail->date_generated
                 ]);
             }
 
@@ -113,7 +115,7 @@ class LeadDeleteController extends Controller
 
             if(isset($setting->deleted_lead_email_one)) {
                 $data["email"] = $setting->deleted_lead_email_one;
-                $data["title"] = "Bulk Leads Manager";
+                $data["title"] = $emailTemplate->subject;
                 $data["body"] = $emailTemplate->content;
 
                 $files = [ $filetopath ];

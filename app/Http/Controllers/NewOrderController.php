@@ -242,14 +242,13 @@ class NewOrderController extends Controller
 
             $leadTypeId = $request->lead_type_id;
             $gender = isset($request->gender) ? $request->gender : NULL;
-
-            $allStateID = State::whereIn('name', $request->state_id)->pluck('id')->toArray();
-            if(count($allStateID) > 0) {
-                $state_id = $allStateID;
-            } else {
-                $state_id = NULL;
+            $state_id = null;
+            if(isset($request->state_id)) {
+                $allStateID = State::whereIn('name', $request->state_id)->pluck('id')->toArray();
+                if(count($allStateID) > 0) {
+                    $state_id = $allStateID;
+                }
             }
-            // $state_id = () ? $allStateID : NULL;
 
             $total_leads_available = 0;
 
