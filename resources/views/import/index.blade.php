@@ -459,42 +459,55 @@
                             import_progress += 1;
                             $("#import_progress").text(import_progress + '% (Step 1 - Uploading file...)');
 
-                            if (import_progress >= 100) {
+                            if (import_progress == 90) {
                                 clearInterval(stop);
                             }
-                        },[5000])
+                        },[7000])
 
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.start_upload') }}",
                             data: {id: list , filename:filename , leadType:$('.lead_type_name').text(), leadId:leadId},
                             success: function (res) {
-                                import_progress = 98;
-                                uploadTime(filename);
-                                    if(res['done'] == true)
-                                    {
-                                        Swal.fire({
-                                        icon: "success",
-                                        title: "File Import",
-                                        text: res['message'],
-                                        });
-                                        setpwizard();
-                                        $('#totalRows').text(res['rows']);
-                                        $('#duplicateRows').text(res['duplicate']);
-                                        $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an email.)' );
-                                        $('#importRows').text(res['import']);
-                                        $('#lead_id').text(res['lead']);
-                                        $("#rejectRecords").text(res['rejected']);
-                                        // $('.file_name').text(res['uploadTime']);
+
+                                import_progress = 97;
+                                let stop = setInterval(function(){
+                                    import_progress += 1;
+                                    $("#import_progress").text(import_progress + '% (Step 1 - Uploading file...)');
+
+                                    if (import_progress >= 100) {
+                                        uploadSucess();
+                                        clearInterval(stop);
                                     }
-                                    if(res['done'] == false)
-                                    {
-                                        Swal.fire({
-                                        icon: "info",
-                                        title: "File Import",
-                                        text: res['message'],
-                                        });
-                                    }
+                                },[2000])
+
+                                function uploadSucess() {
+                                    uploadTime(filename);
+                                        if(res['done'] == true)
+                                        {
+                                            Swal.fire({
+                                            icon: "success",
+                                            title: "File Import",
+                                            text: res['message'],
+                                            });
+                                            setpwizard();
+                                            $('#totalRows').text(res['rows']);
+                                            $('#duplicateRows').text(res['duplicate']);
+                                            $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an email.)' );
+                                            $('#importRows').text(res['import']);
+                                            $('#lead_id').text(res['lead']);
+                                            $("#rejectRecords").text(res['rejected']);
+                                            // $('.file_name').text(res['uploadTime']);
+                                        }
+                                        if(res['done'] == false)
+                                        {
+                                            Swal.fire({
+                                            icon: "info",
+                                            title: "File Import",
+                                            text: res['message'],
+                                            });
+                                        }
+                                }
                             }
                         });
                     }
