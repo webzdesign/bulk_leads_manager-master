@@ -66,16 +66,11 @@
                                             <h4 class="c-7b f-20 f-500 mb-16 f-16-500">Leads Never Sent</h4>
                                             <h4 class="f-30 f-800 c-34 mb-0 f-20-500 mb-20-500">{{$inventory}}</h4>
                                         </div>
-                                        @if($inventeryPercentType == "dec")
+
                                         <div class="cardsFooter f-16 f-700 c-e9">
-                                            {{-- @if($inventeryPercent)   +{{$inventeryPercent}}% @else +0%   @endif<span class="c-7b f-300">than last week</span> --}}
-                                            @if($inventeryPercent)   -{{$inventeryPercent}}% @else 0%   @endif<span class="c-7b f-300">than last week</span>
-                                           </div>
-                                        @else
-                                        <div class="cardsFooter f-16 f-700 c-4b">
-                                         @if($inventeryPercent)   +{{$inventeryPercent}}% @else 0%   @endif<span class="c-7b f-300">than last week</span>
+                                            {{$inventeryPercent}}% <span class="c-7b f-300">than last week</span>
                                         </div>
-                                        @endif
+
                                     </div>
                                 </div>
                                 <div class="statsCard settingWrpr h-auto">
@@ -91,16 +86,11 @@
                                             <h4 class="c-7b f-20 f-16-500 f-500 mb-16">Total Leads</h4>
                                             <h4 class="f-30 f-800 c-34 mb-0 f-20-500 mb-20-500">{{ $totalLeadsCount }}</h4>
                                         </div>
-                                        @if($leadPercentType == "dec")
+
                                         <div class="cardsFooter f-16 f-700 c-e9">
-                                         {{-- @if($leadsPercent)   +{{$leadsPercent}}% @else +0% @endif<span class="c-7b f-300">than last week</span> --}}
-                                            @if($leadsPercent)   -{{$leadsPercent}}% @else 0% @endif<span class="c-7b f-300">than last week</span>
+                                            {{$leadsPercent}}% <span class="c-7b f-300">than last week</span>
                                         </div>
-                                         @else
-                                         <div class="cardsFooter f-16 f-700 c-4b">
-                                            @if($leadsPercent)   +{{$leadsPercent}}% @else 0% @endif<span class="c-7b f-300">than last week</span>
-                                         </div>
-                                         @endif
+
                                     </div>
                                 </div>
                             </div>

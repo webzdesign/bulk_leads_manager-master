@@ -34,66 +34,79 @@ class StatsController extends Controller
         // $inventory = Lead::sum('total_row');
         $inventory = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->count();
 
-        $totalInventory =   $inventory;
-        $newInventory = Lead::where('created_at', '>=', Carbon::now()->subDay(7))->sum('total_row');
-        $inventeryPercent = '';
+        $totalLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->count();
+        // $newInventory = Lead::where('created_at', '>=', Carbon::now()->subDay(7))->sum('total_row');
+        // $inventeryPercent = '';
 
         //if($totalInventory != 0 && $newInventory != 0 && $totalInventory-$newInventory !=0)
           //      $inventeryPercent = intval((intval($newInventory) * 100) / intval($totalInventory-$newInventory));
 
         // total revenue inc-dec in percentage calculation
-        $lastWeekInventery = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$lastWeekStartDate, $lastWeekEndDate])->count();
-        $currentWeekInventery = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$currentWeekStartDate, $currentWeekEndDate])->count();
+        $lastWeekInventery = LeadDetail::where('is_send','>',0)->where('is_duplicate', 0)->where('is_invalid',0)->where('created_at', '>=', Carbon::now()->subDay(7))->count();
+        $lastWeekNewInventery = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->where('created_at', '>=', Carbon::now()->subDay(7))->count();
+        // $currentWeekInventery = LeadDetail::where('is_send','=',0)->where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$currentWeekStartDate, $currentWeekEndDate])->count();
         // return $lastWeekInventery.' --- '.$currentWeekInventery;
-        if($lastWeekInventery > $currentWeekInventery) {
-            if($currentWeekInventery != 0){
-                $inventeryPercent = $lastWeekInventery - $currentWeekInventery;
-                $inventeryPercent = round(($inventeryPercent/$currentWeekInventery)*100);
-            } else {
-                $inventeryPercent = round(($lastWeekInventery)*100);
-            }
-            $inventeryPercentType = "dec";
-        } else {
-            if($lastWeekInventery != 0){
-                $inventeryPercent = $currentWeekInventery - $lastWeekInventery;
-                $inventeryPercent = round(($inventeryPercent/$lastWeekInventery)*100);
-            } else {
-                $inventeryPercent = 100;
-            }
-            $inventeryPercentType = "Inc";
-        }
+        // if($lastWeekInventery > $currentWeekInventery) {
+        //     if($currentWeekInventery != 0){
+        //         $inventeryPercent = $lastWeekInventery - $currentWeekInventery;
+        //         $inventeryPercent = round(($inventeryPercent/$currentWeekInventery)*100);
+        //     } else {
+        //         $inventeryPercent = round(($lastWeekInventery)*100);
+        //     }
+        //     $inventeryPercentType = "dec";
+        // } else {
+        //     if($lastWeekInventery != 0){
+        //         $inventeryPercent = $currentWeekInventery - $lastWeekInventery;
+        //         $inventeryPercent = round(($inventeryPercent/$lastWeekInventery)*100);
+        //     } else {
+        //         $inventeryPercent = 100;
+        //     }
+        //     $inventeryPercentType = "Inc";
+        // }
 
-        $totalLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->count();
+        $inventeryPercent = 0;
+        if($lastWeekInventery > 0) {
+            $newInventory = $totalLeads - $lastWeekInventery;
+            $inventeryPercent = round($newInventory / $totalLeads * 100);
+        }
+        // else {
+        //     $inventeryPercent = round($lastWeekNewInventery / $totalLeads * 100);
+        // }
+
         $totalLeadsCount = $totalLeads;
         $newLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->where('created_at', '>=', Carbon::now()->subDay(7))->count();
-        $leadsPercent = '' ;
+        $leadsPercent = 0;
+
+        if($newLeads > 0) {
+            $leadsPercent = round($newLeads / $totalLeads * 100);
+        }
 
         //if($totalLeads != 0 && $newLeads != 0 && $totalLeads-$newLeads !=0)
           //      $leadsPercent = intval((intval($newLeads) * 100) / intval($totalLeads-$newLeads));
 
         // total lead inc-dec in percentage calculation
-        $lstWeekLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$lastWeekStartDate, $lastWeekEndDate])->count();
-        $currentWeekLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$currentWeekStartDate, $currentWeekEndDate])->count();
+        // $lstWeekLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$lastWeekStartDate, $lastWeekEndDate])->count();
+        // $currentWeekLeads = LeadDetail::where('is_duplicate', 0)->where('is_invalid',0)->whereBetween('created_at',[$currentWeekStartDate, $currentWeekEndDate])->count();
         // return $lstWeekLeads.' --- '.$currentWeekLeads;
-        if($lstWeekLeads > $currentWeekLeads) {
-            if($currentWeekLeads != 0){
-                $leadsPercent = $lstWeekLeads - $currentWeekLeads;
-                $leadsPercent = round(($leadsPercent/$currentWeekLeads)*100);
-            } else {
-                $leadsPercent = round(($lstWeekLeads)*100);
-            }
-            $leadPercentType = "dec";
-        } else {
-            if($lstWeekLeads != 0){
-                $leadsPercent = $currentWeekLeads - $lstWeekLeads;
-                $leadsPercent = round(($leadsPercent/$lstWeekLeads)*100);
-            } else {
-                $leadsPercent = 100;
-            }
-            $leadPercentType = "Inc";
-        }
+        // if($lstWeekLeads > $currentWeekLeads) {
+        //     if($currentWeekLeads != 0){
+        //         $leadsPercent = $lstWeekLeads - $currentWeekLeads;
+        //         $leadsPercent = round(($leadsPercent/$currentWeekLeads)*100);
+        //     } else {
+        //         $leadsPercent = round(($lstWeekLeads)*100);
+        //     }
+        //     $leadPercentType = "dec";
+        // } else {
+        //     if($lstWeekLeads != 0){
+        //         $leadsPercent = $currentWeekLeads - $lstWeekLeads;
+        //         $leadsPercent = round(($leadsPercent/$lstWeekLeads)*100);
+        //     } else {
+        //         $leadsPercent = 100;
+        //     }
+        //     $leadPercentType = "Inc";
+        // }
 
-        return view("$this->view/index", compact('moduleName','leadTypes','last24hours','last7days','last30days', 'totalLeadsCount','inventory','inventeryPercent', 'inventeryPercentType','leadsPercent','leadPercentType'));
+        return view("$this->view/index", compact('moduleName','leadTypes','last24hours','last7days','last30days', 'totalLeadsCount','inventory','inventeryPercent','leadsPercent'));
     }
 
 }
