@@ -99,6 +99,7 @@
 
                     </div>
                     <div class="py-3 cardsFooter d-flex justify-content-end">
+                        <button type="button" class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="clear">Clear</button>
                         <button type="button" class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
                     </div>
                 </ul>
@@ -200,6 +201,15 @@
                         }
                     }
                 });
+            });
+
+            $("#clear").on('click', function(e) {
+                $('[name="lead_type_id"]').val('').trigger('change');
+                $('[name="age_group_id"]').val('').trigger('change');
+                $('[name="gender"]').val('').trigger('change');
+                $('[name="state_id"]').val('').trigger('change');
+                $('#fromDate').val('').trigger('change');
+                $('#toDate').val('').trigger('change');
             });
         });
     </script>

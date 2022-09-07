@@ -171,26 +171,28 @@
 @section('script')
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script type="text/html" id="filterDropdown">
-        <div class="d-flex align-items-center filterPanelbtn">
-            <button id="showModel" class="btn-primary f-500 f-14 float-right align-right" data-bs-toggle="modal"
-                data-bs-target="#addAdmin">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8.00008 13.3332V7.99984M8.00008 7.99984V2.6665M8.00008 7.99984H13.3334M8.00008 7.99984H2.66675"
-                        stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
-                    <defs>
-                        <linearGradient id="paint0_linear_1524_12120" x1="8.00008" y1="2.6665" x2="8.00008" y2="13.3332"
-                            gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#ffffff" />
-                            <stop offset="1" stop-color="#ffffff" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                Add New Admin
-            </button>
-        </div>
-    </script>
+    @if (auth()->user()->allowCreateEditUser == 1)
+        <script type="text/html" id="filterDropdown">
+            <div class="d-flex align-items-center filterPanelbtn">
+                <button id="showModel" class="btn-primary f-500 f-14 float-right align-right" data-bs-toggle="modal"
+                    data-bs-target="#addAdmin">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M8.00008 13.3332V7.99984M8.00008 7.99984V2.6665M8.00008 7.99984H13.3334M8.00008 7.99984H2.66675"
+                            stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+                        <defs>
+                            <linearGradient id="paint0_linear_1524_12120" x1="8.00008" y1="2.6665" x2="8.00008" y2="13.3332"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#ffffff" />
+                                <stop offset="1" stop-color="#ffffff" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    Add New Admin
+                </button>
+            </div>
+        </script>
+    @endif
 
     <script type="text/html" id="searchPannel">
         <input class="form-control f-14" placeholder="Search here">

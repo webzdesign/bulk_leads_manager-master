@@ -89,6 +89,7 @@
                         </div>
                     </div>
                     <div class="py-3 cardsFooter d-flex justify-content-end">
+                        <button class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="clear">Clear</button>
                         <button class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
                     </div>
                 </ul>
@@ -290,6 +291,12 @@
         });
     });
 
+    $("#clear").on('click', function(e) {
+        $('#stateDD').val('').trigger('change');
+        $('#leadTypeDD').val('').trigger('change');
+        $('#leadAgeDD').val('').trigger('change');
+        $('#genderDD').val('').trigger('change');
+    });
 
 });
 

@@ -195,7 +195,6 @@ $(document).ready(function() {
         format: "dd-mm-yyyy",
         autoclose: true,
         todayHighlight: true,
-        endDate: "25-08-2022"
     });
 
     $('#datepicker2').datepicker({
