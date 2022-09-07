@@ -79,14 +79,14 @@ class AdminsController extends Controller
             $validate =  $request->validate([
                 'firstName' => 'required',
                 'lastName' => 'required',
-                'email' => 'required|email|unique:users,email,'.$request->id,
+                'email' => 'required|email|unique:users,email,'.$request->id .',id,deleted_at,NULL',
                 'password' => 'sometimes|nullable',
                 'password_confirmation' => 'sometimes|nullable|same:password'
             ]);
 
             $user = User::where('id',$request->id)->first();
 
-            $password = $request->password ? $request->password : $user->password;
+            $password = $request->password ? Hash::make($request->password) : $user->password;
 
             $user = User::find($request->id)->update([
                 'firstName' => $request->firstName,
@@ -107,7 +107,7 @@ class AdminsController extends Controller
            $validate = $request->validate([
                 'firstName' => 'required',
                 'lastName' => 'required',
-                'email' => 'required|email|unique:users',
+                'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
                 'password' => 'required',
                 'password_confirmation' => 'required|same:password'
             ]);
