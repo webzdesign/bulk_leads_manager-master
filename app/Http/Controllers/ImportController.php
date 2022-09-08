@@ -363,4 +363,16 @@ class ImportController extends Controller
 
         return Excel::download(new ExportCSV($request->lead_id,$request->type),"test.csv");
     }
+
+    public function checkFileUpload(Request $request)
+    {
+        $checkFileUpload = Lead::find($request->leadId);
+        if($checkFileUpload) {
+            if($checkFileUpload->status == 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

@@ -447,6 +447,7 @@
                     var datecheck = dateCheck();
 
                     if(selectfield == true && datecheck == true) {
+                        checkFileUpload();
                         $('#next').prop('disabled', true);
 
                         var list = [];
@@ -778,6 +779,21 @@
                 }
             }
 
+            function checkFileUpload()
+            {
+                let stop = setInterval(function(){
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('admin.import.checkFileUpload') }}",
+                        data: {leadId:leadId},
+                        success: function(res) {
+                            if(res == true) {
+                                clearInterval(stop);
+                            }
+                        }
+                    });
+                },[65000])
+            }
         });
     </script>
 @endsection
