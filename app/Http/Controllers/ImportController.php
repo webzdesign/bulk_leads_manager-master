@@ -371,7 +371,7 @@ class ImportController extends Controller
             if($checkFileUpload->status == 3) {
                 return true;
             } else {
-                return false;
+                return "false";
             }
         }
     }
