@@ -122,10 +122,18 @@ class LeadDeleteController extends Controller
                 $data["title"] = $emailTemplate->subject;
                 $data["body"] = $emailTemplate->content;
                 $data["files"] = $zipFileName;
+                $data["bbc_email"] = $setting->bcc_email_address;
+                $data["replyTo"] = $setting->reply_to_email;
 
                 // $files = [ $filetopath ];
 
                 Mail::send('leadDeleteMail', $data, function($message)use($data) {
+                    if($data["bbc_email"] !=''){
+                        $message->bcc($data["bbc_email"]);
+                    }
+                    if($data["replyTo"] !=''){
+                        $message->replyTo($data["replyTo"]);
+                    }
                     $message->to($data["email"], $data["email"])->subject($data["title"]);
 
                     // foreach ($files as $file) {
@@ -140,10 +148,18 @@ class LeadDeleteController extends Controller
                 $data["title"] = $emailTemplate->subject;
                 $data["body"] = $emailTemplate->content;
                 $data["files"] = $zipFileName;
+                $data["bbc_email"] = $setting->bcc_email_address;
+                $data["replyTo"] = $setting->reply_to_email;
 
                 // $files = [ $filetopath ];
 
                 Mail::send('leadDeleteMail', $data, function($message)use($data) {
+                    if($data["bbc_email"] !=''){
+                        $message->bcc($data["bbc_email"]);
+                    }
+                    if($data["replyTo"] !=''){
+                        $message->replyTo($data["replyTo"]);
+                    }
                     $message->to($data["email"], $data["email"])->subject($data["title"]);
 
                     // foreach ($files as $file) {
