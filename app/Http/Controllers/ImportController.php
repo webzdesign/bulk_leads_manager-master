@@ -273,6 +273,17 @@ class ImportController extends Controller
                             } else {
                                 $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$checkDate[2]));
                             }
+                        } else {
+                            if(strlen($checkDate[0]) == '1' && strlen($checkDate[1]) == '1' ) {
+                                if(strlen($checkDate[2]) == '2') {
+                                    $dates = DateTime::createFromFormat('y', $checkDate[2]);
+                                    $year = $dates->format('Y');
+
+                                    $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$year));
+                                } else {
+                                    $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$checkDate[2]));
+                                }
+                            }
                         }
                     }
 
@@ -288,6 +299,17 @@ class ImportController extends Controller
                                 $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$year));
                             } else {
                                 $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$checkDate[2]));
+                            }
+                        } else {
+                            if(strlen($checkDate[0]) == '1' && strlen($checkDate[1]) == '1' ) {
+                                if(strlen($checkDate[2]) == '2') {
+                                    $dates = DateTime::createFromFormat('y', $checkDate[2]);
+                                    $year = $dates->format('Y');
+
+                                    $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$year));
+                                } else {
+                                    $generated_date = date("Y-m-d",strtotime($checkDate[1].'-'.$checkDate[0].'-'.$checkDate[2]));
+                                }
                             }
                         }
                     }
