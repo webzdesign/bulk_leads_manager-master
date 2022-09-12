@@ -98,7 +98,11 @@ class LeadDeleteController extends Controller
 
             echo "Record Deleted Successfully.\n";
 
-            $public_dir = public_path();
+            if (! File::exists(public_path('storage/deleteZip'))) {
+                File::makeDirectory(public_path('storage/deleteZip'));
+            }
+
+            $public_dir = public_path('storage/deleteZip');
             $newName = explode('.csv',$fileName);
             $zipFileName = $newName[0].'_'.uniqid().'.zip';
             $zip = new ZipArchive;
@@ -167,7 +171,7 @@ class LeadDeleteController extends Controller
 
     public function downloadZip($path)
     {
-        $path = public_path($path);
+        $path = public_path('storage/deleteZip/'.$path);
         return response()->download($path);
     }
 }
