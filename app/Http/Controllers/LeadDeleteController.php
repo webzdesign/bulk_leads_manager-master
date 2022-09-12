@@ -100,7 +100,7 @@ class LeadDeleteController extends Controller
 
             $public_dir = public_path();
             $newName = explode('.csv',$fileName);
-            $zipFileName = $newName[0].'.zip';
+            $zipFileName = $newName[0].'_'.uniqid().'.zip';
             $zip = new ZipArchive;
             if ($zip->open($public_dir . '/' . $zipFileName, ZipArchive::CREATE) === TRUE) {
                 $zip->addFile(public_path('assets/'.$fileName),$fileName);
@@ -117,15 +117,16 @@ class LeadDeleteController extends Controller
                 $data["email"] = $setting->deleted_lead_email_one;
                 $data["title"] = $emailTemplate->subject;
                 $data["body"] = $emailTemplate->content;
+                $data["files"] = $zipFileName;
 
-                $files = [ $filetopath ];
+                // $files = [ $filetopath ];
 
-                Mail::send('leadDeleteMail', $data, function($message)use($data, $files) {
+                Mail::send('leadDeleteMail', $data, function($message)use($data) {
                     $message->to($data["email"], $data["email"])->subject($data["title"]);
 
-                    foreach ($files as $file) {
-                        $message->attach($file);
-                    }
+                    // foreach ($files as $file) {
+                    //     $message->attach($file);
+                    // }
 
                 });
             }
@@ -134,15 +135,16 @@ class LeadDeleteController extends Controller
                 $data["email"] = $setting->deleted_lead_email_two;
                 $data["title"] = $emailTemplate->subject;
                 $data["body"] = $emailTemplate->content;
+                $data["files"] = $zipFileName;
 
-                $files = [ $filetopath ];
+                // $files = [ $filetopath ];
 
-                Mail::send('leadDeleteMail', $data, function($message)use($data, $files) {
+                Mail::send('leadDeleteMail', $data, function($message)use($data) {
                     $message->to($data["email"], $data["email"])->subject($data["title"]);
 
-                    foreach ($files as $file) {
-                        $message->attach($file);
-                    }
+                    // foreach ($files as $file) {
+                    //     $message->attach($file);
+                    // }
 
                 });
             }
@@ -153,13 +155,19 @@ class LeadDeleteController extends Controller
                 unlink(public_path('assets/'.$fileName));
             }
 
-            if (File::exists($filetopath)) {
-                unlink($filetopath);
-            }
+            // if (File::exists($filetopath)) {
+            //     unlink($filetopath);
+            // }
 
         } else {
             echo "No Record Founds.\n";
         }
 
+    }
+
+    public function downloadZip($path)
+    {
+        $path = public_path($path);
+        return response()->download($path);
     }
 }

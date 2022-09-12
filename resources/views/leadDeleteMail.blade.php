@@ -67,6 +67,16 @@
             </div>
 
             <div class="email-content">
+                @php
+                    if(isset($body) && $body !=null){
+                        $ziplink = url('downloadZip/'.$files);
+
+                        if(str_contains($body, '[link]')) {
+                            $body = str_replace('[link]',$ziplink,$body);
+                        }
+                    }
+                @endphp
+
                 {!! $body !!}
             </div>
         </div>
