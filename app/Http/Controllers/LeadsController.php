@@ -107,4 +107,36 @@ class LeadsController extends Controller
         }
         return response()->json([$age,$lead]);
     }
+
+    public static function leadSync()
+    {
+        $leadDetails = LeadDetail::with('lead')->whereNotNull('date_generated');
+
+        $totalRec = $leadDetails->count();
+        $totalPage = ceil($totalRec / 1000);
+
+        for ($p = 0; $p < $totalPage; $p++) {
+            $skip = $p * 1000;
+            $leadDetails = LeadDetail::with('lead')->whereNotNull('date_generated')->skip($skip)->take(1000)->get();
+
+            foreach ($leadDetails as $leadDetail) {
+                $leadTypeId = $leadDetail->lead->lead_type_id;
+
+                $today = date('Y-m-d');
+                $date1 = date_create($leadDetail->date_generated);
+                $date2 = date_create($today);
+                $diff  = date_diff($date1,$date2);
+                $diffDays = intval($diff->format("%a"));
+
+                $ageGroup = AgeGroup::select('id')->where('lead_type_id', $leadTypeId)->where('age_from', '<=', $diffDays)->where('age_to', '>=', $diffDays)->first();
+                if ($ageGroup) {
+                    $ageGroupId = $ageGroup->id;
+                } else {
+                    $ageGroupId = null;
+                }
+                echo $leadDetail->id.'<br/>';
+                LeadDetail::find($leadDetail->id)->update(['age_group_id' => $ageGroupId, 'age' => $diffDays]);
+            }
+        }
+    }
 }
