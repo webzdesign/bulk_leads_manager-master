@@ -110,7 +110,7 @@ class LeadsController extends Controller
 
     public static function leadSync()
     {
-        $leadDetails = LeadDetail::with('lead')->whereNotNull('date_generated');
+        $leadDetails = LeadDetail::with('lead')->whereNotNull('date_generated')->where('is_duplicate',0)->where('is_invalid',0);
 
         $totalRec = $leadDetails->count();
         $totalPage = ceil($totalRec / 1000);
