@@ -465,12 +465,14 @@
                             }
                         },[7000])
 
+                        $("#loaderOverlay").removeClass('d-none');
+
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.start_upload') }}",
                             data: {id: list , filename:filename , leadType:$('.lead_type_name').text(), leadId:leadId},
                             success: function (res) {
-
+                                $("#loaderOverlay").addClass('d-none');
                                 import_progress = 97;
                                 let stop = setInterval(function(){
                                     import_progress += 1;
