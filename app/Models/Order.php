@@ -24,7 +24,7 @@ class Order extends Model
     }
 
     public function age_group(){
-        return $this->belongsTo(AgeGroup::class,'age_group_id','id');
+        return $this->belongsTo(AgeGroup::class,'age_group_id','id')->withTrashed();
     }
 
     public function state(){
