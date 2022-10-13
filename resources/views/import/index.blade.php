@@ -496,7 +496,7 @@
                                             setpwizard();
                                             $('#totalRows').text(res['rows']);
                                             $('#duplicateRows').text(res['duplicate']);
-                                            $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an email.)' );
+                                            $('#invalidRows').text(res['invalid'] + ' ('+res['invalid']+' of these are missing an Phone Number.)' );
                                             $('#importRows').text(res['import']);
                                             $('#lead_id').text(res['lead']);
                                             $("#rejectRecords").text(res['rejected']);
@@ -667,7 +667,7 @@
                     }
                 });
 
-                if($.inArray('3', status) !== -1 && $.inArray('8', status) !== -1 && $.inArray('12', status) !== -1) {
+                if($.inArray('8', status) !== -1 && $.inArray('12', status) !== -1) {
                     $('.select_heading').addClass('d-none');
                     return true;
                 }else {

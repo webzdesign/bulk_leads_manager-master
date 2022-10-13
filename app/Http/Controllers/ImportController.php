@@ -138,6 +138,7 @@ class ImportController extends Controller
         $phone_number_index = in_array($leadFields['phone_number'],$request->id) ? array_search($leadFields['phone_number'],$request->id) : null;
 
         $emails = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('email')->toArray();
+        $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number')->toArray();
         $countries = Country::pluck('id', 'name')->toArray();
         $states = State::pluck('id', 'name')->toArray();
         $cities = City::pluck('id', 'name')->toArray();
@@ -176,29 +177,39 @@ class ImportController extends Controller
             }
 
             if (!is_null($email_index)) {
+                $arr['email'] = $row[$email_index];
+                // if ($row[$email_index] != '' || $row[$email_index] != null) {
+                //     if (in_array($row[$email_index], $emails)) {
+                //         $arr['is_duplicate'] = 1;
+                //         $arr['is_invalid'] = 0;
+                //         $duplicateRecords++;
+                //     } else {
+                //         $arr['is_duplicate'] = 0;
+                //         $arr['is_invalid'] = 0;
+                //         $emails[] = $row[$email_index];
+                //     }
+                // } else {
+                //     $arr['is_duplicate'] = 0;
+                //     $arr['is_invalid'] = 1;
+                //     $invalid++;
+                //     continue;
+                // }
+            }
 
-                if ($row[$email_index] != '' || $row[$email_index] != null) {
-                    if (in_array($row[$email_index], $emails)) {
+            if(!is_null($phone_number_index)) {
+                if($row[$phone_number_index] != '' || $row[$phone_number_index] != null) {
+                    if(in_array($row[$phone_number_index], $phoneNumbers)) {
                         $arr['is_duplicate'] = 1;
                         $arr['is_invalid'] = 0;
                         $duplicateRecords++;
                     } else {
                         $arr['is_duplicate'] = 0;
                         $arr['is_invalid'] = 0;
-                        $emails[] = $row[$email_index];
+                        $phoneNumbers[] = $row[$phone_number_index];
                     }
                 } else {
                     $arr['is_duplicate'] = 0;
                     $arr['is_invalid'] = 1;
-                    $invalid++;
-                    continue;
-                }
-            }
-
-            if(!is_null($phone_number_index)) {
-                if($row[$phone_number_index] != '' || $row[$phone_number_index] != null) {
-                    $arr['phone_number'] = $row[$phone_number_index];
-                } else {
                     $invalid++;
                     continue;
                 }
