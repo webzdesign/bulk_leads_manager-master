@@ -354,13 +354,16 @@ class LeadUpload extends Command
                             self::notifyUploadStatus(['message' => 'Data Inserted successFully', 'duplicate' => $duplicateRecords, 'invalid' => $invalid, 'import' => $imported, 'rows' => $totalRows, 'done' => true, 'lead' => $lead->id, 'uploadTime' => $uploadTime, 'rejected' => $rejected], $lead->added_by);
                         } else {
                             Lead::find($lead->id)->update(['status' => 0]);
-                            // LeadDetail::where(['lead_id' => $lead->id])->delete();
+                            LeadDetail::where(['lead_id' => $lead->id])->delete();
                             self::notifyUploadStatus(['message' => 'No Data Found In File', 'done' => false], $lead->added_by);
                         }
 
                         DB::commit();
 
                     } catch (\Exception $g) {
+                        DB::rollBack();
+                        Lead::find($lead->id)->update(['status' => 0]);
+                        LeadDetail::where(['lead_id' => $lead->id])->delete();
                         Log::info('exception Data', array('err' => $g->getMessage(), 'err_no' => $g->getCode()));
                     }
                 } catch (\Exception $e) {
@@ -370,10 +373,18 @@ class LeadUpload extends Command
                             goto retrying;
                         } else {
                             DB::rollBack();
+                            if($lead) {
+                                Lead::find($lead->id)->update(['status' => 0]);
+                                LeadDetail::where(['lead_id' => $lead->id])->delete();
+                            }
                             self::notifyUploadStatus($e, $lead->added_by, true);
                         }
                     } else {
                         DB::rollBack();
+                        if($lead) {
+                            Lead::find($lead->id)->update(['status' => 0]);
+                            LeadDetail::where(['lead_id' => $lead->id])->delete();
+                        }
                         self::notifyUploadStatus(['message' => 'No Data Found In File', 'done' => false, 'err' => $e->getMessage()], $lead->added_by);
                     }
                 }
