@@ -70,9 +70,7 @@ class LeadUpload extends Command
 
                 Lead::find($request['leadId'])->update(['status' => 4]);
                 retrying:
-                $i = 0;
                 Log::info('retrying', $request);
-                
 
                 // $emails = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('email')->toArray();
                 $countries = Country::pluck('id', 'name')->toArray();
@@ -330,11 +328,6 @@ class LeadUpload extends Command
                             LeadDetail::query()->insert($mainArr);
                             DB::commit();
                             $mainArr = [];
-                            if($i == 5) {
-                                break;
-                            }
-                            $i++;
-                            
                         }
                     }
 
