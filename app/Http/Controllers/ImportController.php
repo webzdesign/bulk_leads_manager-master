@@ -7,6 +7,7 @@ use App\Imports\GetData;
 use App\Models\Lead;
 use App\Models\LeadFields;
 use App\Models\LeadType;
+use App\Models\LeadUploadTrack;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -98,7 +99,6 @@ class ImportController extends Controller
     public function start_upload(Request $request)
     {
         try {
-
             
             if (Lead::where('status', 4)->exists()) {
                 return response()->json(['message' => 'Another file is being processed', 'done' => false]);
@@ -129,6 +129,21 @@ class ImportController extends Controller
         $process = new Process([$phpBinaryPath, base_path('artisan'), $command, $data]); // (['php', 'artisan', 'foo:bar', 'json data'])
         $process->setoptions(['create_new_console' => true]); //Run process in background 
         $process->start();
+    }
+
+    public static function checkLeadUploadProgress() {
+        if (Lead::where('status', 4)->exists()) {
+            if (LeadUploadTrack::where('status', 0)->exists()) {
+                $progress = LeadUploadTrack::where('status', 0)->first();
+                if($progress) {
+                    return response()->json(['inserted_count' => $progress->inserted_count, 'total_count' => $progress->total_count]);
+                }
+            } else if (LeadUploadTrack::where('status', 3)->exists()) {
+                return response()->json(['inserted_count' => 0, 'total_count' => 0]);
+            }
+            return response()->json(['inserted_count' => 0, 'total_count' => 0]);
+        }
+        return response()->json(['inserted_count' => 0, 'total_count' => 0]);
     }
 
     public function downloadCsv(Request $request)

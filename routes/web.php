@@ -79,6 +79,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
             Route::post('/getData', [ImportController::class, 'getData'])->name('admin.import.getData');
             Route::post('/start_upload',[ImportController::class, 'start_upload'])->name('admin.import.start_upload');
             Route::post('/checkFileUpload', [ImportController::class, 'checkFileUpload'])->name('admin.import.checkFileUpload');
+            Route::post('/checkLeadUploadProgress',[ImportController::class, 'checkLeadUploadProgress'])->name('admin.lead.upload_progress');
         });
 
         Route::group(['prefix' => 'clients'], function(){

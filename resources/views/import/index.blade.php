@@ -1,7 +1,13 @@
 @extends('layouts.master')
 @section('content')
 
-    <div class="middleContent">
+<div class="middleContent">
+        <div class="alert alert-primary mb-4 text-center d-none" id="upload_text">
+           <h2 class="display-6">Another file is being processed...</h2>
+        </div>  
+        <div class="progress mb-4" style="height: 20px;">
+          <div class="progress-bar" role="progressbar" id="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" aria-label="Example with label">0%</div>
+        </div>
         <div class="settingWrpr importWrpr">
             <ul class="m-0 importStep row justify-content-center">
                 <li
@@ -176,7 +182,7 @@
                             <h3 class="f-16 f-500 c-gr">Scanning the uploaded file, please wait...</h3>
                             <div class="progressBar d-flex align-items-center">
                                 <div class="progress w-100">
-                                    <div class="progress-bar" style="width:1%" data-parcent="100"></div>
+                                    <div class="progress-bar" style="width:1%" data-parcent="100" id="file-percentage"></div>
                                 </div>
                                 <span class="ms-3 c-19 f-16 f-500 f-14-500" id="progress-bar">1%</span>
                             </div>
@@ -334,8 +340,46 @@
         var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
         var leadId = '';
         var FileName = '';
+        var progressPercentage = 0;
         $(document).ready(function() {
-
+            function getUploadProgress () {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('admin.lead.upload_progress') }}",
+                    success: function(res) {
+                        let totalCounts = parseInt(res.total_count);
+                        let recordCounts = parseInt(res.inserted_count);
+                        progressPercentage = parseInt(recordCounts/totalCounts * 100);
+                        if(totalCounts > 0 && recordCounts > 0) { 
+                            $("#upload_text").removeClass('d-none');
+                            $("#progressbar").html(progressPercentage+'%');
+                            $('#progressbar').width(progressPercentage+'%', function() {
+                                return $(this).attr("aria-valuenow", progressPercentage) + "%";
+                            })
+                            if (progressPercentage >= 100) { 
+                                $("#upload_text").addClass('d-none');
+                                $("#progressbar").html('100%');
+                                $('#progressbar').css("width", '100%', function() {
+                                    return $(this).attr("aria-valuenow", 100) + "%";
+                                })
+                                clearInterval(progressResponse);
+                            }
+                        } else {
+                            $("#progressbar").html('0%');
+                            $('#progressbar').css("width", '0%', function() {
+                                return $(this).attr("aria-valuenow", 0) + "%";
+                            })
+                        }
+                    },
+                    error:function(jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR, textStatus, errorThrown)
+                    }
+                });
+            }
+            getUploadProgress();
+            let progressResponse = setInterval(function() {
+                getUploadProgress();
+            }, 5000);
             $("input:checkbox").on('click', function() {
                 var $box = $(this);
                 if ($box.is(":checked")) {
@@ -398,7 +442,7 @@
 
                                     let stop = setInterval(function(){
                                         width += 1;
-                                        $(".progress-bar").css('width', width + '%');
+                                        $("#file-percentage.progress-bar").css('width', width + '%');
                                         $("#progress-bar").text(width + '%');
 
                                         if (width >= 100) {
