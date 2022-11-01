@@ -343,7 +343,7 @@
         var progressPercentage = 0;
         $("#progress_upload").addClass('d-none').removeClass("progress");
         $(document).ready(function() {
-            function setZeroWidth(timer) {
+            function setZeroWidth(timer = 0) {
                 setTimeout(function(){
                     $("#upload_text").addClass('d-none');
                     $("#progressbar").html('0%');
@@ -379,6 +379,8 @@
                                 clearInterval(progressResponse);
                                 setFullWidth(setZeroWidth(3000));
                             }
+                        } else {
+                            setZeroWidth();
                         }
                     },
                     error:function(jqXHR, textStatus, errorThrown) {

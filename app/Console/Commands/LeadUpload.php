@@ -55,7 +55,7 @@ class LeadUpload extends Command
     {
         ini_set('memory_limit', -1);
         ini_set('MAX_EXECUTION_TIME', 0);
-        set_time_limit(60000);
+        set_time_limit(0);
         // $request = json_decode($this->argument('param')[0], true);
         // Log::info('data'.$request['filename']);
         // return 0;
