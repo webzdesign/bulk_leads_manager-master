@@ -5,7 +5,7 @@
         <div class="alert alert-primary mb-4 text-center d-none" id="upload_text">
            <h2 class="display-6">Another file is being processed...</h2>
         </div>  
-        <div class="progress mb-4" style="height: 20px;">
+        <div class="progress mb-4" id="progress_upload" style="height: 20px;">
           <div class="progress-bar" role="progressbar" id="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" aria-label="Example with label">0%</div>
         </div>
         <div class="settingWrpr importWrpr">
@@ -341,7 +341,25 @@
         var leadId = '';
         var FileName = '';
         var progressPercentage = 0;
+        $("#progress_upload").addClass('d-none').removeClass("progress");
         $(document).ready(function() {
+            function setZeroWidth(timer) {
+                setTimeout(function(){
+                    $("#upload_text").addClass('d-none');
+                    $("#progressbar").html('0%');
+                    $('#progressbar').css("width", '0%', function() {
+                        return $(this).attr("aria-valuenow", 0) + "%";
+                    })
+                }, timer);
+            }
+            function setFullWidth(callBackFun) {
+                $("#upload_text").addClass('d-none');
+                $("#progressbar").html('100%');
+                $('#progressbar').css("width", '100%', function() {
+                    return $(this).attr("aria-valuenow", 100) + "%";
+                });
+                callBackFun();
+            }
             function getUploadProgress () {
                 $.ajax({
                     type: "POST",
@@ -350,25 +368,17 @@
                         let totalCounts = parseInt(res.total_count);
                         let recordCounts = parseInt(res.inserted_count);
                         progressPercentage = parseInt(recordCounts/totalCounts * 100);
-                        if(totalCounts > 0 && recordCounts > 0) { 
+                        $("#progress_upload").removeClass('d-none').addClass("progress");
+                        if(totalCounts > 0 && recordCounts > 0) {
                             $("#upload_text").removeClass('d-none');
                             $("#progressbar").html(progressPercentage+'%');
                             $('#progressbar').width(progressPercentage+'%', function() {
                                 return $(this).attr("aria-valuenow", progressPercentage) + "%";
                             })
-                            if (progressPercentage >= 100) { 
-                                $("#upload_text").addClass('d-none');
-                                $("#progressbar").html('100%');
-                                $('#progressbar').css("width", '100%', function() {
-                                    return $(this).attr("aria-valuenow", 100) + "%";
-                                })
+                            if (progressPercentage >= 100) {
                                 clearInterval(progressResponse);
+                                setFullWidth(setZeroWidth(3000));
                             }
-                        } else {
-                            $("#progressbar").html('0%');
-                            $('#progressbar').css("width", '0%', function() {
-                                return $(this).attr("aria-valuenow", 0) + "%";
-                            })
                         }
                     },
                     error:function(jqXHR, textStatus, errorThrown) {
@@ -376,6 +386,7 @@
                     }
                 });
             }
+            
             getUploadProgress();
             let progressResponse = setInterval(function() {
                 getUploadProgress();
