@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         $setting = SiteSetting::find(1);
         $schedule->command('lead:delete')->cron('* * */'.$setting->frequency_of_deleted_archives.' * *')->withoutOverlapping();
         $schedule->command('lead:send')->everyFiveMinutes()->withoutOverlapping();
-        $schedule->command('lead:sync')->daily();
+        // $schedule->command('lead:sync')->daily();
         // $schedule->command('test:mail')->everyMinute()->withoutOverlapping();
     }
 

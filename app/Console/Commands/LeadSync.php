@@ -38,6 +38,7 @@ class LeadSync extends Command
      */
     public function handle()
     {
-        LeadsController::leadSync();
+        $this->info('This section is comment');
+        // LeadsController::leadSync();
     }
 }

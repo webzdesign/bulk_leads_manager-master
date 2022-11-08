@@ -108,7 +108,7 @@ class LeadsController extends Controller
         return response()->json([$age,$lead]);
     }
 
-    public static function leadSync()
+    /* public static function leadSync()
     {
         $leadDetails = LeadDetail::with('lead')->whereNotNull('date_generated')->where('is_duplicate',0)->where('is_invalid',0);
 
@@ -138,5 +138,5 @@ class LeadsController extends Controller
                 LeadDetail::find($leadDetail->id)->update(['age_group_id' => $ageGroupId, 'age' => $diffDays]);
             }
         }
-    }
+    } */
 }
