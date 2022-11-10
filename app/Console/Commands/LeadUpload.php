@@ -74,7 +74,7 @@ class LeadUpload extends Command
                 try {
                     $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number')->toArray();
 
-                    $getData = (new FastExcel)->import(storage_path('app/import/' . $request['filename']));
+                    $getData = (new FastExcel)->withoutHeaders()->import(storage_path('app/import/' . $request['filename']));
                     $getData = $getData->toArray();
                     $rows = array_map(function ($element) {
                         return array_values($element);
