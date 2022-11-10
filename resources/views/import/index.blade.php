@@ -3,7 +3,7 @@
 
 <div class="middleContent">
         <div class="alert alert-primary mb-4 text-center d-none" id="upload_text">
-           <h2 class="display-6">Another file is being processed...</h2>
+           <h2 class="display-6">File is being processed...</h2>
         </div>  
         <div class="progress mb-4" id="progress_upload" style="height: 20px;">
           <div class="progress-bar" role="progressbar" id="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" aria-label="Example with label">0%</div>
@@ -377,7 +377,9 @@
                             })
                             if (progressPercentage >= 100) {
                                 clearInterval(progressResponse);
-                                setFullWidth(setZeroWidth(3000));
+                                setFullWidth(function() {
+                                    setZeroWidth(3000)
+                                });
                             }
                         } else {
                             setZeroWidth();
