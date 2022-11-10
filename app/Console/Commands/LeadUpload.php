@@ -70,12 +70,7 @@ class LeadUpload extends Command
             if(is_array($request) && array_key_exists('id', $request) && array_key_exists('filename', $request) && array_key_exists('leadType', $request) && array_key_exists('leadId', $request) && is_array($request['id']) && !is_null($request['filename']) && !is_null($request['leadId'])) {
 
                 Lead::find($request['leadId'])->update(['status' => 4]);
-                retrying:
-                Log::info('retrying', $request);
 
-                // $emails = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('email')->toArray();
-                
-                
                 try {
                     $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number')->toArray();
 
@@ -118,7 +113,7 @@ class LeadUpload extends Command
                     $mainArr = array();
                     $rejected = 0;
                     $totalRecords = 0;
-                    DB::beginTransaction();
+                    
                     Log::info('first transaction');
                     foreach ($rows as $row) {
                         // Log::info('starts on : '.date('Y-m-d H:i:s'));
@@ -330,22 +325,38 @@ class LeadUpload extends Command
                             $mainArr[] = $arr;
                         }
                         if (count($mainArr) == 2000) {
-                            Log::info('inserting 2000 Data Starts');
-                            LeadDetail::query()->insert($mainArr);
-                            $totalRecords += count($mainArr);
-                            $infoData = array(
-                                'lead_id' => $lead->id,
-                                'inserted_count' => $totalRecords,
-                                'total_count' => $totalRows,
-                                'created_at' => date('Y-m-d H:i:s'),
-                                'updated_at' => date('Y-m-d H:i:s'),
-                                'file_name'  => $lead->file_name,
-                                'status' => 0
-                            );
-                            Log::info('inserting 2000 Data Ends');
-                            LeadUploadTrack::upsert(array($infoData), 'lead_id', ['inserted_count', 'total_count', 'updated_at']);
-                            DB::commit();
-                            $mainArr = [];
+                            try {
+                                DB::beginTransaction();
+                                Log::info('inserting 2000 Data Starts');
+                                LeadDetail::query()->insert($mainArr);
+                                $totalRecords += count($mainArr);
+                                $infoData = array(
+                                    'lead_id' => $lead->id,
+                                    'inserted_count' => $totalRecords,
+                                    'total_count' => $totalRows,
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                    'updated_at' => date('Y-m-d H:i:s'),
+                                    'file_name'  => $lead->file_name,
+                                    'status' => 0
+                                );
+                                Log::info('inserting 2000 Data Ends');
+                                LeadUploadTrack::upsert(array($infoData), 'lead_id', ['inserted_count', 'total_count', 'updated_at']);
+                                DB::commit();
+                                $mainArr = [];
+                            } catch(\Exception $e) {
+                                $mainArr = [];
+                                Log::info('exception Data', array('err' => $e->getMessage(), 'err_no' => $e->getCode()));
+                                DB::rollBack();
+                                if($lead) {
+                                    LeadUploadTrack::where('lead_id', $lead->id)->update(['status' => 2]);
+                                    LeadUploadTrack::where('lead_id', $lead->id)->delete();
+                                    Lead::find($lead->id)->update(['status' => -1]);
+                                    LeadDetail::where(['lead_id' => $lead->id])->delete();
+                                }
+
+                                self::notifyUploadStatus(['message' => 'No Data Found In File', 'done' => false, 'err' => $e->getMessage()], $lead->added_by);
+                                break;
+                            }
                         }
                         // Log::info('ends on : '.date('Y-m-d H:i:s'));
                     }
@@ -401,34 +412,15 @@ class LeadUpload extends Command
                         LeadDetail::where(['lead_id' => $lead->id])->delete();
                         Log::info('exception Data', array('err' => $g->getMessage(), 'err_no' => $g->getCode()));
                     }
-                } catch (\Exception $e) {
-                    Log::info('exception Data', array('err' => $e->getMessage(), 'err_no' => $e->getCode()));
-                    if ($e instanceof \Illuminate\Database\QueryException) {
-                        if ($e->getCode() == 1205) {
-                            goto retrying;
-                        } else {
-                            DB::rollBack();
-                            if($lead) {
-                                LeadUploadTrack::where('lead_id', $lead->id)->update(['status' => 2]);
-                                LeadUploadTrack::where('lead_id', $lead->id)->delete();
-                                Lead::find($lead->id)->update(['status' => -1]);
-                                LeadDetail::where(['lead_id' => $lead->id])->delete();
-                            }
-                            self::notifyUploadStatus($e, $lead->added_by, true);
-                        }
-                    } else {
-                        DB::rollBack();
-                        if($lead) {
-                            LeadUploadTrack::where('lead_id', $lead->id)->update(['status' => 2]);
-                            LeadUploadTrack::where('lead_id', $lead->id)->delete();
-                            Lead::find($lead->id)->update(['status' => -1]);
-                            LeadDetail::where(['lead_id' => $lead->id])->delete();
-                        }
-                        self::notifyUploadStatus(['message' => 'No Data Found In File', 'done' => false, 'err' => $e->getMessage()], $lead->added_by);
-                    }
-                }
+                } catch (\Exception $er) {
+                    Lead::find($request['leadId'])->update(['status' => -1]);
+                    $file = Lead::where('id', $request['leadId'])->first()->file_name;
+                    $uploadedTime = \Carbon\Carbon::createFromDate(Lead::where('id', $request['leadId'])->first()->uploaded_datetime);
+                    $from = \Carbon\Carbon::now();
 
-                
+                    $uploadTime = $file . " (Uploaded " . $uploadedTime->diffInHours($from) . ' hours and ' . $uploadedTime->diffInMinutes($from) . ' minutes ago.)';
+                    self::notifyUploadStatus(['message' => 'Something Went Wrong', 'done' => false, 'lead' => $request['leadId'], 'uploadTime' => $uploadTime, 'rejected' => $rejected], $lead->added_by);
+                }
             }
         }
     }
