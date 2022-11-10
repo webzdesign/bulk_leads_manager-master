@@ -70,7 +70,7 @@ class LeadUpload extends Command
             if(is_array($request) && array_key_exists('id', $request) && array_key_exists('filename', $request) && array_key_exists('leadType', $request) && array_key_exists('leadId', $request) && is_array($request['id']) && !is_null($request['filename']) && !is_null($request['leadId'])) {
 
                 Lead::find($request['leadId'])->update(['status' => 4]);
-
+                Log::info('request Data', $request);
                 try {
                     $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number')->toArray();
 
