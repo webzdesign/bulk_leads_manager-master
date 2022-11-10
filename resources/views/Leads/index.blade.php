@@ -153,6 +153,7 @@
                 { data:'state_id', },
                 { data:'address', }
             ],
+            "pageLength": 500
         });
 
         $('#filterInput').html($('#searchPannel').html());
