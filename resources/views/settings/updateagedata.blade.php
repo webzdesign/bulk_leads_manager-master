@@ -86,7 +86,11 @@
                 },
                 url: "{{ route('admin.age.update.progress') }}",
                 success: function(res) {
-                    if(res.status == 3) {
+                    if(res.status == -1) {
+                        $("#upload_progress").addClass('d-none');
+                        $("#no_progress").removeClass('d-none');
+                        $("#update_button_div").removeClass('d-none').addClass('d-flex');
+                    } else if(res.status == 3) {
                         $("#no_progress").removeClass('d-none');
                         $("#update_button_div").removeClass('d-none').addClass('d-flex');
                         $("#upload_progress").addClass('d-none');
