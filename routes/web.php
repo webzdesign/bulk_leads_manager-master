@@ -59,6 +59,9 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         /*Settings route*/
         Route::get('settings', [SettingController::class, 'index'])->name('settings');
+        Route::get('update_age_data', [SettingController::class, 'update_age_data'])->name('update_age_data');
+        Route::post('update_age_data_in_progress', [SettingController::class, 'update_age_data_in_progress'])->name('admin.age.update.progress');
+        Route::post('update_age_data_in_progress_status', [SettingController::class, 'update_age_data_in_progress_status'])->name('admin.age.update.progress.status');
         Route::post('site_setting_create', [SettingController::class, 'site_setting_create'])->name('site_setting_create');
         Route::post('email_setup_create', [SettingController::class, 'email_setup_create'])->name('email_setup_create');
         Route::post('email_template_create', [SettingController::class, 'email_template_create'])->name('email_template_create');

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AgeGroupUpdate;
 use Illuminate\Http\Request;
 use App\Models\SiteSetting;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Validator;
 use Auth;
+use Illuminate\Support\Facades\DB;
 
 class SettingController extends Controller
 {
@@ -143,6 +145,53 @@ class SettingController extends Controller
         $email_template = EmailTemplate::where('email_subject',$request->email_subject)->first();
         if(isset($email_template) && $email_template !=null){
             $response_array = ['status' => true,'content' => $email_template->content, 'subject' => $email_template->subject];
+        }
+
+        return response()->json($response_array);
+    }
+
+    public function update_age_data() {
+        $moduleName = 'Update Age Data';
+        $age_group_data = AgeGroupUpdate::get()->first();
+
+        return view('settings/updateagedata',compact('moduleName','age_group_data'));
+    }
+
+    public function update_age_data_in_progress() {
+        
+        $response_array = ['status' => -1];
+        $ageGroupData = AgeGroupUpdate::get()->first();
+
+        if($ageGroupData) {
+            $response_array['status'] = $ageGroupData->status;
+        }
+
+        return response()->json($response_array);
+    }
+    
+    public function update_age_data_in_progress_status() {
+        
+        $response_array = ['status' => -1];
+        $ageGroupData = AgeGroupUpdate::get()->first();
+
+        if($ageGroupData) {
+            if($ageGroupData->status == "3") {
+                $ageGroupData->update(['status' => 0]);
+                $response_array['status'] = 0;
+                $getPost = DB::select('CALL update_lead_age_data_proc()');
+            } else {
+                $response_array['status'] = $ageGroupData->status;
+            }
+        } else {
+            AgeGroupUpdate::insert(['status' => 0, 'created_at' => date('Y-m-d H:i:s', time())]);
+            $response_array['status'] = 0;
+            $getPost = DB::select('CALL update_lead_age_data_proc()');
+        }
+
+        $ageGroupData = AgeGroupUpdate::get()->first();
+
+        if($ageGroupData) {
+            $response_array['status'] = $ageGroupData->status;
         }
 
         return response()->json($response_array);
