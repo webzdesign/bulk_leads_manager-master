@@ -341,11 +341,32 @@
         var leadId = '';
         var FileName = '';
         var progressPercentage = 0;
+        let progressResponse;
+        var request_token = "session()->get('_token')";
         $("#progress_upload").addClass('d-none').removeClass("progress");
         $(document).ready(function() {
+            function enableProgress(enabled = true) {
+                if(enabled) {
+                    $("#progressbar").addClass('progress-bar-animated progress-bar-striped');
+                } else {
+                    $("#progressbar").removeClass('progress-bar-animated progress-bar-striped');
+                }
+            }
+            function setDefaultWidth(timer = 0) {
+                setTimeout(function(){
+                    $("#progress_upload").removeClass('d-none').addClass("progress");
+                    $("#upload_text").removeClass('d-none');
+                    enableProgress();
+                    $("#progressbar").html('0%');
+                    $('#progressbar').css("width", '100%', function() {
+                        return $(this).attr("aria-valuenow", 0) + "%";
+                    })
+                }, timer);
+            }
             function setZeroWidth(timer = 0) {
                 setTimeout(function(){
                     $("#upload_text").addClass('d-none');
+                    enableProgress(false);
                     $("#progressbar").html('0%');
                     $('#progressbar').css("width", '0%', function() {
                         return $(this).attr("aria-valuenow", 0) + "%";
@@ -354,35 +375,62 @@
             }
             function setFullWidth(callBackFun) {
                 $("#upload_text").addClass('d-none');
+                enableProgress(false);
                 $("#progressbar").html('100%');
                 $('#progressbar').css("width", '100%', function() {
                     return $(this).attr("aria-valuenow", 100) + "%";
                 });
                 callBackFun();
             }
+            function stopInterval() {
+                if(progressResponse != null && typeof progressResponse != 'undefined') {
+                    clearInterval(progressResponse);
+                    progressResponse = null;
+                }
+            }
             function getUploadProgress () {
                 $.ajax({
                     type: "POST",
                     url: "{{ route('admin.lead.upload_progress') }}",
                     success: function(res) {
-                        let totalCounts = parseInt(res.total_count);
-                        let recordCounts = parseInt(res.inserted_count);
-                        progressPercentage = parseInt(recordCounts/totalCounts * 100);
-                        $("#progress_upload").removeClass('d-none').addClass("progress");
-                        if(totalCounts > 0 && recordCounts > 0) {
-                            $("#upload_text").removeClass('d-none');
-                            $("#progressbar").html(progressPercentage+'%');
-                            $('#progressbar').width(progressPercentage+'%', function() {
-                                return $(this).attr("aria-valuenow", progressPercentage) + "%";
-                            })
-                            if (progressPercentage >= 100) {
-                                clearInterval(progressResponse);
-                                setFullWidth(function() {
-                                    setZeroWidth(3000)
-                                });
-                            }
+                        if(res.notify != null && typeof res.notify != 'undefined') {
+                            stopInterval();
+                            $("#progress_upload").removeClass('d-none').addClass("progress");
+                            enableProgress(false);
+                            $("#progressbar").html('100%');
+                            $('#progressbar').width('100%', function() {
+                                return $(this).attr("aria-valuenow", 100) + "%";
+                            });
+                            Swal.fire({
+                                icon: "info",
+                                title: "imported Successfully",
+                                text: "File Uploaded Successfully.",
+                            });
                         } else {
-                            setZeroWidth();
+                            if(typeof res.file_in_progress != 'undefined' && res.file_in_progress == true) {
+                                setDefaultWidth();
+                            } else {
+                                let totalCounts = parseInt(res.total_count);
+                                let recordCounts = parseInt(res.inserted_count);
+                                progressPercentage = parseInt(recordCounts/totalCounts * 100);
+                                $("#progress_upload").removeClass('d-none').addClass("progress");
+                                if(totalCounts > 0 && recordCounts > 0) {
+                                    $("#upload_text").removeClass('d-none');
+                                    enableProgress(false);
+                                    $("#progressbar").html(progressPercentage+'%');
+                                    $('#progressbar').width(progressPercentage+'%', function() {
+                                        return $(this).attr("aria-valuenow", progressPercentage) + "%";
+                                    })
+                                    if (progressPercentage >= 100) {
+                                        stopInterval();
+                                        setFullWidth(function() {
+                                            setZeroWidth(3000)
+                                        });
+                                    }
+                                } else {
+                                    setZeroWidth();
+                                }
+                            }
                         }
                     },
                     error:function(jqXHR, textStatus, errorThrown) {
@@ -392,7 +440,7 @@
             }
             
             getUploadProgress();
-            let progressResponse = setInterval(function() {
+            progressResponse = setInterval(function() {
                 getUploadProgress();
             }, 5000);
             $("input:checkbox").on('click', function() {
@@ -529,9 +577,14 @@
                         $.ajax({
                             type: "POST",
                             url: "{{ route('admin.import.start_upload') }}",
-                            data: {id: list , filename:filename , leadType:$('.lead_type_name').text(), leadId:leadId},
+                            data: {id: list , filename:filename , leadType:$('.lead_type_name').text(), leadId:leadId, request_token : "{{session()->get('_token')}}"},
                             success: function (res) {
                                 $("#loaderOverlay").addClass('d-none');
+                                if(progressResponse == null || typeof progressResponse == 'undefined') {
+                                    progressResponse = setInterval(function() {
+                                        getUploadProgress();
+                                    }, 5000);
+                                }
                                 import_progress = 97;
                                 let stop = setInterval(function(){
                                     import_progress += 1;

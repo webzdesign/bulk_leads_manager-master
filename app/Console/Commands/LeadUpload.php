@@ -393,7 +393,7 @@ class LeadUpload extends Command
                             $from = \Carbon\Carbon::now();
     
                             $uploadTime = $file . " (Uploaded " . $uploadedTime->diffInHours($from) . ' hours and ' . $uploadedTime->diffInMinutes($from) . ' minutes ago.)';
-                            self::notifyUploadStatus(['message' => 'Data Inserted successFully', 'duplicate' => $duplicateRecords, 'invalid' => $invalid, 'import' => $imported, 'rows' => $totalRows, 'done' => true, 'lead' => $lead->id, 'uploadTime' => $uploadTime, 'rejected' => $rejected], $lead->added_by);
+                            self::notifyUploadStatus(['message' => 'Data Inserted successFully', 'duplicate' => $duplicateRecords, 'invalid' => $invalid, 'import' => $imported, 'rows' => $totalRows, 'done' => true, 'lead' => $lead->id, 'uploadTime' => $uploadTime, 'rejected' => $rejected, 'request_token' => $request['request_token']], $lead->added_by);
                         } else {
                             LeadUploadTrack::where('lead_id', $lead->id)->update(['status' => 2]);
                             LeadUploadTrack::where('lead_id', $lead->id)->delete();

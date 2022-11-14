@@ -10,6 +10,7 @@ use App\Models\LeadType;
 use App\Models\LeadUploadTrack;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -131,19 +132,33 @@ class ImportController extends Controller
         $process->start();
     }
 
-    public static function checkLeadUploadProgress() {
+    public static function checkLeadUploadProgress(Request $request) {
+
+        $notify = null;
+
         if (Lead::where('status', 4)->exists()) {
             if (LeadUploadTrack::where('status', 0)->exists()) {
                 $progress = LeadUploadTrack::where('status', 0)->first();
                 if($progress) {
-                    return response()->json(['inserted_count' => $progress->inserted_count, 'total_count' => $progress->total_count]);
+                    return response()->json(['inserted_count' => $progress->inserted_count, 'total_count' => $progress->total_count, 'a' => 1]);
                 }
-            } else if (LeadUploadTrack::where('status', 3)->exists()) {
-                return response()->json(['inserted_count' => 0, 'total_count' => 0]);
+            } else {
+                return response()->json(['inserted_count' => 0, 'total_count' => 0, 'file_in_progress' => true]);
             }
-            return response()->json(['inserted_count' => 0, 'total_count' => 0]);
+        } else {
+            $notifyData = DB::table('notifications')->whereNull('read_at')->whereIn('data->thread->lead', function($q) {
+                $q->select('id')->from('leads')->where('status', 3)->orderBy('id', 'desc');
+            })->where('data->thread->request_token', session()->get('_token'))->orderBy('updated_at', 'desc')->first();
+            if($notifyData) {
+                $user = \App\Models\User::find($notifyData->notifiable_id);
+                if($user) {
+                    $notify = true;
+                    $user->unreadNotifications()->update(['read_at' => now()]);
+                }
+            }
         }
-        return response()->json(['inserted_count' => 0, 'total_count' => 0]);
+
+        return response()->json(['inserted_count' => 0, 'total_count' => 0, 'notify' => $notify]);
     }
 
     public function downloadCsv(Request $request)
