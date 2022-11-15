@@ -152,7 +152,7 @@ class ImportController extends Controller
             if($notifyData) {
                 $user = \App\Models\User::find($notifyData->notifiable_id);
                 if($user) {
-                    $notify = true;
+                    $notify = json_decode($notifyData->data);
                     $user->unreadNotifications()->update(['read_at' => now()]);
                 }
             }

@@ -291,7 +291,7 @@
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Rows:</div>
-                                    <div class="colTwo c-43 f-16 f-500" id='totalRows'>2499</div>
+                                    <div class="colTwo c-43 f-16 f-500" id='totalRows'>&nbsp;</div>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <div class="colOne c-gr f-16 f-500">Duplicate Records:</div>
@@ -343,8 +343,10 @@
         var progressPercentage = 0;
         let progressResponse;
         var request_token = "session()->get('_token')";
+        $("#loaderOverlay").removeClass('d-none');
         $("#progress_upload").addClass('d-none').removeClass("progress");
         $(document).ready(function() {
+            $("#loaderOverlay").addClass('d-none');
             function enableProgress(enabled = true) {
                 if(enabled) {
                     $("#progressbar").addClass('progress-bar-animated progress-bar-striped');
@@ -388,7 +390,14 @@
                     progressResponse = null;
                 }
             }
+            function setUploadDetail() {
+                $(".addStep3").addClass('d-none');
+                $(".step").addClass('d-none').removeClass('active');
+                $(".step:last").removeClass('d-none').addClass('active');
+                $(".cardsFooter").addClass('d-none');
+            }
             function getUploadProgress () {
+                
                 $.ajax({
                     type: "POST",
                     url: "{{ route('admin.lead.upload_progress') }}",
@@ -401,6 +410,14 @@
                             $('#progressbar').width('100%', function() {
                                 return $(this).attr("aria-valuenow", 100) + "%";
                             });
+                            setUploadDetail();
+                            $('#totalRows', $(".step:last")).text(res.notify.thread.rows);
+                            $('#duplicateRows', $(".step:last")).text(res.notify.thread.duplicate);
+                            $('#invalidRows', $(".step:last")).text(res.notify.thread.invalid + ' ('+res.notify.thread.invalid+' of these are missing an Phone Number.)' );
+                            $('#importRows', $(".step:last")).text(res.notify.thread.import);
+                            $('#lead_id', $(".step:last")).text(res.notify.thread.lead);
+                            $("#rejectRecords", $(".step:last")).text(res.notify.thread.rejected);
+                            $("#loaderOverlay").addClass('d-none');
                             Swal.fire({
                                 icon: "info",
                                 title: "imported Successfully",
@@ -408,6 +425,8 @@
                             });
                         } else {
                             if(typeof res.file_in_progress != 'undefined' && res.file_in_progress == true) {
+                                $("#loaderOverlay").removeClass('d-none');
+                                setUploadDetail();
                                 setDefaultWidth();
                             } else {
                                 let totalCounts = parseInt(res.total_count);
@@ -415,6 +434,8 @@
                                 progressPercentage = parseInt(recordCounts/totalCounts * 100);
                                 $("#progress_upload").removeClass('d-none').addClass("progress");
                                 if(totalCounts > 0 && recordCounts > 0) {
+                                    $("#loaderOverlay").removeClass('d-none');
+                                    setUploadDetail();
                                     $("#upload_text").removeClass('d-none');
                                     enableProgress(false);
                                     $("#progressbar").html(progressPercentage+'%');
@@ -428,6 +449,7 @@
                                         });
                                     }
                                 } else {
+                                    $("#loaderOverlay").addClass('d-none');
                                     setZeroWidth();
                                 }
                             }
@@ -439,7 +461,7 @@
                 });
             }
             
-            getUploadProgress();
+            getUploadProgress(true);
             progressResponse = setInterval(function() {
                 getUploadProgress();
             }, 5000);
@@ -554,7 +576,7 @@
                     var datecheck = dateCheck();
 
                     if(selectfield == true && datecheck == true) {
-                        checkFileUpload();
+
                         $('#next').prop('disabled', true);
 
                         var list = [];
@@ -563,14 +585,6 @@
                         })
 
                         var filename =  $('#file_in_db').text();
-                        let stop = setInterval(function(){
-                            import_progress += 1;
-                            $("#import_progress").text(import_progress + '% (Step 1 - Uploading file...)');
-
-                            if (import_progress == 90) {
-                                clearInterval(stop);
-                            }
-                        },[7000])
 
                         $("#loaderOverlay").removeClass('d-none');
 
@@ -585,7 +599,7 @@
                                         getUploadProgress();
                                     }, 5000);
                                 }
-                                import_progress = 97;
+                                /* import_progress = 97;
                                 let stop = setInterval(function(){
                                     import_progress += 1;
                                     $("#import_progress").text(import_progress + '% (Step 1 - Uploading file...)');
@@ -622,7 +636,7 @@
                                             text: res['message'],
                                             });
                                         }
-                                }
+                                } */
                             }
                         });
                     }
@@ -893,21 +907,7 @@
                 }
             }
 
-            function checkFileUpload()
-            {
-                let stop = setInterval(function(){
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('admin.import.checkFileUpload') }}",
-                        data: {leadId:leadId},
-                        success: function(res) {
-                            if(res == true) {
-                                clearInterval(stop);
-                            }
-                        }
-                    });
-                },[65000])
-            }
+            $("#loaderOverlay").addClass('d-none');
         });
     </script>
 @endsection
