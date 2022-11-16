@@ -257,13 +257,10 @@ class NewOrderController extends Controller
             $Leads = Lead::select('id')->where('lead_type_id',$leadTypeId)->pluck('id')->toArray();
             $LeadTypes = LeadType::find($leadTypeId);
 
-            DB::enableQueryLog();
-            $qry = array();
-
             $leads_details = LeadDetail::whereIn('lead_details.lead_id',$Leads)->where(['lead_details.age_group_id' => $request->age_group_id,'lead_details.is_duplicate' => 0,'lead_details.is_invalid' => 0])->where('lead_details.is_send','<',$setting->no_of_time_lead_download);
 
 
-            $checkOrder = Order::where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $leadTypeId,'orders.age_group_id' => $request->age_group_id]);
+            $checkOrder = Order::where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $leadTypeId]);
 
             if($gender != NULL){
                 $leads_details->where('lead_details.gender',$gender);
@@ -299,7 +296,6 @@ class NewOrderController extends Controller
             }
 
             $leads_details = $leads_details_count;
-            $qry[] = DB::getQueryLog();
             $total_leads_available = $leads_details;
 
         }
