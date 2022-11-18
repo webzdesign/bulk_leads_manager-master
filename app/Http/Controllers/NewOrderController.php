@@ -15,6 +15,8 @@ use App\Models\OrderDetail;
 use App\Models\SiteSetting;
 use Auth,Validator,Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 class NewOrderController extends Controller
 {
     private $moduleName = 'New order';
@@ -237,71 +239,158 @@ class NewOrderController extends Controller
     public function count_total_leads_available(Request $request){
 
         $total_leads_available = 0;
-        $LeadTypes = LeadType::find($request->lead_type_id);
-        $checkExist = Lead::where('lead_type_id',$request->lead_type_id)->exists();
-        if($checkExist){
+        $total_order_leads_available = 0;
+        $checkOrder = false;
 
-            $leadTypeId = $request->lead_type_id;
-            $gender = isset($request->gender) ? $request->gender : NULL;
-            $state_id = null;
-            if(isset($request->state_id)) {
-                $allStateID = State::whereIn('name', $request->state_id)->pluck('id')->toArray();
-                if(count($allStateID) > 0) {
-                    $state_id = $allStateID;
-                }
-            }
-
-            $total_leads_available = 0;
-
-            $setting = SiteSetting::find(1);
-            $Leads = Lead::select('id')->where('lead_type_id',$leadTypeId)->pluck('id')->toArray();
-            $LeadTypes = LeadType::find($leadTypeId);
-
-            $leads_details = LeadDetail::whereIn('lead_details.lead_id',$Leads)->where(['lead_details.age_group_id' => $request->age_group_id,'lead_details.is_duplicate' => 0,'lead_details.is_invalid' => 0])->where('lead_details.is_send','<',$setting->no_of_time_lead_download);
-
-
-            $checkOrder = Order::where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $leadTypeId]);
-
-            if($gender != NULL){
-                $leads_details->where('lead_details.gender',$gender);
-
-            }
-            if($state_id != NULL){
-                $leads_details->whereIn('lead_details.state_id',$state_id);
-
-            }
-            $ExistOrderId = $checkOrder->pluck('id')->toArray();
-
-            if(count( $ExistOrderId ) > 0) {
-
-               /*$leads_details->whereNotIn('lead_details.id',function($query) use($gender, $state_id, $request) {
-                    $query->select('order_details.lead_details_id')->from('order_details')->whereIn('order_details.order_id',function($qs) use($gender, $state_id, $request){
-                        $qs->select('orders.id')->from('orders');
-                        $qs->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id,'orders.age_group_id' => $request->age_group_id]);
+        try {
+            
+            $LeadTypes = LeadType::find($request->lead_type_id);
+            
+            if(Lead::where('lead_type_id',$request->lead_type_id)->exists()) {
+    
+                $setting = SiteSetting::find(1);
+                $checkOrder = DB::table('orders')->select('id')->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id])->exists();
+                
+                if ($checkOrder) {
+                    
+                    $order_data = DB::table('order_details')->select('id', 'lead_details_id')->whereIn('order_id', function($q) use($request) {
+                        $q->select('id')->from('orders')->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id]);
                     });
-                });*/
-                $LeadExistId = OrderDetail::whereIn('order_id', $ExistOrderId)->pluck('lead_details_id')->toArray();
 
-                if(count($LeadExistId) > 0) {
-                    $getLeadDetails = $leads_details->pluck('id')->toArray();
-                    $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
-                    $leads_details_count = count($getLeadDiff);
-                    //$leads_details->whereNotIn('lead_details.id', $LeadExistId);
+                    $result = DB::table('lead_details')
+                    ->selectRaw('count(*) as cnt, count(if(order_details.id is null, NULL, order_details.id)) as order_cnt')
+                    ->joinSub($order_data, 'order_details', 'lead_details.id', '=', 'order_details.lead_details_id', 'left')
+                    ->whereIn('lead_details.lead_id', function($q) use($request) {
+                        $q->select('id')->from('leads')->where('lead_type_id', $request->lead_type_id)->whereNull('leads.deleted_at');
+                    })
+                    ->where([
+                        'lead_details.age_group_id' => $request->age_group_id,
+                        'lead_details.is_duplicate' => 0,
+                        'lead_details.is_invalid' => 0
+                    ])
+                    ->where('lead_details.is_send','<',$setting->no_of_time_lead_download)
+                    ->whereNull('lead_details.deleted_at')
+                    ->when(isset($request->gender), function($q) use($request) {
+                        $q->where('lead_details.gender',$request->gender);
+                    })
+                    ->when(isset($request->state_id) && is_array($request->state_id) && count($request->state_id), function($q) use($request) {
+                        $q->whereIn('lead_details.state_id', function($qs) use($request) {
+                            $qs->select('id')->from('states')->whereIn('states.name', $request->state_id);
+                        });
+                    })->first();
+    
+                    if($result) {
+                        $total_leads_available = $result->cnt;
+                        $total_order_leads_available = $result->order_cnt;
+                    }
+                    
+                } else {
 
-                }else{
-                    $leads_details_count = $leads_details->count();
+                    $result = DB::table('lead_details')
+                    ->selectRaw('count(*) as cnt, sum(if(order_details.id is null, 0, 1)) as order_cnt')
+                    ->whereIn('lead_details.lead_id', function($q) use($request) {
+                        $q->select('id')->from('leads')->where('lead_type_id', $request->lead_type_id)->whereNull('leads.deleted_at');
+                    })
+                    ->where([
+                        'lead_details.age_group_id' => $request->age_group_id,
+                        'lead_details.is_duplicate' => 0,
+                        'lead_details.is_invalid' => 0
+                    ])
+                    ->where('lead_details.is_send','<',$setting->no_of_time_lead_download)
+                    ->whereNull('lead_details.deleted_at')
+                    ->when(isset($request->gender), function($q) use($request) {
+                        $q->where('lead_details.gender',$request->gender);
+                    })
+                    ->when(isset($request->state_id) && is_array($request->state_id) && count($request->state_id), function($q) use($request) {
+                        $q->whereIn('lead_details.state_id', function($qs) use($request) {
+                            $qs->select('id')->from('states')->whereIn('name', $request->state_id);
+                        });
+                    })->first();
+    
+                    if($result) {
+                        $total_leads_available = $result->cnt;
+                    }
                 }
-            }else{
-                $leads_details_count = $leads_details->count();
+                
             }
 
-            $leads_details = $leads_details_count;
-            $total_leads_available = $leads_details;
-
+            return response()->json([true, ['total_leads_available' => ($total_leads_available - $total_order_leads_available), 'LeadTypes' => $LeadTypes->name]], 200);
+            
+        } catch(\Exception $e) {
+            Log::error('count_total_leads_available : '. $e->getMessage(), []);
+            return response()->json([false, ['total_leads_available' => ($total_leads_available - $total_order_leads_available)]], 500);
         }
 
-        return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
     }
+    
+    // public function count_total_leads_available(Request $request){
+
+    //     $total_leads_available = 0;
+    //     $LeadTypes = LeadType::find($request->lead_type_id);
+    //     $checkExist = Lead::where('lead_type_id',$request->lead_type_id)->exists();
+    //     if($checkExist){
+
+    //         $leadTypeId = $request->lead_type_id;
+    //         $gender = isset($request->gender) ? $request->gender : NULL;
+    //         $state_id = null;
+    //         if(isset($request->state_id)) {
+    //             $allStateID = State::whereIn('name', $request->state_id)->pluck('id')->toArray();
+    //             if(count($allStateID) > 0) {
+    //                 $state_id = $allStateID;
+    //             }
+    //         }
+
+    //         $total_leads_available = 0;
+
+    //         $setting = SiteSetting::find(1);
+    //         $Leads = Lead::select('id')->where('lead_type_id',$leadTypeId)->pluck('id')->toArray();
+    //         $LeadTypes = LeadType::find($leadTypeId);
+
+    //         $leads_details = LeadDetail::whereIn('lead_details.lead_id',$Leads)->where(['lead_details.age_group_id' => $request->age_group_id,'lead_details.is_duplicate' => 0,'lead_details.is_invalid' => 0])->where('lead_details.is_send','<',$setting->no_of_time_lead_download);
+
+
+    //         $checkOrder = Order::where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $leadTypeId]);
+
+    //         if($gender != NULL){
+    //             $leads_details->where('lead_details.gender',$gender);
+
+    //         }
+    //         if($state_id != NULL){
+    //             $leads_details->whereIn('lead_details.state_id',$state_id);
+
+    //         }
+    //         $ExistOrderId = $checkOrder->pluck('id')->toArray();
+
+    //         if(count( $ExistOrderId ) > 0) {
+
+    //            /*$leads_details->whereNotIn('lead_details.id',function($query) use($gender, $state_id, $request) {
+    //                 $query->select('order_details.lead_details_id')->from('order_details')->whereIn('order_details.order_id',function($qs) use($gender, $state_id, $request){
+    //                     $qs->select('orders.id')->from('orders');
+    //                     $qs->where(['orders.client_id' => $request->client_id,'orders.lead_type_id' => $request->lead_type_id,'orders.age_group_id' => $request->age_group_id]);
+    //                 });
+    //             });*/
+    //             $LeadExistId = OrderDetail::whereIn('order_id', $ExistOrderId)->pluck('lead_details_id')->toArray();
+
+    //             if(count($LeadExistId) > 0) {
+    //                 $getLeadDetails = $leads_details->pluck('id')->toArray();
+    //                 $getLeadDiff = array_diff($getLeadDetails,$LeadExistId );
+    //                 $leads_details_count = count($getLeadDiff);
+    //                 //$leads_details->whereNotIn('lead_details.id', $LeadExistId);
+
+    //             }else{
+    //                 $leads_details_count = $leads_details->count();
+    //             }
+    //         }else{
+    //             $leads_details_count = $leads_details->count();
+    //         }
+
+    //         $leads_details = $leads_details_count;
+    //         $total_leads_available = $leads_details;
+
+    //     }
+
+    //     return response()->json([true, ['total_leads_available' => $total_leads_available, 'LeadTypes' => $LeadTypes->name]]);
+    // }
 
     /* public function count_total_leads_available(Request $request){
         $total_leads_available = 0;
