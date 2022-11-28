@@ -22,6 +22,7 @@ class ImportController extends Controller
 
     public function index()
     {
+        ini_set('upload_max_filesize', '200M');
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::get();
         $leadFields = LeadFields::get();
@@ -100,7 +101,7 @@ class ImportController extends Controller
     public function start_upload(Request $request)
     {
         try {
-            
+
             if (Lead::where('status', 4)->exists()) {
                 return response()->json(['message' => 'Another file is being processed', 'done' => false]);
             } else {
@@ -112,10 +113,10 @@ class ImportController extends Controller
                 $uploadedTime = \Carbon\Carbon::createFromDate(Lead::where('id',$lead->id)->first()->uploaded_datetime);
                 $from = \Carbon\Carbon::now();
                 $uploadTime = $file . " (Uploaded " . $uploadedTime->diffInHours($from) .' hours and '. $uploadedTime->diffInMinutes($from).' minutes ago.)';
-                
+
                 return response()->json(['message' => 'Hold on tight. Your file is being processed', 'duplicate' => 0, 'invalid' => 0, 'import' => 0, 'rows' => 0, 'done' => true, 'lead' => $request->leadId, 'uploadTime' => $uploadTime, 'rejected' => 0]);
             }
-            
+
         } catch (\Exception $e) {
             return response()->json(['message' => 'Unable to Upload File', 'done' => false, 'err' => $e]);
         }
@@ -128,7 +129,7 @@ class ImportController extends Controller
         $phpBinaryPath = $phpBinaryFinder->find();
 
         $process = new Process([$phpBinaryPath, base_path('artisan'), $command, $data]); // (['php', 'artisan', 'foo:bar', 'json data'])
-        $process->setoptions(['create_new_console' => true]); //Run process in background 
+        $process->setoptions(['create_new_console' => true]); //Run process in background
         $process->start();
     }
 
