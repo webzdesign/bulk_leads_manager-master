@@ -60,11 +60,11 @@ class LeadUpload extends Command
         // Log::info('data'.$request['filename']);
         // return 0;
         $requestJsonData = $this->argument('param');
-        
+
         if (Lead::where('status', 4)->exists()) {
             self::notifyUploadStatus(['message' => 'Upload File in Progress...', 'done' => false]);
         } else  if ($requestJsonData && array_key_exists(0, $requestJsonData)) {
-            
+
             $request = json_decode($requestJsonData[0], true);
 
             if(is_array($request) && array_key_exists('id', $request) && array_key_exists('filename', $request) && array_key_exists('leadType', $request) && array_key_exists('leadId', $request) && is_array($request['id']) && !is_null($request['filename']) && !is_null($request['leadId'])) {
@@ -72,8 +72,7 @@ class LeadUpload extends Command
                 Lead::find($request['leadId'])->update(['status' => 4]);
                 Log::info('request Data', $request);
                 try {
-                    $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number')->toArray();
-
+                    $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number', 'phone_number')->toArray();
                     $getData = (new FastExcel)->withoutHeaders()->import(storage_path('app/import/' . $request['filename']));
                     $getData = $getData->toArray();
                     $rows = array_map(function ($element) {
@@ -87,7 +86,7 @@ class LeadUpload extends Command
                     $states = State::pluck('id', 'name')->toArray();
                     $cities = City::pluck('id', 'name')->toArray();
                     $lead = Lead::find($request['leadId']);
-                    
+
                     $duplicateRecords = 0;
                     $invalid = 0;
 
@@ -113,8 +112,10 @@ class LeadUpload extends Command
                     $mainArr = array();
                     $rejected = 0;
                     $totalRecords = 0;
-                    
+
                     Log::info('first transaction');
+                    $ageGroups = AgeGroup::where('lead_type_id', $lead->lead_type_id)->get();
+
                     foreach ($rows as $row) {
                         // Log::info('starts on : '.date('Y-m-d H:i:s'));
                         $allEmpty = 0;
@@ -164,19 +165,21 @@ class LeadUpload extends Command
 
                         if (!is_null($phone_number_index)) {
                             if ($row[$phone_number_index] != '' || $row[$phone_number_index] != null) {
-                                if (in_array($row[$phone_number_index], $phoneNumbers)) {
+                                // if (in_array($row[$phone_number_index], $phoneNumbers)) {
+                                if (isset($phoneNumbers[$row[$phone_number_index]])) {
                                     $arr['is_duplicate'] = 1;
                                     $arr['is_invalid'] = 0;
                                     $duplicateRecords++;
                                 } else {
                                     $arr['is_duplicate'] = 0;
                                     $arr['is_invalid'] = 0;
-                                    $phoneNumbers[] = $row[$phone_number_index];
+                                    $phoneNumbers[$row[$phone_number_index]] = $row[$phone_number_index];
                                 }
                             } else {
                                 $arr['is_duplicate'] = 0;
                                 $arr['is_invalid'] = 1;
                                 $invalid++;
+                                $arr = [];
                                 continue;
                             }
                         }
@@ -302,10 +305,16 @@ class LeadUpload extends Command
                                 continue;
                             }
 
-                            $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead->lead_type_id)->where('age_from', '<=', $diffDays)->where('age_to', '>=', $diffDays)->first();
-                            if ($ageGroup) {
-                                $arr['age_group_id'] = $ageGroup->id;
+                            foreach ($ageGroups as $ageGroup) {
+                                if ($ageGroup->age_from <= $diffDays && $ageGroup->age_to >= $diffDays) {
+                                    $arr['age_group_id'] = $ageGroup->id;
+                                }
                             }
+
+                            // $ageGroup = AgeGroup::select('id')->where('lead_type_id', $lead->lead_type_id)->where('age_from', '<=', $diffDays)->where('age_to', '>=', $diffDays)->first();
+                            // if ($ageGroup) {
+                            //     $arr['age_group_id'] = $ageGroup->id;
+                            // }
 
                             $arr['age'] = $diffDays;
                             $row[$date_generated_index] = $generated_date;
@@ -380,18 +389,18 @@ class LeadUpload extends Command
                             );
                             LeadUploadTrack::upsert(array($infoData), 'lead_id', ['inserted_count', 'total_count', 'updated_at']);
                         }
-    
+
                         $imported = ($totalRows - ($duplicateRecords + $invalid)) - $rejected;
-    
+
                         if ($rows) {
                             Log::info('updating Data');
                             LeadUploadTrack::where('lead_id', $lead->id)->update(['status' => 3]);
                             Lead::find($lead->id)->update(['rows' => $totalRows, 'duplicate_row' => $duplicateRecords, 'invalid_row' => $invalid, 'total_row' => $imported, 'status' => 3]);
-    
+
                             $file = Lead::where('id', $lead->id)->first()->file_name;
                             $uploadedTime = \Carbon\Carbon::createFromDate(Lead::where('id', $lead->id)->first()->uploaded_datetime);
                             $from = \Carbon\Carbon::now();
-    
+
                             $uploadTime = $file . " (Uploaded " . $uploadedTime->diffInHours($from) . ' hours and ' . $uploadedTime->diffInMinutes($from) . ' minutes ago.)';
                             self::notifyUploadStatus(['message' => 'Data Inserted successFully', 'duplicate' => $duplicateRecords, 'invalid' => $invalid, 'import' => $imported, 'rows' => $totalRows, 'done' => true, 'lead' => $lead->id, 'uploadTime' => $uploadTime, 'rejected' => $rejected, 'request_token' => $request['request_token']], $lead->added_by);
                         } else {
