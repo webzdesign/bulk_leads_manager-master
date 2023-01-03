@@ -13,10 +13,8 @@ use App\Models\LeadDetail;
 use App\Models\OrderDetail;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
-use DataTables,Mail,Storage;
-use App\Exports\LeadDetailsExport;
+use Illuminate\Support\Facades\Mail;
 use App\Models\EmailTemplate;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 class OrdersController extends Controller
 {
@@ -75,7 +73,10 @@ class OrdersController extends Controller
             })
             ->editColumn('qty',function($row){
                 $age_group = $row->qty;
-                return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
+                if($row->age_group) {
+                    return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '').$row->age_group->age_from.'-'.$row->age_group->age_to.' Days';
+                }
+                return ($age_group > 0 ? $age_group.' '.$row->lead_type->name.' | ' : '');
             })
             ->addIndexColumn()
 
@@ -122,359 +123,206 @@ class OrdersController extends Controller
         return $datatable;
     }
 
-    // public static function sendLead($order_id = ''){
-
-    //     $setting = SiteSetting::find(1);
-    //     $status = isset($order_id) && $order_id !=null ? '1' : '0';
-
-    //     $order_data = Order::with(['client'])->where('status',$status);
-    //     if(isset($order_id) && $order_id !=null){
-
-    //         $value = $order_data->where('id',$order_id)->first();
-    //         $site_setting = SiteSetting::first()->toArray();
-    //         $file_name = $value->file_name;
-
-    //         $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
-    //         $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
-    //         $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
-    //         $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
-
-    //         $client_email = $value->client->email;
-    //         $to_email = [$client_email,$from_email];
-
-    //         Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
-
-    //             $message->from($from_email, $from_name);
-    //             if($bcc_email !=''){
-    //                 $message->bcc([$bcc_email]);
-    //             }
-    //             if($replay_email !=''){
-    //                 $message->replyTo($replay_email);
-    //             }
-    //             $message->to($to_email)->subject('Leads send');
-    //         });
-
-    //         echo "Lead details send successfuly.";
-    //         return true;
-    //         // $order_data->where('id',$order_id);
-    //     }
-    //     $order_data = $order_data->get();
-
-    //     $lead_response = [];
-
-    //     if(!$order_data->isEmpty()){
-    //         foreach($order_data as $key => $value){
-    //             $lead_collection = [];
-
-    //             $lead_ids = Lead::where(['lead_type_id' => $value->lead_type_id])->pluck('id')->toArray();
-
-    //             if(isset($lead_ids) && $lead_ids !=null){
-    //                 if($order_id == ''){
-    //                     // $skip_lead_details_ids = OrderDetail::where(['order_id' => $value->id])->pluck('lead_details_id')->toArray();
-    //                     $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
-    //                     $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
-    //                 }
-    //                 $lead_details = LeadDetail::with(['lead','country','state','city'])->whereIn('lead_id',$lead_ids)->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
-
-    //                 if($order_id == '') {
-    //                     $lead_details->where('is_send','<',$setting->no_of_time_lead_download);
-    //                 }
-    //                 if(isset($value->state_id) && $value->state_id !=null){
-    //                     $lead_details->where('state_id',$value->state_id);
-    //                 }
-    //                 if(isset($value->gender) && $value->gender !=null){
-    //                     $lead_details->where('gender',$value->gender);
-    //                 }
-    //                 if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-    //                     foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
-    //                         $lead_details->whereNotIn('id',$skip_lead_details_id);
-    //                     }
-    //                 }
-    //                 // if(isset($order_id) && $order_id != null) {
-    //                 //     $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
-    //                 //     $lead_details->whereIn('id',$orderDetailsID);
-    //                 // }
-
-    //                 // $lead_details = $lead_details->get()->take($value->qty);
-    //                 $lead_details = $lead_details->limit($value->qty)->get();
-
-    //                 if(isset($lead_details) && $lead_details !=null){
-
-    //                     foreach ($lead_details as $key => $row) {
-    //                         $age_group = AgeGroup::where('id',$row->age_group_id)->get();
-
-    //                         $age_from = !$age_group->isEmpty() ? $age_group[0]->age_from : '';
-    //                         $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : '';
-
-    //                         $lead_collection[] = array(
-    //                             'age_group' => $age_from.' - '.$age_to,
-    //                             'first_name' => $row->first_name,
-    //                             'last_name' => $row->last_name,
-    //                             'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
-    //                             'email' => $row->email,
-    //                             'address' => $row->address,
-    //                             'country' => isset($row->country->name) && $row->country->name !=null ? $row->country->name : '',
-    //                             'state' => isset($row->state->name) && $row->state->name !=null ? $row->state->name : '',
-    //                             'city' => isset($row->city->name) && $row->city->name !=null ? $row->city->name : '',
-    //                             'phone_number' => $row->phone_number,
-    //                             'birth_date' => $row->birth_date,
-    //                             'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
-    //                             'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
-    //                         );
-
-    //                         //Add records
-    //                         $where_array = ['order_id' => $value->id, 'lead_details_id' => $row->id];
-    //                         OrderDetail::updateOrCreate($where_array,['order_id' => $value->id, 'lead_details_id' => $row->id]);
-
-    //                         if($order_id == '') {
-    //                             LeadDetail::where('id', $row->id)->increment('is_send', 1);
-    //                         }
-    //                     }
-
-    //                     if(isset($lead_collection) && $lead_collection !=null){
-
-    //                         $file_name = 'LeadReport-'.uniqid().'.csv';
-    //                         $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
-
-    //                         //Mail sending
-    //                         $site_setting = SiteSetting::first()->toArray();
-
-    //                         $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
-    //                         $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
-    //                         $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
-    //                         $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
-
-    //                         $client_email = $value->client->email;
-    //                         $to_email = [$client_email,$from_email];
-    //                         $upload_path = 'storage/leadreport/'.$file_name;
-
-    //                         Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email){
-
-    //                             $message->from($from_email, $from_name);
-    //                             if($bcc_email !=''){
-    //                                 $message->bcc([$bcc_email]);
-    //                             }
-    //                             if($replay_email !=''){
-    //                                 $message->replyTo($replay_email);
-    //                             }
-    //                             $message->to($to_email)->subject('Leads send');
-    //                         });
-
-    //                         // Update order status
-    //                         Order::where('id', $value->id)->update(['status' => '1','file_name' => $file_name]);
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         if(isset($lead_response) && $lead_response !=null){
-    //             echo "Lead details send successfuly.";
-    //             return $lead_response;
-    //         }
-    //     }
-    // }
-
     public static function sendLead($order_id = ''){
 
-        $start_time = time();
-        $setting = SiteSetting::find(1);
-        $status = isset($order_id) && $order_id !=null ? '1' : '0';
-        $totalRecords = 0;
-        $order_data = Order::select('id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date','file_name')->with(['client'=>function($query){
-            $query->select('id', 'email','lastName');
-        }])->where('status',$status);
+        $start_time = microtime(true);
 
-        if(isset($order_id) && $order_id !=null){ //resend
+        try {
 
-            $value = $order_data->where('id',$order_id)->first();
-            $site_setting = SiteSetting::first()->toArray();
-            $file_name = $value->file_name;
-            $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
-
-            $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
-            $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
-            $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
-            $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
-
-            $client_email = $value->client->email;
-            $to_email = [$client_email,$from_email];
-
-            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
-
-                $message->from($from_email, $from_name);
-                if($bcc_email !=''){
-                    $message->bcc([$bcc_email]);
-                }
-                if($replay_email !=''){
-                    $message->replyTo($replay_email);
-                }
-                $message->to($to_email)->subject($emailSubject->subject);
-            });
-
-            echo "Lead details send successfuly.";
-            return true;
-            // $order_data->where('id',$order_id);
-        }
-
-        $order_data = $order_data->get();
-
-        $lead_response = [];
-
-        if(!$order_data->isEmpty()){ // lead:send
-
-            foreach($order_data as $key => $value){
-
-                $lead_collection = [];
-                $skip_lead_details_id_exists = false;
-
-                if(Lead::where(['lead_type_id' => $value->lead_type_id])->exists()){
-                    if($order_id == ''){
-                        $clientOrderId = $value->client_id;
-                        /* Old Version Query Starts */
-
-                        // $clientOrderId = Order::where('client_id',$value->client_id)->pluck('id');
-                        // $skip_lead_details_ids = OrderDetail::whereIn('order_id',$clientOrderId)->pluck('lead_details_id')->toArray();
-
-                        /* Old Version Query Ends*/
-
-                        /* Optimized Version Query Starts */
-
-                        $skip_lead_details_id_exists = OrderDetail::whereIn('order_id',function($query) use($clientOrderId) {
-                            $query->select('id')->from('orders')->where('client_id', $clientOrderId);
-                        })->exists();
-
-                        /* Optimized Version Query Ends */
+            $setting = SiteSetting::find(1);
+            $status = isset($order_id) && $order_id !=null ? '1' : '0';
+            $totalRecords = 0;
+            $order_data = Order::with(['client'=>function($query){
+                $query->select('id', 'email','lastName');
+            }])->where('status',$status);
+            
+    
+            if(isset($order_id) && $order_id !=null){ //resend
+    
+                $value = $order_data->where('id',$order_id)->first(['id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date','file_name']);
+                $site_setting = SiteSetting::first()->toArray();
+                $file_name = $value->file_name;
+                $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
+    
+                $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
+                $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
+                $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
+                $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
+    
+                $client_email = $value->client->email;
+                $to_email = [$client_email,$from_email];
+    
+                Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
+    
+                    $message->from($from_email, $from_name);
+                    if($bcc_email !=''){
+                        $message->bcc([$bcc_email]);
                     }
-                    $leadIds = $value->lead_type_id;
-                    $lead_details = LeadDetail::whereHas('lead' , function($q) use($leadIds){
-                        $q->where('lead_type_id',$leadIds);
-                    })->with(['country','state','city'])->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0]);
-
-                    if($order_id == '') {
-                        $lead_details->where('is_send','<',$setting->no_of_time_lead_download);
+                    if($replay_email !=''){
+                        $message->replyTo($replay_email);
                     }
-                    if(isset($value->state_id) && $value->state_id !=null){
-                        $lead_details->whereIn('state_id',explode(',',$value->state_id));
-                    }
-                    if(isset($value->gender) && $value->gender !=null){
-                        $lead_details->where('gender',$value->gender);
+                    $message->to($to_email)->subject($emailSubject->subject);
+                });
+    
+                echo "Lead details send successfuly.";
+                return true;
+            }
+    
+            $order_data = $order_data->get(['id','lead_type_id','age_group_id','client_id','state_id','gender','qty','order_date','file_name']);
+    
+            if(!$order_data->isEmpty()) { // lead:send
+    
+                foreach($order_data as $value){
+                    if(DB::table('order_details')->where('order_id', $value->id)->exists()) {
+                        DB::table('order_details')->where('order_id', $value->id)->delete();
                     }
 
-                    if($skip_lead_details_id_exists) {
-                        $lead_details->whereNotIn('id', function($q) use($clientOrderId) {
-                            $q->select('lead_details_id')->from('order_details')->whereIn('order_id',function($query) use($clientOrderId) {
+                    $limitRecords = $value->qty;
+                    $chunkBatch = 5000;
+
+                    if($value->qty < $chunkBatch) {
+                        $chunkBatch = $value->qty;
+                    }
+
+                    $i = 0;
+                    $skip_lead_details_id_exists = false;
+    
+                    if (DB::table('leads')->where('lead_type_id', $value->lead_type_id)->exists()) {
+
+                        if($order_id == ''){
+                            $clientOrderId = $value->client_id;
+    
+                            /* Optimized Version Query Starts */
+    
+                            $skip_lead_details_id_exists = DB::table('order_details')->whereIn('order_id',function($query) use($clientOrderId) {
                                 $query->select('id')->from('orders')->where('client_id', $clientOrderId);
+                            })->exists();
+    
+                            /* Optimized Version Query Ends */
+                        }
+
+                        $leadIds = $value->lead_type_id;
+                        $loopBreak = false;
+                        LeadDetail::whereHas('lead' , function($q) use($leadIds){
+                            $q->where('lead_type_id',$leadIds);
+                        })->where(['age_group_id' => $value->age_group_id,'is_duplicate' => 0])
+                        ->when(($order_id == ''), function($q) use($setting) {
+                            $q->where('is_send','<',$setting->no_of_time_lead_download);
+                        })
+                        ->when((isset($value->state_id) && $value->state_id !=null), function($q) use($value) {
+                            $q->whereIn('state_id',explode(',',$value->state_id));
+                        })
+                        ->when(isset($value->gender) && $value->gender !=null, function($q) use($value) {
+                            $q->where('gender',$value->gender);
+                        })
+                        ->when(false != $skip_lead_details_id_exists, function($qs) use($clientOrderId) {
+                            $qs->whereNotIn('id', function($q) use($clientOrderId) {
+                                $q->select('lead_details_id')->from('order_details')->whereIn('order_id',function($query) use($clientOrderId) {
+                                    $query->select('id')->from('orders')->where('client_id', $clientOrderId);
+                                });
                             });
+                        })->chunkById($chunkBatch, function($lead_detail_row) use($value, $order_id, &$i, &$limitRecords, &$totalRecords, &$loopBreak) {
+
+                            foreach ($lead_detail_row->chunk(2000) as $lead_detail) {
+
+                                $order_details = array();
+
+                                foreach ($lead_detail as $row) {
+
+                                    //Add/Update records array
+                                    $order_details[] = ['order_id' => $value->id, 'lead_details_id' => $row->id, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')];
+
+                                    if($order_id == '') {
+                                        DB::table('lead_details')->where('id', $row->id)->increment('is_send', 1);
+                                    }
+
+                                    $i++;
+                                    
+                                    if($i == $limitRecords) {
+                                        $loopBreak = true;
+                                        $totalRecords += $i;
+
+                                        break;
+                                    }
+                                }
+
+                                DB::table('order_details')->upsert(array_values($order_details), ['order_id', 'lead_details_id'], ['order_id', 'lead_details_id','created_at', 'updated_at']);
+                                $order_details = array();
+
+                                if($loopBreak) {
+                                    break;
+                                }
+                            }
+
+                            if($loopBreak) {
+                                return false;
+                            }
                         });
-                    }
 
-                    /* Old Version Query Starts */
-
-                    // if(isset($skip_lead_details_ids) && $skip_lead_details_ids !=null){
-                    //     foreach(array_chunk($skip_lead_details_ids, 200) as $skip_lead_details_id) {
-                    //         $lead_details->whereNotIn('id',$skip_lead_details_id);
-                    //     }
-                    // }
-
-                    /* Old Version Query Ends */
-                    // if(isset($order_id) && $order_id != null) {
-                    //     $orderDetailsID = OrderDetail::where('order_id',$order_id)->get()->pluck('lead_details_id')->toArray();
-                    //     $lead_details->whereIn('id',$orderDetailsID);
-                    // }
-
-                    // $lead_details = $lead_details->get()->take($value->qty);
-                    $lead_details = $lead_details->limit($value->qty)->get();
-                    $totalRecords = $lead_details->count();
-                    if(isset($lead_details) && $lead_details !=null){
-
-                        foreach ($lead_details->chunk(2000) as $lead_detail) {
-
-                            $order_details = array();
-
-                            foreach ($lead_detail as $row) {
-                                /* $age_group = AgeGroup::where('id',$row->age_group_id)->get();
-
-                                $age_from = !$age_group->isEmpty() ? $age_group[0]->age_from : '';
-                                $age_to = !$age_group->isEmpty() ? $age_group[0]->age_to : ''; */
-
-                                $lead_collection[] = array(
-                                    // 'age_group' => $age_from.' - '.$age_to,
-                                    'first_name' => $row->first_name,
-                                    'last_name' => $row->last_name,
-                                    'gender' => $row->gender == 0 ? 'Male' : ($row->gender == 1 ? 'Female' : ''),
-                                    'email' => $row->email,
-                                    'address' => $row->address,
-                                    'country' => isset($row->country->name) && $row->country->name !=null ? $row->country->name : '',
-                                    'state' => isset($row->state->name) && $row->state->name !=null ? $row->state->name : '',
-                                    'city' => isset($row->city->name) && $row->city->name !=null ? $row->city->name : '',
-                                    'phone_number' => $row->phone_number,
-                                    'birth_date' => $row->birth_date,
-                                    // 'age' => isset($row->age) && $row->age !=null ? $row->age : 'N/A',
-                                    'zip' => isset($row->zip) && $row->zip !=null ? $row->zip : 'N/A',
-                                    'ip'  => isset($row->ip) && $row->ip != null ? $row->ip : 'N/A',
-                                    'date_generated' => date("m-d-Y", strtotime($row->date_generated)),
-                                );
-
-                                //Add/Update records array
-                                $order_details[] = ['order_id' => $value->id, 'lead_details_id' => $row->id, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')];
-
-                                if($order_id == '') {
-                                    LeadDetail::where('id', $row->id)->increment('is_send', 1);
-                                }
-                            }
-
-                            if(count($order_details)) {
-                                foreach(array_chunk($order_details, 2000) as $order_detail) {
-                                    DB::table('order_details')->upsert($order_detail, ['order_id', 'lead_details_id'], ['order_id', 'lead_details_id','created_at', 'updated_at']);
-                                }
-                            }
-                        }
-
-                        if(isset($lead_collection) && $lead_collection !=null){
-
-                            $leadType = LeadType::find($value->lead_type_id);
-                            $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$value->qty.'_'.$value->client->lastName.'_'.uniqid().'.csv';
-                            $lead_response = Excel::store(new LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
-
-                            //Mail sending
-                            $site_setting = SiteSetting::first()->toArray();
-                            $emailSubject = EmailTemplate::where('email_subject','lead-send')->first();
-
-                            $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
-                            $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
-                            $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
-                            $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
-
-                            $client_email = $value->client->email;
-                            $to_email = [$client_email,$from_email];
-                            $upload_path = 'storage/leadreport/'.$file_name;
-
-                            Mail::send('mail/leadreport', ['order_data' => $value, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
-
-                                $message->from($from_email, $from_name);
-                                if($bcc_email !=''){
-                                    $message->bcc([$bcc_email]);
-                                }
-                                if($replay_email !=''){
-                                    $message->replyTo($replay_email);
-                                }
-                                $message->to($to_email)->subject($emailSubject->subject);
-                            });
-
-                            // Update order status
-                            Order::where('id', $value->id)->update(['status' => '1','file_name' => $file_name]);
-                            $lastProductOrder = $value->qty.' '. $value->lead_type->name .' | '. $value->age_group->age_from .'-'. $value->age_group->age_to . ' Days Old';
-                            Client::where('id', $value->client_id)->update(['last_order_date' => $value->order_date, 'last_product_ordered' => $lastProductOrder]);
-                        }
+                        self::sendOrderUpdateAndLeadsEmail($value);
+                        
                     }
                 }
+    
             }
 
-            if(isset($lead_response) && $lead_response !=null){
-                echo $totalRecords." Lead details send successfuly in ".(time() - $start_time). "ms";
-                return $lead_response;
-            }
+            echo ('time_elapsed_secs : '.(microtime(true) - $start_time)." : Mem used : ".memory_get_peak_usage());
+            return true;
+        } catch(\Exception $ex) {
+            echo('exception caught'. $ex->getMessage());
         }
+    }
+
+    public static function sendOrderUpdateAndLeadsEmail($order_data) {
+
+        $lead_response = false;
+
+        try {
+            
+            $leadType = \App\Models\LeadType::find($order_data->lead_type_id);
+            $lead_collection = \Illuminate\Support\Facades\DB::select("CALL order_excel_generate_by_id(".$order_data->id.")");
+            
+            if(count($lead_collection) > 0) {
+                
+                $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$order_data->qty.'_'.$order_data->client->lastName.'_'.uniqid().'.csv';
+                $lead_response = \Maatwebsite\Excel\Facades\Excel::store(new \App\Exports\LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
+    
+                //Mail sending
+                $site_setting = \App\Models\SiteSetting::first()->toArray();
+                $emailSubject = \App\Models\EmailTemplate::where('email_subject','lead-send')->first();
+    
+                $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
+                $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
+                $bcc_email = isset($site_setting['bcc_email_address']) && $site_setting['bcc_email_address'] !=null ? $site_setting['bcc_email_address'] : '';
+                $replay_email = isset($site_setting['reply_to_email']) && $site_setting['reply_to_email'] !=null ? $site_setting['reply_to_email'] : '';
+    
+                $client_email = $order_data->client->email;
+                $to_email = [$client_email,$from_email];
+                $upload_path = 'storage/leadreport/'.$file_name;
+    
+                \Illuminate\Support\Facades\Mail::send('mail/leadreport', ['order_data' => $order_data, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
+    
+                    $message->from($from_email, $from_name);
+                    if($bcc_email !=''){
+                        $message->bcc([$bcc_email]);
+                    }
+                    if($replay_email !=''){
+                        $message->replyTo($replay_email);
+                    }
+                    $message->to($to_email)->subject($emailSubject->subject);
+                });
+    
+                // Update order status
+                \App\Models\Order::where('id', $order_data->id)->update(['status' => '1','file_name' => $file_name]);
+                $lastProductOrder = $order_data->qty.' '. $order_data->lead_type->name .' | '. $order_data->age_group->age_from .'-'. $order_data->age_group->age_to . ' Days Old';
+                \App\Models\Client::where('id', $order_data->client_id)->update(['last_order_date' => $order_data->order_date, 'last_product_ordered' => $lastProductOrder]);
+            }
+        } catch(\Exception $e) {
+            $lead_response = false;
+            echo 'something went wrong '.$e->getMessage();
+        }
+
+        return $lead_response;
     }
 
     public static function download($path)
