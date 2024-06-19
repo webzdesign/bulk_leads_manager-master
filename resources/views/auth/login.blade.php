@@ -23,7 +23,7 @@
                         </svg>
                         Email Address
                     </label>
-                    <input type="text" name="email" id="email" class="form-control f-400 f-14 text-dark" value="{{ old('email') }}" placeholder="Enter your email address" autofocus>
+                    <input type="text" name="email" id="email" class="form-control f-400 f-14 text-dark" value="{{ old('email', 'admin@leadmanager.com') }}" placeholder="Enter your email address" autofocus>
                     @error('email')
                         <span class="text-danger f-400 f-14">
                             {{ $message }}
@@ -41,7 +41,7 @@
                         </svg>
                         Password
                     </label>
-                    <input type="password" name="password" id="password" class="form-control f-400 f-14 text-dark" placeholder="Enter your password">
+                    <input type="password" name="password" id="password" value="Lead@456" class="form-control f-400 f-14 text-dark" placeholder="Enter your password">
                     @error('password')
                         <span class="text-danger f-400 f-14">
                             {{ $message }}
