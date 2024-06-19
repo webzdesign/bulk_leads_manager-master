@@ -61,6 +61,8 @@ class LeadUpload extends Command
         // return 0;
         $requestJsonData = $this->argument('param');
 
+        // $requestJsonData = '{"id":["1","2","3","4","5","6","10","8","11","12","13","null"],"filename":"aa1_1672642403.csv","leadType":"Australian Bulk LeadsAustralian Bulk LeadsAustralian Bulk Leads","leadId":"2","request_token":"od9Kngej30eTluhFR7baGZXbUnmbNTWbuz6kOmuA"}';
+
         if (Lead::where('status', 4)->exists()) {
             self::notifyUploadStatus(['message' => 'Upload File in Progress...', 'done' => false]);
         } else  if ($requestJsonData && array_key_exists(0, $requestJsonData)) {
@@ -75,11 +77,13 @@ class LeadUpload extends Command
                     $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number', 'phone_number')->toArray();
                     $getData = (new FastExcel)->withoutHeaders()->import(storage_path('app/import/' . $request['filename']));
                     $getData = $getData->toArray();
+                    // dd($getData);
                     $rows = array_map(function ($element) {
                         return array_values($element);
                     }, $getData);
 
                     $totalRows = count($rows);
+                    // dd($totalRows);
                     Lead::find($request['leadId'])->update(['rows' => $totalRows]);
 
                     $countries = Country::pluck('id', 'name')->toArray();
@@ -93,7 +97,7 @@ class LeadUpload extends Command
                     $leadFields = LeadFields::where('status', 1)->pluck('id', 'columnName')->toArray();
                     $lead_older = SiteSetting::find(1);
                     $days = $lead_older->disallow_import_lead_older * 30;
-
+                    // dd($days);
                     $email_index = in_array($leadFields['email'], $request['id']) ? array_search($leadFields['email'], $request['id']) : null;
                     $gender_index = in_array($leadFields['gender'], $request['id']) ? array_search($leadFields['gender'], $request['id']) : null;
                     $city_index = in_array($leadFields['city_id'], $request['id']) ? array_search($leadFields['city_id'], $request['id']) : null;
@@ -145,6 +149,7 @@ class LeadUpload extends Command
 
                         if (!is_null($email_index)) {
                             $arr['email'] = $row[$email_index];
+                            
                             // if ($row[$email_index] != '' || $row[$email_index] != null) {
                             //     if (in_array($row[$email_index], $emails)) {
                             //         $arr['is_duplicate'] = 1;
@@ -243,15 +248,16 @@ class LeadUpload extends Command
                             if (strpos($row[$date_generated_index], '-') !== false) {
                                 $checkDate = explode('-', $row[$date_generated_index]);
                                 if (isset($checkDate[0]) && isset($checkDate[1]) && isset($checkDate[2])) {
-
+                                    
                                     if (strlen($checkDate[0]) == '2' && strlen($checkDate[1]) == '2') {
                                         if (strlen($checkDate[2]) == '2') {
                                             $dates = DateTime::createFromFormat('y', $checkDate[2]);
                                             $year = $dates->format('Y');
-
+                                            
                                             $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $year));
                                         } else {
-                                            $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $checkDate[2]));
+                                            $generated_date = date("Y-m-d", strtotime($checkDate[0] . '-' . $checkDate[1] . '-' . $checkDate[2]));
+                                            // dd($row[$date_generated_index], $generated_date, $checkDate[1] . '-' . $checkDate[0] . '-' . $checkDate[2]);
                                         }
                                     } else {
                                         if (strlen($checkDate[0]) == '1' && strlen($checkDate[1]) == '1') {
@@ -295,12 +301,14 @@ class LeadUpload extends Command
                             }
 
                             $today = date('Y-m-d');
+                            // dd($generated_date);
                             $date1 = date_create($generated_date);
                             $date2 = date_create($today);
                             $diff  = date_diff($date1, $date2);
                             $diffDays = intval($diff->format("%a"));
 
                             if ($diffDays > $days) {
+                                // dd('ert', $diffDays);
                                 $rejected++;
                                 continue;
                             }
@@ -329,11 +337,12 @@ class LeadUpload extends Command
                                 $arr[$column] = utf8_encode($row[$key]);
                             }
                         }
-
+                        // dd($arr);
                         if (!empty($arr)) {
                             $mainArr[] = $arr;
                         }
                         if (count($mainArr) == 2000) {
+                            // dd($mainArr);
                             try {
                                 DB::beginTransaction();
                                 Log::info('inserting 2000 Data Starts');
