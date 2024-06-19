@@ -147,9 +147,15 @@ class ImportController extends Controller
                 return response()->json(['inserted_count' => 0, 'total_count' => 0, 'file_in_progress' => true]);
             }
         } else {
-            $notifyData = DB::table('notifications')->whereNull('read_at')->whereIn('data->thread->lead', function($q) {
-                $q->select('id')->from('leads')->where('status', 3)->orderBy('id', 'desc');
-            })->where('data->thread->request_token', session()->get('_token'))->orderBy('updated_at', 'desc')->first();
+            $leadIds = Lead::select('id')->where('status', 3)->orderBy('id', 'desc')->pluck('id')->toArray();
+
+            $notifyData = DB::table('notifications')
+            ->whereNull('read_at')
+            ->whereIn(DB::raw("CAST(json_unquote(json_extract(`data`, '$.\"thread\".\"lead\"')) AS CHAR)"), $leadIds)
+            ->where(DB::raw("CAST(json_unquote(json_extract(`data`, '$.\"thread\".\"request_token\"')) AS CHAR)"), session()->get('_token'))
+            ->orderBy('updated_at', 'desc')
+            ->first();
+		
             if($notifyData) {
                 $user = \App\Models\User::find($notifyData->notifiable_id);
                 if($user) {
