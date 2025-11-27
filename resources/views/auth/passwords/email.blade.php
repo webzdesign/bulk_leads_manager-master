@@ -3,7 +3,7 @@
 @section('content')
 
     <section class="loginBanner w-100">
-        <img src="{{ asset('public/assets/images/login-banner.png') }}" alt="login" class="w-100">
+         <img src="{{ asset('assets/images/login-banner.png') }}" alt="login" class="w-100">
     </section>
 
     <section class="loginCard d-flex align-items-center justify-content-center">
@@ -12,14 +12,16 @@
                 <h3 class="text-white f-700 f-22 m-0">Forgot Password</h3>
             </div>
 
-            @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
-                </div>
-            @endif
+         
 
             <form method="POST" action="{{ route('password.email') }}" id="form">
                 @csrf
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                        @endif
+
                 <div class="form-group">
                     <label for="email" class="c-gr f-500 f-12 mb-2 d-flex align-items-center">
                         <svg width="14" height="15" viewBox="0 0 14 15" fill="none"
@@ -70,5 +72,4 @@
         });
     });
 </script>
-
 @endsection

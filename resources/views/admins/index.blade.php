@@ -15,7 +15,7 @@
                     </tr>
                 </thead>
                 <tbody id='tbody'>
-                    {{-- @foreach ($users as $user)
+                     @foreach ($users as $user)
                         <tr>
                             <td class="c-7b">{{$user->firstName}}</td>
                             <td class="c-7b">{{$user->lastName}}</td>
@@ -45,7 +45,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach --}}
+                        @endforeach 
                 </tbody>
             </table>
         </div>
@@ -225,7 +225,7 @@
                 )
             @endif
 
-            var datatable = $('.datatable').DataTable({
+            var datatable = $('#example').DataTable({
                 "dom": "<'filterHeader d-block-500 cardsHeader'<'#filterInput'><'#filterBtn'>>" +
                     "<'row m-0'<'col-sm-12 p-0'tr>>" +
                     "<'row datatableFooter'<'col-md-5 align-self-center'i><'col-md-7'p>>",

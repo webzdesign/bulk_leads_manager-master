@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\LeadDeleteController;
 use Illuminate\Console\Command;
+use App\Http\Controllers\LeadDeleteController;
 
 class LeadDelete extends Command
 {
@@ -19,22 +19,15 @@ class LeadDelete extends Command
      *
      * @var string
      */
-    protected $description = 'Lead Delete';
+     protected $description = 'Lead Delete';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
+     public function __construct()
     {
         parent::__construct();
     }
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle()
     {

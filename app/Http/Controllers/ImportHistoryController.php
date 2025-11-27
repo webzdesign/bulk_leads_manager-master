@@ -95,13 +95,13 @@ class ImportHistoryController extends Controller
     public function downloadOriginal($id)
     {
         $type = 'original';
-        return Excel::download(new LeadStatusDownload($id,$type), Lead::where('id',decrypt($id))->first()->file_name."-importedRecords.csv");
+        // return Excel::download(new LeadStatusDownload($id,$type), Lead::where('id',decrypt($id))->first()->file_name."-importedRecords.csv");
     }
 
     public function downloadDuplicate($id)
     {
         $type = 'duplicate';
-        return Excel::download(new LeadStatusDownload($id,$type), Lead::where('id',decrypt($id))->first()->file_name."-duplicateRecords.csv");
+        // return Excel::download(new LeadStatusDownload($id,$type), Lead::where('id',decrypt($id))->first()->file_name."-duplicateRecords.csv");
     }
 
 }

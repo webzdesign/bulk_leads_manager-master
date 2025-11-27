@@ -13,3 +13,4 @@ class Client extends Model
 
     protected $guarded = [];
 }
+

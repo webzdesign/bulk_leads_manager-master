@@ -26,7 +26,7 @@ class NewOrderController extends Controller
         $LeadTypes = LeadType::orderBy('id','desc')->get();
         $States = State::orderBy('name')->get();
 
-        return view('new_order/index',compact('moduleName','LeadTypes','States'));
+        return view('new_orders/index',compact('moduleName','LeadTypes','States'));
     }
 
     public function create_client(Request $request){

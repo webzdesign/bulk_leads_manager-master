@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
     <section class="loginBanner w-100">
-        <img src="{{ asset('public/assets/images/login-banner.png') }}" alt="login" class="w-100">
+        <img src="{{ asset('assets/images/login-banner.png') }}" alt="login" class="w-100">
     </section>
 
     <section class="loginCard d-flex align-items-center justify-content-center">
@@ -48,7 +48,7 @@
                     @enderror
                 </div>
                 <div class="text-end mt-2">
-                    <a href="{{ route('password.request') }}" class="c-7b f-12 f-500">Forgot Password?</a>
+                     <a href="{{ route('password.request') }}" class="c-7b f-12 f-500">Forgot Password?</a>
                 </div>
                 <button type="submit" class="btn-primary text-uppercase w-100 mt-4">sign in</button>
             </form>

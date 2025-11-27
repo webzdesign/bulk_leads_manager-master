@@ -54,7 +54,7 @@ class ImportController extends Controller
                 }
 
                 $fileName = $title . "_" . strtotime(date(now())) . "." . $file->getClientOriginalExtension();
-                $file->move('storage/app/import', $fileName);
+               $file->move(storage_path('app/import'), $fileName);
             }
 
             $leadData = Lead::create([

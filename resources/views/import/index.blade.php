@@ -752,12 +752,11 @@
                                 generatedDate =  dateParts[0] + '/' + dateParts[1] +'/'+ dateParts[2];
                             }
                         }
-
                         const date1 = new Date(generatedDate);
                         const date2 = new Date();
                         const diffTime = Math.abs(date2 - date1);
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+                       
                         if(diffDays > Days) {
                             validDate.push("false");
                         } else {

@@ -12,6 +12,8 @@ class LeadDetail extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+    protected $table = 'lead_details';
+    protected $fillable =['firstname','lastname','gender','email','address','countru_id','state_id','city_id','phone_number','birth_date','age','zip','date_genrated','is_duplicate','is_invalid','is_send','deleted_at','lead_id','age_group_id'];
 
     public function lead()
     {
@@ -34,3 +36,4 @@ class LeadDetail extends Model
     }
 
 }
+

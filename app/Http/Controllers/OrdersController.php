@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\DB;
+
 class OrdersController extends Controller
 {
     private $moduleName = "Orders";
@@ -279,17 +280,17 @@ class OrdersController extends Controller
 
         try {
             
-            $leadType = \App\Models\LeadType::find($order_data->lead_type_id);
-            $lead_collection = \Illuminate\Support\Facades\DB::select("CALL order_excel_generate_by_id(".$order_data->id.")");
+            $leadType = LeadType::find($order_data->lead_type_id);
+            $lead_collection = DB::select("CALL order_excel_generate_by_id(".$order_data->id.")");
             
             if(count($lead_collection) > 0) {
                 
                 $file_name = str_replace(' ','_',trim($leadType->name)).'_'.$order_data->qty.'_'.$order_data->client->lastName.'_'.uniqid().'.csv';
-                $lead_response = \Maatwebsite\Excel\Facades\Excel::store(new \App\Exports\LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
+                // $lead_response = \Maatwebsite\Excel\Facades\Excel::store(new \App\Exports\LeadDetailsExport($lead_collection), $file_name, 'leadreport'); //Third parameter is storage path if check path to config/filesystem.php
     
                 //Mail sending
-                $site_setting = \App\Models\SiteSetting::first()->toArray();
-                $emailSubject = \App\Models\EmailTemplate::where('email_subject','lead-send')->first();
+                $site_setting = SiteSetting::first()->toArray();
+                $emailSubject =EmailTemplate::where('email_subject','lead-send')->first();
     
                 $from_email = isset($site_setting['email_from_address']) && $site_setting['email_from_address'] !=null ? $site_setting['email_from_address'] : '';
                 $from_name = isset($site_setting['email_from_name']) && $site_setting['email_from_name'] !=null ? $site_setting['email_from_name'] : '';
@@ -300,22 +301,22 @@ class OrdersController extends Controller
                 $to_email = [$client_email,$from_email];
                 $upload_path = 'storage/leadreport/'.$file_name;
     
-                \Illuminate\Support\Facades\Mail::send('mail/leadreport', ['order_data' => $order_data, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
+                // \Illuminate\Support\Facades\Mail::send('mail/leadreport', ['order_data' => $order_data, 'file' => $file_name], function($message) use ($to_email,$from_email,$from_name,$bcc_email,$replay_email, $emailSubject){
     
-                    $message->from($from_email, $from_name);
-                    if($bcc_email !=''){
-                        $message->bcc([$bcc_email]);
-                    }
-                    if($replay_email !=''){
-                        $message->replyTo($replay_email);
-                    }
-                    $message->to($to_email)->subject($emailSubject->subject);
-                });
+                //     $message->from($from_email, $from_name);
+                //     if($bcc_email !=''){
+                //         $message->bcc([$bcc_email]);
+                //     }
+                //     if($replay_email !=''){
+                //         $message->replyTo($replay_email);
+                //     }
+                //     $message->to($to_email)->subject($emailSubject->subject);
+                // });
     
                 // Update order status
-                \App\Models\Order::where('id', $order_data->id)->update(['status' => '1','file_name' => $file_name]);
+                Order::where('id', $order_data->id)->update(['status' => '1','file_name' => $file_name]);
                 $lastProductOrder = $order_data->qty.' '. $order_data->lead_type->name .' | '. $order_data->age_group->age_from .'-'. $order_data->age_group->age_to . ' Days Old';
-                \App\Models\Client::where('id', $order_data->client_id)->update(['last_order_date' => $order_data->order_date, 'last_product_ordered' => $lastProductOrder]);
+               Client::where('id', $order_data->client_id)->update(['last_order_date' => $order_data->order_date, 'last_product_ordered' => $lastProductOrder]);
             }
         } catch(\Exception $e) {
             $lead_response = false;

@@ -10,9 +10,10 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 
+
 class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,WithEvents
 {
-    private $i = 1;
+     private $i = 1;
     private $id;
     private $type;
 
@@ -21,14 +22,12 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
           $this->id = $id;
           $this->type = $type;
     }
-
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        //
-        if($this->type == 'duplicate')
+         if($this->type == 'duplicate')
         {
             $temp = LeadDetail::where('lead_id',decrypt($this->id))->where('is_duplicate',1)->get();
         }
@@ -101,4 +100,5 @@ class LeadStatusDownload implements FromCollection,WithHeadings,WithMapping,With
             }];
     }
 
+    
 }

@@ -47,3 +47,4 @@ class SiteSettingSeeder extends Seeder
         EmailTemplate::updateOrCreate(['id' => 2],$records);
     }
 }
+

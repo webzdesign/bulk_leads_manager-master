@@ -17,10 +17,13 @@ use App\Models\LeadDetail;
 use App\Models\AgeGroup;
 use App\Models\State;
 
+
 class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,ShouldAutoSize,WithHeadingRow
 {
-
-    protected $lead_collection;
+    /**
+    * @return \Illuminate\Support\Collection
+    */
+   protected $lead_collection;
 
     function __construct($lead_collection) {
         $this->lead_collection = $lead_collection;
@@ -62,4 +65,5 @@ class LeadDetailsExport implements FromCollection,WithHeadings, WithEvents,Shoul
             },
         ];
     }
+
 }

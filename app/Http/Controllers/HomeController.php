@@ -8,6 +8,7 @@ use App\Models\LeadType;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
+
 class HomeController extends Controller
 {
     public $moduleName = 'Dashboard';
@@ -21,13 +22,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index(Request $request)
+     public function index(Request $request)
     {
         $moduleName = $this->moduleName;
         $leadTypes = LeadType::with(['ageGroup','leads'])->get();

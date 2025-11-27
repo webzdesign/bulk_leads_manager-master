@@ -2,20 +2,19 @@
 
 namespace Database\Seeders;
 
-use App\Models\LeadFields;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use DB;
+use App\Models\LeadFields;
 
 class LeadFieldSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        DB::table('lead_fields')->truncate();
+          DB::table('lead_fields')->truncate();
 
         LeadFields::updateOrCreate(
         ['id' => 1, 'name' => 'First Name' ,'columnName' => 'first_name']);
@@ -55,5 +54,6 @@ class LeadFieldSeeder extends Seeder
 
         LeadFields::firstOrCreate(
         ['id' => 13, 'name' => 'IP' ,'columnName' => 'ip' ]);
+
     }
 }

@@ -2,20 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
 use Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // User::factory(10)->create();
 
         User::updateOrCreate(['email' => 'admin@gmail.com'],
         [
@@ -68,5 +70,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LeadTypeSeeder::class);
         $this->call(LeadFieldSeeder::class);
         $this->call(SiteSettingSeeder::class);
+    
     }
 }

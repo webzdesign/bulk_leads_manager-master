@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Models\LeadDetail;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use App\Models\LeadDetail;
 
 class ImportDownload implements FromCollection
 {
@@ -12,7 +12,6 @@ class ImportDownload implements FromCollection
     */
     public function collection()
     {
-        //
         return LeadDetail::all();
     }
 }

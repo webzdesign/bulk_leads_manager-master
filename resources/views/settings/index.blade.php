@@ -17,7 +17,7 @@
             </div>
             <form method="POST" action="{{ url('site_setting_create') }}" id="form1">
                 @csrf
-                <input type="hidden" name="id" value="{{ isset($site_settings) && $site_settings !=null ? $site_settings['id'] : ''; }}">
+                <input type="hidden" name="id" value="{{ isset($site_settings) && $site_settings !=null ? $site_settings['id'] : ''}}">
 
                 <div class="cardsBody">
                     <div class="row">
@@ -111,7 +111,7 @@
 
             <form method="POST" action="{{ url('email_setup_create') }}" id="form2">
                 @csrf
-                <input type="hidden" name="id" value="{{ isset($site_settings) && $site_settings !=null ? $site_settings['id'] : ''; }}">
+                <input type="hidden" name="id" value="{{ isset($site_settings) && $site_settings !=null ? $site_settings['id'] : '' }}">
                 <div class="cardsBody">
                     <div class="row">
                         <div class="col-lg-6 pr-40">

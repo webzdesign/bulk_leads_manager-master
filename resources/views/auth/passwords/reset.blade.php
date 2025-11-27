@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="loginBanner w-100">
-        <img src="{{ asset('public/assets/images/login-banner.png') }}" alt="login" class="w-100">
+       <img src="{{ asset('assets/images/login-banner.png') }}" alt="login" class="w-100">
     </section>
 
     <section class="loginCard d-flex align-items-center justify-content-center">

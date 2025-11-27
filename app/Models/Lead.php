@@ -11,7 +11,7 @@ class Lead extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
+protected $table = 'leads';
     protected $guarded = [];
 
     public function user() {
@@ -31,3 +31,4 @@ class Lead extends Model
     }
 
 }
+

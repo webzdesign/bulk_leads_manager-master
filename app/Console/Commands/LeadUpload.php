@@ -74,6 +74,7 @@ class LeadUpload extends Command
                 Lead::find($request['leadId'])->update(['status' => 4]);
                 Log::info('request Data', $request);
                 try {
+                   
                     $phoneNumbers = LeadDetail::where('is_duplicate', 0)->where('is_invalid', 0)->pluck('phone_number', 'phone_number')->toArray();
                     $getData = (new FastExcel)->withoutHeaders()->import(storage_path('app/import/' . $request['filename']));
                     $getData = $getData->toArray();
@@ -93,7 +94,7 @@ class LeadUpload extends Command
 
                     $duplicateRecords = 0;
                     $invalid = 0;
-
+ 
                     $leadFields = LeadFields::where('status', 1)->pluck('id', 'columnName')->toArray();
                     $lead_older = SiteSetting::find(1);
                     $days = $lead_older->disallow_import_lead_older * 30;
@@ -244,74 +245,43 @@ class LeadUpload extends Command
                         $arr['lead_id'] = $lead->id;
                         $arr['created_at'] = date('Y-m-d H:i:s');
 
-                        if (!is_null($date_generated_index)) {
-                            if (strpos($row[$date_generated_index], '-') !== false) {
-                                $checkDate = explode('-', $row[$date_generated_index]);
-                                if (isset($checkDate[0]) && isset($checkDate[1]) && isset($checkDate[2])) {
-                                    
-                                    if (strlen($checkDate[0]) == '2' && strlen($checkDate[1]) == '2') {
-                                        if (strlen($checkDate[2]) == '2') {
-                                            $dates = DateTime::createFromFormat('y', $checkDate[2]);
-                                            $year = $dates->format('Y');
-                                            
-                                            $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $year));
-                                        } else {
-                                            $generated_date = date("Y-m-d", strtotime($checkDate[0] . '-' . $checkDate[1] . '-' . $checkDate[2]));
-                                            // dd($row[$date_generated_index], $generated_date, $checkDate[1] . '-' . $checkDate[0] . '-' . $checkDate[2]);
-                                        }
-                                    } else {
-                                        if (strlen($checkDate[0]) == '1' && strlen($checkDate[1]) == '1') {
-                                            if (strlen($checkDate[2]) == '2') {
-                                                $dates = DateTime::createFromFormat('y', $checkDate[2]);
-                                                $year = $dates->format('Y');
+                      if (!is_null($date_generated_index)) {
+    $rawDate = $row[$date_generated_index];
+    $generated_date = null;
 
-                                                $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $year));
-                                            } else {
-                                                $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $checkDate[2]));
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                $checkDate = explode('/', $row[$date_generated_index]);
-                                if (isset($checkDate[0]) && isset($checkDate[1]) && isset($checkDate[2])) {
+    try {
+        
+        if (strpos($rawDate, '-') !== false) {
+           
+            $generated_date = \Carbon\Carbon::createFromFormat('d-m-Y', $rawDate)->format('Y-m-d');
+        } elseif (strpos($rawDate, '/') !== false) {
+            
+            $generated_date = \Carbon\Carbon::createFromFormat('d/m/Y', $rawDate)->format('Y-m-d');
+        } else {
+          
+            $generated_date = \Carbon\Carbon::parse($rawDate)->format('Y-m-d');
+        }
 
-                                    if (strlen($checkDate[0]) == '2' && strlen($checkDate[1]) == '2') {
-                                        if (strlen($checkDate[2]) == '2') {
-                                            $dates = DateTime::createFromFormat('y', $checkDate[2]);
-                                            $year = $dates->format('Y');
+        
+        $today    = now()->format('Y-m-d');
+        $date1    = date_create($generated_date);
+        $date2    = date_create($today);
+        $diffDays = date_diff($date1, $date2)->days;
 
-                                            $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $year));
-                                        } else {
-                                            $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $checkDate[2]));
-                                        }
-                                    } else {
-                                        if (strlen($checkDate[0]) == '1' && strlen($checkDate[1]) == '1') {
-                                            if (strlen($checkDate[2]) == '2') {
-                                                $dates = DateTime::createFromFormat('y', $checkDate[2]);
-                                                $year = $dates->format('Y');
+        if ($diffDays > $days) {
+            $rejected++;
+            continue;
+        }
 
-                                                $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $year));
-                                            } else {
-                                                $generated_date = date("Y-m-d", strtotime($checkDate[1] . '-' . $checkDate[0] . '-' . $checkDate[2]));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            $today = date('Y-m-d');
-                            // dd($generated_date);
-                            $date1 = date_create($generated_date);
-                            $date2 = date_create($today);
-                            $diff  = date_diff($date1, $date2);
-                            $diffDays = intval($diff->format("%a"));
-
-                            if ($diffDays > $days) {
-                                // dd('ert', $diffDays);
-                                $rejected++;
-                                continue;
-                            }
+    } catch (\Exception $e) {
+        
+        Log::error("Invalid date format encountered", [
+            'rawDate' => $rawDate,
+            'error'   => $e->getMessage()
+        ]);
+        $rejected++;
+        continue;
+    }
 
                             foreach ($ageGroups as $ageGroup) {
                                 if ($ageGroup->age_from <= $diffDays && $ageGroup->age_to >= $diffDays) {
