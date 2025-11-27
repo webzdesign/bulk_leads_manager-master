@@ -50,7 +50,7 @@
                 <div class="text-end mt-2">
                      <a href="{{ route('password.request') }}" class="c-7b f-12 f-500">Forgot Password?</a>
                 </div>
-                <button type="submit" class="btn-primary text-uppercase w-100 mt-4">sign in</button>
+                <button type="submit"   style="background: linear-gradient(180deg, #18829fff 0%, #2789adff 100%);color: #fff; width: 100%;padding: 10px 20px;border: none; border-radius: 8px;font-weight: bold;text-transform: uppercase;"class="mt-4">sign in</button>
             </form>
         </div>
     </section>
