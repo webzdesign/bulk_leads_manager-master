@@ -27,7 +27,7 @@ class LoginController extends Controller
         ]);
 
         if(Auth::attempt($credentials)) {
-            return redirect('dashboard');
+            return redirect('bulk_leads_manager/dashboard');
         }
 
         return back()->withErrors([
@@ -38,6 +38,6 @@ class LoginController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect('bulk_leads_manager/login');
     }
 }
