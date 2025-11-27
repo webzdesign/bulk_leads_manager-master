@@ -40,7 +40,7 @@ Route::any('send-lead/{id}',[OrdersController::class,'sendLead'])->name('admin.s
 
 Route::group(['middleware' => 'prevent-back-history'],function(){
 
-    Auth::routes(['register' => false]);
+    Auth::routes(['register' => true]);
     Route::group(['middleware' => ['auth']], function() {
         Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
         Route::post('/dashboard-detail', [App\Http\Controllers\HomeController::class, 'getData'])->name('home.getData');
