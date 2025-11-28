@@ -146,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="cardsFooter d-flex justify-content-end">
-                                <button type="button" class="btn-primary f-500 f-14 btn_next1" style="min-width: 78px !important;">Next</button>
+                                <button type="button" class="btn-pink f-500 f-14 btn_next1" style="min-width: 78px !important;">Next</button>
                             </div>
                         </div>
                     </div>

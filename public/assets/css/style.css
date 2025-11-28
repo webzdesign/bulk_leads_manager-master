@@ -64,12 +64,12 @@ a {
 /* custom checkbox */
 
 .form-check-input:checked {
-    background-color: #4C26AA !important;
-    border-color: #4C26AA !important;
+    background-color: #aa2671 !important;
+    border-color: #aa2671 !important;
 }
 
 .form-check-input {
-    border-color: #7B809A !important;
+    border-color: #9b587e !important;
     width: 18px;
     height: 18px;
     box-shadow: none !important;
@@ -80,7 +80,7 @@ a {
     user-select: none;
     cursor: pointer;
     margin-left: 5px;
-    color: #4F4F52;
+    color: #9b587e;
     font-size: 16px;
     font-family: "Roboto Regular";
 }
@@ -94,16 +94,16 @@ a {
 
 input::-webkit-input-placeholder {
     /* Edge */
-    color: #7B809A !important;
+    color: #9b587e !important;
 }
 
 input:-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: #7B809A !important;
+    color: #9b587e !important;
 }
 
 input::placeholder {
-    color: #7B809A !important;
+    color: #9b587e !important;
 }
 
 
@@ -111,18 +111,18 @@ input::placeholder {
 
 button:disabled {
     background: #E9EAED !important;
-    color: #7B809A !important;
+    color: #9b587e !important;
     cursor: not-allowed;
 }
 
 button:disabled svg path {
-    fill: #7B809A !important;
+    fill: #9b587e !important;
 }
 
 .btn-primary,
 .btn-danger,
 .btn-add {
-    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%) !important;
+    background: linear-gradient(180deg, #e62e84 0%, #e74e95 100%);
     border-radius: 8px !important;
     border: none !important;
     height: 40px;
@@ -189,7 +189,7 @@ button:disabled svg path {
 }
 
 .c-7b {
-    color: #7B809A !important;
+    color: #9b587e !important;
 }
 
 .c-36 {
@@ -225,11 +225,11 @@ button:disabled svg path {
 }
 
 .c-4c {
-    color: #4C26AA !important;
+    color: #aa2671 !important;
 }
 
 .c-46 {
-    color: #46679D !important;
+    color: #aa2671 !important;
 }
 
 
@@ -371,7 +371,7 @@ button:disabled svg path {
 
 .select2-results__option {
     padding: 5px 15px !important;
-    color: #7B809A !important;
+    color: #9b587e !important;
     font-family: "Roboto Regular" !important;
     font-weight: normal !important;
     font-size: 14px !important;
@@ -423,7 +423,7 @@ button:disabled svg path {
 }
 
 .loginCard .loginCardHead {
-    background: linear-gradient(180deg, #d0347d 0%, #e74e95 100%);
+    background: linear-gradient(180deg, #e62e84 0%, #e74e95 100%);
     box-shadow: 0px 2px 6px rgba(220, 34, 101, 0.36);
     border-radius: 8px;
     min-height: 81px;
@@ -470,9 +470,21 @@ footer {
     left: 0;
     z-index: 8;
 }
+.btn-pink{
+    background-color: #E75480;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem; /* small text */
+  font-weight: 500;
+  /* text-transform: uppercase; */
+  transition: background-color 0.3s ease;
 
+
+}
 aside {
-    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
+     background: linear-gradient(180deg, #e62e84 0%, #e74e95 100%);
     width: 260px;
     min-width: 260px;
     height: 100vh;
@@ -491,16 +503,16 @@ aside .logoBx svg {
 
 aside::-webkit-scrollbar-track {
     width: 6px;
-    background-color: #461fa5;
+    background-color: #db306f;
 }
 
 aside::-webkit-scrollbar {
     width: 6px;
-    background-color: #461fa5;
+    background-color: #a51f6b;
 }
 
 aside::-webkit-scrollbar-thumb {
-    background-color: #9999fb;
+    background-color: #fb99ec;
 }
 
 aside .userProfile {
@@ -516,7 +528,7 @@ aside .userProfile [data-bs-toggle="collapse"] {
 }
 
 aside .userProfile [data-bs-toggle="collapse"]:hover {
-    background: #6666EA50;
+    background: #ea66bc50;
 }
 
 aside .userProfile img {
@@ -557,11 +569,11 @@ aside .menuList li a {
 }
 
 aside .menuList li a.active {
-    background: #6666EA !important;
+    background: #15ffcc !important;
 }
 
 aside .menuList li a:hover {
-    background: #6666EA50;
+    background: #ff4a9b ;
 }
 
 
@@ -752,7 +764,7 @@ table.dataTable td {
 .tableCards .editBtn,
 .tableCards .deleteBtn,
 .tableCards .cartBtn {
-    background: #1A73E7;
+    background: #e71ab0;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     border: none;
@@ -820,7 +832,7 @@ table.dataTable td {
 }
 
 .modal-title {
-    color: #344767;
+    color: #673455;
     font-size: 18px;
     font-family: "Roboto Bold" !important;
 }
@@ -844,7 +856,7 @@ table.dataTable td {
 
 .groupModal .select-styled,
 .groupModal .form-control {
-    color: #7B809A;
+    color: #9b587e;
     font-family: "Roboto Regular" !important;
 }
 
@@ -854,7 +866,7 @@ table.dataTable td {
 .importWrpr .fileUploadBx {
     background: #F0F2F5;
     border-radius: 10px;
-    border: 1px dashed #4C26AA;
+    border: 1px dashed #aa2666;
     padding: 30px 20px;
     cursor: pointer;
 }
@@ -890,7 +902,7 @@ table.dataTable td {
 }
 
 .importWrpr .importStep span {
-    background: #6666EA;
+    background: #be287196;
     border-radius: 50%;
     width: 32px;
     min-width: 32px;
@@ -967,7 +979,7 @@ table.dataTable td {
 }
 
 .importWrpr .stepThree table td {
-    color: #7B809A !important;
+    color: #9b587e !important;
     font-family: "Roboto Regular" !important;
 }
 
@@ -1035,7 +1047,7 @@ table.dataTable {
 
 div.dataTables_wrapper div.dataTables_info {
     padding-top: 0;
-    color: #7B809A;
+    color: #9b587e;
     font-size: 16px;
     font-family: "Roboto Medium";
 }
@@ -1044,18 +1056,18 @@ div.dataTables_wrapper div.dataTables_info {
 .page-item:last-child .page-link {
     font-family: "Roboto Regular";
     font-size: 16px;
-    color: #4C26AA;
+    color: #E93B77;
 }
 
 .page-item.active .page-link {
-    background: #4C26AA;
-    border-color: #4C26AA;
+    background: #E93B77;
+    border-color: #9b224c;
     color: #fff !important;
 }
 
 .page-link {
     box-shadow: none !important;
-    color: #4C26AA !important;
+    color:#E93B77 !important;
     font-family: "Roboto Medium";
 }
 
@@ -1067,7 +1079,7 @@ div.dataTables_wrapper div.dataTables_info {
 
 .filterDropdownBx .select-styled,
 .clientBlock .select-styled {
-    color: #7B809A;
+    color: #be6685;
     font-size: 14px !important;
     font-family: "Roboto Regular" !important;
 }
@@ -1137,12 +1149,12 @@ div.dataTables_wrapper div.dataTables_info {
     width: 95px;
     min-width: 95px;
     height: 95px;
-    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
+    background: linear-gradient(180deg, #E93B77 0%, #DA1F63 100%);
 }
 
 .statsWrpr .settingWrpr .cardsFooter {
     margin: 0 -24px;
-    border-color: #4a24a947;
+    border-color: #E93B77;
     margin-top: 30px;
 }
 
@@ -1174,7 +1186,7 @@ div.dataTables_wrapper div.dataTables_info {
     border-radius: 12px 12px 0 0;
     margin: 0 -25px;
     padding: 15px 24px;
-    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
+  background: linear-gradient(180deg, #E93B77 0%, #DA1F63 100%);
     box-shadow: none !important;
 }
 
@@ -1193,7 +1205,7 @@ div.dataTables_wrapper div.dataTables_info {
     padding: 15px 24px;
     display: block;
     position: relative;
-    border-bottom: 1px solid #4720a642;
+    border-bottom: 1px solid#E93B77
 }
 
 .notificationBody li a:hover {
@@ -1225,7 +1237,7 @@ div.dataTables_wrapper div.dataTables_info {
 
 .notificationBody .cardsBody::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #4822a6;
+    background-color: #a62289;
 }
 
 .tooltip {
@@ -1235,12 +1247,12 @@ div.dataTables_wrapper div.dataTables_info {
 .tooltip-inner {
     font-family: 'Roboto Regular';
     font-size: 16px;
-    background-color: #6666ea;
+    background-color:#E93B77;
 }
 
 .bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before,
 .bs-tooltip-end .tooltip-arrow::before {
-    border-right-color: #6666ea;
+    border-right-color: #E93B77;
 }
 
 .tooltip.show {

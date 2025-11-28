@@ -320,7 +320,7 @@
 
                 <div class="cardsFooter d-flex justify-content-end">
                     <form id="fileUploadForm" enctype="multipart/form-data">
-                    <button class="btn-primary f-500 f-14" type="submit" id="next">Save & continue import</button>
+                    <button class="btn-pink f-500 f-14" type="submit" id="next">Save & continue import</button>
                     </form>
                 </div>
             </div>

@@ -6,7 +6,7 @@
 
     <section class="loginCard d-flex align-items-center justify-content-center">
         <div class="bg-white loginCardBody w-100-500">
-            <div class="loginCardHead d-flex align-items-center justify-content-center position-relative">
+            <div class="loginCardHead  d-flex align-items-center justify-content-center position-relative">
                 <h3 class="text-white f-700 f-22 m-0">Welcome Back!</h3>
             </div>
 
@@ -48,9 +48,11 @@
                     @enderror
                 </div>
                 <div class="text-end mt-2">
-                     <a href="{{ route('password.request') }}" class="c-7b f-12 f-500">Forgot Password?</a>
+                   <a href="{{ route('password.request') }}" style="color: #e346a6ff;"class="f-12 f-500">
+                         Forgot Password?
+                    </a>
                 </div>
-                <button type="submit"   style="background: linear-gradient(180deg, #18829fff 0%, #2789adff 100%);color: #fff; width: 100%;padding: 10px 20px;border: none; border-radius: 8px;font-weight: bold;text-transform: uppercase;"class="mt-4">sign in</button>
+                <button type="submit" style="background-color:#E75480;color: #fff; width: 100%;padding: 10px 20px;border: none; border-radius: 8px;font-weight: bold;text-transform: uppercase;"class=".btn-pink-gradient mt-4">sign in</button>
             </form>
         </div>
     </section>
@@ -86,5 +88,4 @@
         });
     });
 </script>
-
 @endsection

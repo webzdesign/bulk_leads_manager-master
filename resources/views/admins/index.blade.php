@@ -174,7 +174,7 @@
     @if (auth()->user()->allowCreateEditUser == 1)
         <script type="text/html" id="filterDropdown">
             <div class="d-flex align-items-center filterPanelbtn">
-                <button id="showModel" class="btn-primary f-500 f-14 float-right align-right" data-bs-toggle="modal"
+                <button id="showModel" class="btn-pink f-500 f-14 float-right align-right" data-bs-toggle="modal"
                     data-bs-target="#addAdmin">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
                         <path

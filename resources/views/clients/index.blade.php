@@ -103,7 +103,7 @@
 
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn-primary" id='addClient_submit' style="min-width: 74px;"
+                                <button type="button" class="btn-pink" id='addClient_submit' style="min-width: 74px;"
                                      data-update="false">Add Client</button>
                             </div>
 
@@ -119,7 +119,7 @@
     <div class="d-flex align-items-center filterPanelbtn">
         @if(auth()->user()->allowCreateEditUser == 1)
         <div class="me-2">
-            <button id='showModel' class="btn-primary f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">
+            <button id='showModel' class="btn-pink f-500 f-14" style="min-width: 84px !important;"  data-bs-toggle="modal" data-bs-target="#addClient">
                 <svg class="me-1" width="16" height="16" viewBox="0 0 16 16" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
                     <path d="M8.00008 13.3332V7.99984M8.00008 7.99984V2.6665M8.00008 7.99984H13.3334M8.00008 7.99984H2.66675" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
                     <defs>

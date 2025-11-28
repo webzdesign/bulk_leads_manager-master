@@ -94,7 +94,7 @@
                 </div>
                 <div class="cardsFooter d-flex justify-content-end">
                     <button class="btn-default f-500 f-14" type="reset">Cancel</button>
-                    <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
+                    <button class="btn-pink f-500 f-14" type="submit">Save changes</button>
                 </div>
             </form>
         </div>
@@ -182,7 +182,7 @@
                 </div>
                 <div class="cardsFooter d-flex justify-content-end">
                     <button class="btn-default f-500 f-14" type="reset">Cancel</button>
-                    <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
+                    <button class="btn-pink f-500 f-14" type="submit">Save changes</button>
                 </div>
             </form>
         </div>
@@ -235,7 +235,7 @@
                 </div>
                 <div class="cardsFooter d-flex justify-content-end">
                     <button class="btn-default f-500 f-14" type="reset">Cancel</button>
-                    <button class="btn-primary f-500 f-14" type="submit">Save changes</button>
+                    <button class="btn-pink f-500 f-14" type="submit">Save changes</button>
                 </div>
             </form>
         </div>

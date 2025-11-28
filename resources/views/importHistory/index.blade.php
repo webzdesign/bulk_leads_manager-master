@@ -27,7 +27,7 @@
 <script type="text/html" id="filterDropdown">
     <div class="d-flex align-items-center filterPanelbtn">
         <div class="button-dropdown position-relative">
-            <button style="min-width: 104px;" class="btn-primary f-500 dropdown-toggle">
+            <button style="min-width: 104px;" class="btn-pink f-500 dropdown-toggle">
                 <svg class="me-2" width="14" height="14" viewBox="0 0 14 14" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="py-3 cardsFooter d-flex justify-content-end">
-                    <button class="btn-primary f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
+                    <button class="btn-pink f-500 f-14" style="min-width: 84px !important;" id="apply">Apply</button>
                 </div>
             </ul>
         <div>

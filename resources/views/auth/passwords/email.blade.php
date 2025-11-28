@@ -41,7 +41,7 @@
                     @enderror
                     {{-- <span class="text-danger f-400 f-14">Email is require</span> --}}
                 </div>
-                <button type="submit" class="btn-primary text-uppercase w-100 mt-4">Reset password</button>
+                 <button type="submit" style="background-color:#E75480;color: #fff; width: 100%;padding: 10px 20px;border: none; border-radius: 8px;font-weight: bold;text-transform: uppercase;"class=".btn-pink-gradient mt-4">Reset Password</button>
             </form>
         </div>
     </section>

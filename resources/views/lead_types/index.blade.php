@@ -16,8 +16,8 @@
                         <defs>
                             <linearGradient id="paint0_linear_1524_12112" x1="8" y1="3.20703" x2="8"
                                 y2="12.7932" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#3F189F" />
-                                <stop offset="1" stop-color="#4C26AA" />
+                                <stop stop-color="#9f1870ff" />
+                                <stop offset="1" stop-color="#aa2689ff" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -32,14 +32,14 @@
                         <defs>
                             <linearGradient id="paint0_linear_1524_12120" x1="8.00008" y1="2.6665" x2="8.00008"
                                 y2="13.3332" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#3F189F" />
-                                <stop offset="1" stop-color="#4C26AA" />
+                                <stop stop-color="#9f1882ff" />
+                                <stop offset="1" stop-color="#aa266cff" />
                             </linearGradient>
                         </defs>
                     </svg>
                     Add Age Group
                 </button>
-                <button class="btn-primary f-500 f-14" data-bs-toggle="modal" data-bs-target="#LeadType" id="add_lead_type">
+                <button class="btn-pink f-500 f-14" data-bs-toggle="modal" data-bs-target="#LeadType" id="add_lead_type">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="#ffffff"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -140,7 +140,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn-primary text-uppercase" style="min-width: 67px;"
+                    <button type="button" class="btn-pink text-uppercase" style="min-width: 67px;"
                         data-bs-dismiss="modal">ok</button>
                 </div>
 
@@ -199,7 +199,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" id="age_submit" class="btn-primary" style="min-width: 74px;">Add</button>
+                    <button type="button" id="age_submit" class="btn-pink" style="min-width: 74px;">Add</button>
                 </div>
 
             </div>
@@ -234,7 +234,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" id="lead_type_submit" class="btn-primary" style="min-width: 74px;"
+                    <button type="button" id="lead_type_submit" class="btn-pink" style="min-width: 74px;"
                         data-update="false">Add</button>
                 </div>
 
