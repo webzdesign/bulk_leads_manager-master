@@ -149,9 +149,9 @@ button:disabled svg path {
 .btn-default {
     background: #fff !important;
     border-radius: 8px !important;
-    border: 1px solid #4C26AA !important;
+    border: 1px solid #cf2398 !important;
     height: 40px;
-    color: #4C26AA;
+    color: #cf2398;
     padding: 0 15px;
     font-size: 15px;
     line-height: 0;
@@ -181,7 +181,7 @@ button:disabled svg path {
 /* colors */
 
 .c-primary {
-    color: #4C26AA !important;
+    color: #e737a3 !important;
 }
 
 .c-gr {
@@ -355,7 +355,7 @@ button:disabled svg path {
 
 .select2-results__options::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #4C26AA;
+    background-color: #aa267e;
 }
 
 .select2-results__options::-webkit-scrollbar {
@@ -423,7 +423,7 @@ button:disabled svg path {
 }
 
 .loginCard .loginCardHead {
-    background: linear-gradient(180deg, #3F189F 0%, #4C26AA 100%);
+    background: linear-gradient(180deg, #d0347d 0%, #e74e95 100%);
     box-shadow: 0px 2px 6px rgba(220, 34, 101, 0.36);
     border-radius: 8px;
     min-height: 81px;
@@ -434,6 +434,8 @@ button:disabled svg path {
     flex: auto;
     padding: 15px;
 }
+
+
 
 .loginCard .loginCardBody {
     width: 408px;
